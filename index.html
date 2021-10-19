@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Muso Dojo</title>
+    <link rel="stylesheet" type="text/css" href="css/musodojo.css" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <script type="module">
+      import { AUDIO_SPRITE_DATA } from "./modules/audioSpriteData.mjs";
+      import { AudioInterface } from "./modules/audioInterface.mjs";
+      import { Multitool } from "./modules/multitool.mjs";
+      import { COLOR_THEMES } from "./modules/colorThemes.mjs";
+
+      const THEME = "Dark";
+
+      document.body.style.color = COLOR_THEMES[THEME].foreground3;
+      document.body.style.backgroundColor = COLOR_THEMES[THEME].background;
+      document.body.style.userSelect = "none";
+
+      // await AudioInterface.loadAudioSprite(AUDIO_SPRITE_DATA);
+      AudioInterface.loadAudioSprite(AUDIO_SPRITE_DATA);
+      const MULTITOOL = new Multitool({
+        colorTheme: COLOR_THEMES[THEME],
+      });
+      MULTITOOL.addTool();
+      document.body.appendChild(MULTITOOL.container);
+    </script>
+  </body>
+</html>
