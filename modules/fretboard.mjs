@@ -36,8 +36,6 @@ class Fretboard extends Container {
         showFretboardMarkers: true,
         ...props,
       };
-      // make it easier to work with hand in CSS style calculations
-      this.props.hand = this.props.hand.toLowerCase();
 
       this.container.style.position = "relative";
       this.container.style.backgroundColor = this.props.colorTheme.background;
@@ -55,9 +53,14 @@ class Fretboard extends Container {
         );
       }
 
-      if (!(this.props.hand === "left" || this.props.hand === "right")) {
+      if (
+        !(
+          this.props.hand.toLowerCase() === "left" ||
+          this.props.hand.toLowerCase() === "right"
+        )
+      ) {
         throw new Error(
-          `Fretboard hand=${this.props.hand} should be left or right`
+          `Fretboard hand=${this.props.hand.toLowerCase()} should be left or right`
         );
       }
 
@@ -160,7 +163,8 @@ class Fretboard extends Container {
       FRET.style.top = 0;
       FRET.style.width = fretWidth + "px";
       FRET.style.height = this.props.height * this.props.mainScale + "px";
-      FRET.style[this.props.hand] = this.getFretDistance(i) + "px";
+      FRET.style[this.props.hand.toLowerCase()] =
+        this.getFretDistance(i) + "px";
       this.render(FRET);
     }
   }
@@ -180,7 +184,7 @@ class Fretboard extends Container {
       );
       FRETBOARD_AREA.container.style.top =
         this.props.height * this.props.mainScale + "px";
-      FRETBOARD_AREA.container.style[this.props.hand] =
+      FRETBOARD_AREA.container.style[this.props.hand.toLowerCase()] =
         this.getFretDistance(i) + "px";
 
       const FRET_NUMBER_LABEL = document.createElement("div");
@@ -199,14 +203,14 @@ class Fretboard extends Container {
           this.props.height * this.props.mainScale + "px"
         );
         FRETBOARD_AREA.container.style.top = 0;
-        FRETBOARD_AREA.container.style[this.props.hand] =
+        FRETBOARD_AREA.container.style[this.props.hand.toLowerCase()] =
           this.getFretDistance(i) + "px";
         this.render(FRETBOARD_AREA.container);
         const FRET_MARKER = document.createElement("div");
         FRET_MARKER.style.width = "60%";
         FRET_MARKER.style.height = "65%";
         FRET_MARKER.style.backgroundColor = this.props.colorTheme.midground;
-        switch (this.props.hand) {
+        switch (this.props.hand.toLowerCase()) {
           case "right":
             FRET_MARKER.style.clipPath = `polygon(0 0, 100% 6%, 100% 94%, 0 100%)`;
             break;
@@ -280,7 +284,7 @@ class Fretboard extends Container {
           this.props.height *
           this.props.mainScale +
         "px";
-      FRETBOARD_AREA.container.style[this.props.hand] =
+      FRETBOARD_AREA.container.style[this.props.hand.toLowerCase()] =
         this.getFretDistance(fretNum) + "px";
       FRETBOARD_AREA.container.style.cursor = "pointer";
 
@@ -292,7 +296,10 @@ class Fretboard extends Container {
             evt.target.releasePointerCapture(evt.pointerId);
             if (this.props.notes[`${stringNum}_${fretNum}`])
               this.playNote(stringNum, fretNum);
-            if (this.props.mode !== "Play") this.toggleNote(stringNum, fretNum);
+            if (this.props.mode === "Edit One")
+              this.toggleNote(stringNum, fretNum);
+            else if (this.props.mode === "Edit All")
+              this.togglePitchClass(stringNum, fretNum);
           } catch (err) {
             console.error(err);
           }
@@ -307,8 +314,10 @@ class Fretboard extends Container {
             if (this.props.pointerDownIds.includes(evt.pointerId)) {
               if (this.props.notes[`${stringNum}_${fretNum}`])
                 this.playNote(stringNum, fretNum);
-              if (this.props.mode !== "Play")
+              if (this.props.mode === "Edit One")
                 this.toggleNote(stringNum, fretNum);
+              else if (this.props.mode === "Edit All")
+                this.togglePitchClass(stringNum, fretNum);
             }
           } catch (err) {
             console.error(err);
@@ -413,71 +422,65 @@ class Fretboard extends Container {
   toggleNote(stringNum, fretNum) {
     try {
       const NOTE = this.props.notes[`${stringNum}_${fretNum}`];
-      switch (this.props.mode) {
-        case "Edit One":
-          if (!NOTE) {
-            this.playNote(stringNum, fretNum);
-            this.renderNote(stringNum, fretNum, this.props.noteSizes.first);
-          } else {
-            const SIZE = NOTE.size;
-            switch (SIZE) {
-              case this.props.noteSizes.first:
-                this.renderNote(
-                  stringNum,
-                  fretNum,
-                  this.props.noteSizes.second
-                );
-                break;
-              case this.props.noteSizes.second:
-                this.removeNote(stringNum, fretNum);
-                break;
-              default:
-                throw new Error(
-                  `Fretboard toggleNote(stringNum, fretNum): size=${SIZE} should match Fretboard props.noteSizes.first=${this.props.noteSizes.first} || props.noteSizes.second=${this.props.noteSizes.second}`
-                );
-            }
-          }
-          break;
-        case "Edit All":
-          const SELECTED_PITCH_CLASS =
-            this.getMidiFromStringFret(stringNum, fretNum) % 12;
-          let currentPitchClass, currentNote;
-          // grab value of note width because it will change later
-          if (NOTE) {
-            var SIZE = NOTE.size;
-          } else {
-            // if there's no note, play it because the sound won't trigger
-            this.playNote(stringNum, fretNum);
-          }
-          for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
-            for (let j = 1; j <= this.props.tuning.length; j++) {
-              currentPitchClass = this.getMidiFromStringFret(j, i) % 12;
-              if (currentPitchClass === SELECTED_PITCH_CLASS) {
-                currentNote = this.props.notes[`${j}_${i}`];
-                if (!NOTE) {
-                  this.renderNote(j, i, this.props.noteSizes.first);
-                } else {
-                  switch (SIZE) {
-                    case this.props.noteSizes.first:
-                      this.renderNote(j, i, this.props.noteSizes.second);
-                      break;
-                    case this.props.noteSizes.second:
-                      this.removeNote(j, i);
-                      break;
-                    default:
-                      throw new Error(
-                        `Fretboard toggleNote(stringNum, fretNum): size=${SIZE} should match Fretboard props.noteSizes.first=${this.props.noteSizes.first} || props.noteSizes.second=${this.props.noteSizes.second}`
-                      );
-                  }
-                }
+      if (!NOTE) {
+        this.playNote(stringNum, fretNum);
+        this.renderNote(stringNum, fretNum, this.props.noteSizes.first);
+      } else {
+        const SIZE = NOTE.size;
+        switch (SIZE) {
+          case this.props.noteSizes.first:
+            this.renderNote(stringNum, fretNum, this.props.noteSizes.second);
+            break;
+          case this.props.noteSizes.second:
+            this.removeNote(stringNum, fretNum);
+            break;
+          default:
+            throw new Error(
+              `Fretboard toggleOneNote(stringNum, fretNum): size=${SIZE} should match Fretboard props.noteSizes.first=${this.props.noteSizes.first} || props.noteSizes.second=${this.props.noteSizes.second}`
+            );
+        }
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  togglePitchClass(stringNum, fretNum) {
+    try {
+      const NOTE = this.props.notes[`${stringNum}_${fretNum}`];
+      const SELECTED_PITCH_CLASS =
+        this.getMidiFromStringFret(stringNum, fretNum) % 12;
+      let currentPitchClass, currentNote;
+      // grab value of note width because it will change later
+      if (NOTE) {
+        var SIZE = NOTE.size;
+      } else {
+        // if there's no note, play it because the sound won't trigger
+        this.playNote(stringNum, fretNum);
+      }
+      for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
+        for (let j = 1; j <= this.props.tuning.length; j++) {
+          currentPitchClass = this.getMidiFromStringFret(j, i) % 12;
+          if (currentPitchClass === SELECTED_PITCH_CLASS) {
+            currentNote = this.props.notes[`${j}_${i}`];
+            if (!NOTE) {
+              this.renderNote(j, i, this.props.noteSizes.first);
+            } else {
+              switch (SIZE) {
+                case this.props.noteSizes.first:
+                  this.renderNote(j, i, this.props.noteSizes.second);
+                  break;
+                case this.props.noteSizes.second:
+                  this.removeNote(j, i);
+                  break;
+                default:
+                  throw new Error(
+                    `Fretboard togglePitchClass(stringNum, fretNum): size=${SIZE} should match Fretboard props.noteSizes.first=${this.props.noteSizes.first} || props.noteSizes.second=${this.props.noteSizes.second}`
+                  );
               }
             }
           }
-          break;
-        default:
-          throw new Error(
-            `Fretboard toggleNote(stringNum, fretNum): mode=${this.props.mode} should be Edit One or Edit All`
-          );
+        }
       }
     } catch (err) {
       throw err;
