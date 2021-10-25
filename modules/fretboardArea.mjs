@@ -14,8 +14,8 @@ class FretboardArea extends Container {
     this.backgroundDiv = document.createElement("div");
     this.backgroundDiv.style.position = "absolute";
     this.backgroundDiv.style.zIndex = "1";
-    this.backgroundDiv.style.width = "100%";
-    this.backgroundDiv.style.height = "100%";
+    this.backgroundDiv.style.width = "99%";
+    this.backgroundDiv.style.height = "99%";
     this.backgroundDiv.style.borderRadius = "20%";
     this.render(this.backgroundDiv);
   }
