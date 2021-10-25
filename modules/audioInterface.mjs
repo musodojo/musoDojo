@@ -57,21 +57,21 @@ class AudioInterface {
         `AudioInterface startNote(note, duration, delay=0): no midi note in sprite is within an octave of ${note}`
       );
     }
-    const INIT_VOL = 0.4;
-    GAIN.gain.value = INIT_VOL;
-    const CURRENT_TIME = this.context.currentTime;
     if (duration <= 0) {
       duration = CLOSEST_SPRITE_NOTE.duration;
     } else if (duration > CLOSEST_SPRITE_NOTE.duration) {
       duration = CLOSEST_SPRITE_NOTE.duration;
     }
+    const INIT_VOL = 0.5;
+    GAIN.gain.value = INIT_VOL;
+    const CURRENT_TIME = this.context.currentTime;
     // duration multiplier in ENDISH_TIME and setTargetAtTime set by ear
     // tried not to get an audio blip at end
     const ENDISH_TIME = CURRENT_TIME + delay + duration * 0.6;
-    GAIN.gain.setValueAtTime(INIT_VOL, ENDISH_TIME);
-    GAIN.gain.setTargetAtTime(0, ENDISH_TIME, duration * 0.05);
+    GAIN.gain.setTargetAtTime(0, ENDISH_TIME, duration * 0.2);
 
     BUFFER.start(CURRENT_TIME + delay, CLOSEST_SPRITE_NOTE.start, duration);
+
     // return the audio buffer and gain, so it can be stopped
     // and the duration in case it was updated and the new duration is needed
     return [BUFFER, GAIN, duration];
@@ -81,7 +81,7 @@ class AudioInterface {
     const CURRENT_TIME = this.context.currentTime;
     gain.gain.cancelScheduledValues(0);
     gain.gain.setTargetAtTime(0, CURRENT_TIME, 0.05);
-    buffer.stop(CURRENT_TIME + 0.25);
+    buffer.stop(CURRENT_TIME + 0.1);
   }
 }
 
