@@ -133,7 +133,7 @@ class FretboardMultitool extends Container {
 
     // Fretboard uses a lower case hand value to use in style calculations
     this.fretboardMenu.handSelect.addEventListener("change", (event) => {
-      this.fretboard.props.hand = event.target.value.toLowerCase();
+      this.fretboard.props.hand = event.target.value;
       this.fretboard.update();
     });
 
@@ -147,12 +147,43 @@ class FretboardMultitool extends Container {
       this.fretboard.update();
     });
 
+    // reset the index to the first option, which is the title i.e. "Note Size"
+    // this is so a change event will fire even if you re-select an option
+    // this will set all notes to the option size when their size has been edited
+    // but the select still says their original size
+    this.fretboardMenu.noteSizeSelect.addEventListener("pointerdown", () => {
+      this.fretboardMenu.noteSizeSelect.selectedIndex = "0";
+    });
+
+    // change event could fire on selecting same option because selectedIndex
+    // is reset to "0" in pointerdown listener
+    // this means we must check which noteSize is bigger and set that
+    // to first or second based on option choice, even if it's the same as
+    // the previous option choice
     this.fretboardMenu.noteSizeSelect.addEventListener("change", () => {
-      // large is first by default - swap values around on a change event
-      this.fretboard.props.noteSizes = {
-        first: this.fretboard.props.noteSizes.second,
-        second: this.fretboard.props.noteSizes.first,
-      };
+      let largeValue, smallValue;
+      if (
+        this.fretboard.props.noteSizes.first >
+        this.fretboard.props.noteSizes.second
+      ) {
+        largeValue = this.fretboard.props.noteSizes.first;
+        smallValue = this.fretboard.props.noteSizes.second;
+      } else {
+        largeValue = this.fretboard.props.noteSizes.second;
+        smallValue = this.fretboard.props.noteSizes.first;
+      }
+      if (this.fretboardMenu.noteSizeSelect.value === "Large") {
+        this.fretboard.props.noteSizes = {
+          first: largeValue,
+          second: smallValue,
+        };
+      } else if (this.fretboardMenu.noteSizeSelect.value === "Small") {
+        this.fretboard.props.noteSizes = {
+          first: smallValue,
+          second: largeValue,
+        };
+      }
+
       this.fretboard.update();
     });
 
