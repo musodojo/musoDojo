@@ -41,6 +41,7 @@ class Fretboard extends Container {
 
       this.container.style.position = "relative";
       this.container.style.backgroundColor = this.props.colorTheme.background;
+      this.container.style.color = this.props.colorTheme.foreground;
 
       // width and heigth are numbers in px
       this.container.style.width = this.props.width + "px";
@@ -184,7 +185,7 @@ class Fretboard extends Container {
 
       const FRET_NUMBER_LABEL = document.createElement("div");
       FRET_NUMBER_LABEL.style.fontSize = this.props.height / 23 + "px";
-      FRET_NUMBER_LABEL.innerHTML = i;
+      FRET_NUMBER_LABEL.innerText = i;
       FRETBOARD_AREA.render(FRET_NUMBER_LABEL);
       this.render(FRETBOARD_AREA.container);
     }
