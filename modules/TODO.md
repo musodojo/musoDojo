@@ -12,6 +12,4 @@
 
 # Audio Interface
 
-- separate audio sprites for separate instruments
 - HQ audio sprite - violin high note missing
-- check note duration / endish time
