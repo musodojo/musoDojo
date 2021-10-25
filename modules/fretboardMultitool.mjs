@@ -162,6 +162,7 @@ class FretboardMultitool extends Container {
     // the previous option choice
     this.fretboardMenu.noteSizeSelect.addEventListener("change", () => {
       let largeValue, smallValue;
+      // comparing strings with [VALUE]% works!
       if (
         this.fretboard.props.noteSizes.first >
         this.fretboard.props.noteSizes.second
