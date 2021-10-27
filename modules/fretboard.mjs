@@ -407,7 +407,7 @@ class Fretboard extends Container {
       // duration = 0 means play note until up event occurs (event handled externally)
       // duration = x means play note for x seconds (max = note's duration in audio sprite)
       // the === 0 case is handled by event listeners in the FretboardArea
-      if (this.props.noteDuration > 0 || this.props.noteDuration < 0) {
+      if (this.props.noteDuration !== 0) {
         setTimeout(() => {
           this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
             "transparent";
