@@ -28,15 +28,15 @@ class FretboardMultitool extends Container {
     // inside of the FretboardMultitool
     this.container.addEventListener(
       "pointerdown",
-      (evt) => {
+      (event) => {
         try {
           const INDEX = this.fretboard.props.pointerDownIds.indexOf(
-            evt.pointerId
+            event.pointerId
           );
           // if id was not found, push it
           if (INDEX < 0) {
-            this.fretboard.props.pointerDownIds.push(evt.pointerId);
-            evt.target.releasePointerCapture(evt.pointerId);
+            this.fretboard.props.pointerDownIds.push(event.pointerId);
+            event.target.releasePointerCapture(event.pointerId);
           }
         } catch (err) {
           console.error(err);
@@ -46,10 +46,10 @@ class FretboardMultitool extends Container {
     );
     this.container.addEventListener(
       "pointerup",
-      (evt) => {
+      (event) => {
         try {
           const INDEX = this.fretboard.props.pointerDownIds.indexOf(
-            evt.pointerId
+            event.pointerId
           );
           // if id was found, it wasn't cleared by Fretboard
           if (INDEX >= 0) {
@@ -66,10 +66,10 @@ class FretboardMultitool extends Container {
     // multitool's area with pointer down
     this.container.addEventListener(
       "pointerleave",
-      (evt) => {
+      (event) => {
         try {
           const INDEX = this.fretboard.props.pointerDownIds.indexOf(
-            evt.pointerId
+            event.pointerId
           );
           if (INDEX >= 0) {
             this.fretboard.props.pointerDownIds.splice(INDEX, 1);
@@ -244,9 +244,9 @@ class FretboardMultitool extends Container {
     this.container.addEventListener("pointerdown", () => {
       this.container.focus();
     });
-    this.container.addEventListener("keydown", (evt) => {
+    this.container.addEventListener("keydown", (event) => {
       // ROOT NOTE SHORTCUTS
-      switch (evt.key) {
+      switch (event.key) {
         case "z":
         case "Z":
           this.fretboardMenu.rootNoteSelect.value = NOTE_NAMES[0];
