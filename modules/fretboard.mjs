@@ -290,10 +290,10 @@ class Fretboard extends Container {
 
       FRETBOARD_AREA.container.addEventListener(
         "pointerdown",
-        (evt) => {
+        (event) => {
           try {
-            this.props.pointerDownIds.push(evt.pointerId);
-            evt.target.releasePointerCapture(evt.pointerId);
+            this.props.pointerDownIds.push(event.pointerId);
+            event.target.releasePointerCapture(event.pointerId);
             if (this.props.notes[`${stringNum}_${fretNum}`])
               this.playNote(stringNum, fretNum);
             if (this.props.mode === "Edit One")
@@ -309,9 +309,9 @@ class Fretboard extends Container {
 
       FRETBOARD_AREA.container.addEventListener(
         "pointerover",
-        (evt) => {
+        (event) => {
           try {
-            if (this.props.pointerDownIds.includes(evt.pointerId)) {
+            if (this.props.pointerDownIds.includes(event.pointerId)) {
               if (this.props.notes[`${stringNum}_${fretNum}`])
                 this.playNote(stringNum, fretNum);
               if (this.props.mode === "Edit One")
@@ -328,11 +328,11 @@ class Fretboard extends Container {
 
       FRETBOARD_AREA.container.addEventListener(
         "pointerup",
-        (evt) => {
+        (event) => {
           try {
             // pointer id will already be removed by the FreboardMultitool
             // if the Fretboard is inside a FreboardMultitool
-            const INDEX = this.props.pointerDownIds.indexOf(evt.pointerId);
+            const INDEX = this.props.pointerDownIds.indexOf(event.pointerId);
             if (INDEX >= 0) {
               this.props.pointerDownIds.splice(INDEX, 1);
             }
