@@ -14,6 +14,7 @@ class FretboardNote extends Container {
     this.backgroundColor = backgroundColor;
     this.fontColor = colorTheme.foreground;
     this.label = label;
+    // the FretboardArea.backgroundDiv for each FretboardNote has zIndex = 1
     this.container.style.zIndex = "2";
     this.container.style.fontSize = `min( calc(${parentHeight} / 2), calc(${parentWidth} / 3) )`;
     this.container.style.fontWeight = "bold";
