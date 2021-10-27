@@ -13,6 +13,9 @@ class FretboardArea extends Container {
 
     this.backgroundDiv = document.createElement("div");
     this.backgroundDiv.style.position = "absolute";
+    this.backgroundDiv.style.pointerEvents = "none";
+    this.backgroundDiv.style.backgroundColor = "transparent";
+    // the FretboardNote in each FretboardArea has zIndex = 2
     this.backgroundDiv.style.zIndex = "1";
     this.backgroundDiv.style.width = "99%";
     this.backgroundDiv.style.height = "99%";
