@@ -74,10 +74,10 @@ class AudioInterface {
 
     // return the audio buffer and gain, so it can be stopped
     // and the duration in case it was updated and the new duration is needed
-    return [BUFFER, GAIN, duration];
+    return { buffer: BUFFER, gain: GAIN, duration: duration };
   }
 
-  static stopNote([buffer, gain]) {
+  static stopNote({ buffer, gain }) {
     const CURRENT_TIME = this.context.currentTime;
     gain.gain.cancelScheduledValues(0);
     gain.gain.setTargetAtTime(0, CURRENT_TIME, 0.05);
