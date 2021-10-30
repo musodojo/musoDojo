@@ -193,6 +193,10 @@ class FretboardMenu extends Container {
     NOTE_DURATION_0_OPTION.text = "Touch";
     NOTE_DURATION_0_OPTION.value = "0";
     this.noteDurationSelect.add(NOTE_DURATION_0_OPTION);
+    const NOTE_DURATION_05_OPTION = document.createElement("option");
+    NOTE_DURATION_05_OPTION.text = "0.5s";
+    NOTE_DURATION_05_OPTION.value = "0.5";
+    this.noteDurationSelect.add(NOTE_DURATION_05_OPTION);
     const NOTE_DURATION_1_OPTION = document.createElement("option");
     NOTE_DURATION_1_OPTION.text = "1s";
     NOTE_DURATION_1_OPTION.value = "1";
@@ -207,7 +211,7 @@ class FretboardMenu extends Container {
     this.noteDurationSelect.add(NOTE_DURATION_3_OPTION);
     this.noteDurationSelect.value = "0";
     this.noteDurationSelect.addEventListener("change", (event) => {
-      this.props.noteDuration = parseInt(event.target.value);
+      this.props.noteDuration = parseFloat(event.target.value);
     });
 
     this.colorThemeSelect = getColorThemeSelect("Dark");
