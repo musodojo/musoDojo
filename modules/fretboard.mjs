@@ -390,29 +390,43 @@ class Fretboard extends Container {
     }
   }
 
-  playNote(stringNum, fretNum) {
+  playNote(stringNum, fretNum, duration = this.props.noteDuration) {
+    // duration = -1 means play full note duration in audio sprite
+    // duration = 0 means play note until up event occurs (event handled externally)
+    // duration = x means play note for x seconds (max = note's duration in audio sprite)
     try {
-      // stores an array of [buffer, gain, noteduration] in audioBuffers object
+      // clear the previous timeout if the note is currently active
+      if (this.props.audioBuffers[`${stringNum}_${fretNum}`]) {
+        clearTimeout(
+          this.props.audioBuffers[`${stringNum}_${fretNum}`].timeout
+        );
+      }
+      // stores an object {buffer, gain, noteDuration} in audioBuffers object
       // the noteDuration can be updated by AudioInterface.startNote
-      // if this.props.noteDuration is <= 0
+      // if noteDuration = 0
+      // OR if noteDuration > sprite note's full duration
+      // future looping functionality in AudioInterface class might change this
       this.props.audioBuffers[`${stringNum}_${fretNum}`] =
         AudioInterface.startNote(
           this.props.instrument,
           this.getMidiFromStringFret(stringNum, fretNum),
-          this.props.noteDuration
+          duration
         );
+
       this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
         this.props.colorTheme.foreground;
-      // duration = -1 means play full note duration in audio sprite
-      // duration = 0 means play note until up event occurs (event handled externally)
-      // duration = x means play note for x seconds (max = note's duration in audio sprite)
+
       // the === 0 case is handled by event listeners in the FretboardArea
-      if (this.props.noteDuration !== 0) {
-        setTimeout(() => {
-          this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
-            "transparent";
-          delete this.props.audioBuffers[`${stringNum}_${fretNum}`];
-        }, this.props.audioBuffers[`${stringNum}_${fretNum}`][2] * 1000);
+      // adds the timeout property to the audioBuffer definition in audioBuffers
+      if (duration !== 0) {
+        this.props.audioBuffers[`${stringNum}_${fretNum}`].timeout = setTimeout(
+          () => {
+            this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+              "transparent";
+            delete this.props.audioBuffers[`${stringNum}_${fretNum}`];
+          },
+          this.props.audioBuffers[`${stringNum}_${fretNum}`].duration * 1000
+        );
       }
     } catch (err) {
       throw err;
