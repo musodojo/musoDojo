@@ -1,6 +1,5 @@
 # Fretboard
 
-- restart animation on triggerd area backgroundDiv - reflow?
 - strum mode, which plays nearest large note in direction of nut
 
 # Fretboard Menu
