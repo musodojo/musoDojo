@@ -191,7 +191,7 @@ class FretboardMultitool extends Container {
     this.fretboardMenu.noteDurationSelect.addEventListener(
       "change",
       (event) => {
-        this.fretboard.props.noteDuration = parseInt(event.target.value);
+        this.fretboard.props.noteDuration = parseFloat(event.target.value);
         this.fretboard.update();
       }
     );
