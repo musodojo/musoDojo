@@ -7,6 +7,7 @@ import { NOTE_COLORS } from "./noteColors.mjs";
 import { COLOR_THEMES } from "./colorThemes.mjs";
 import { Fretboard } from "./fretboard.mjs";
 import { SquashyMenuIcon } from "./squashyMenuIcon.mjs";
+import { SpinningPlusIcon } from "./spinningPlusIcon.mjs";
 
 class FretboardMultitool extends Container {
   constructor(props = {}) {
@@ -18,9 +19,7 @@ class FretboardMultitool extends Container {
     this.container.style.backgroundColor = PROPS.colorTheme.background;
 
     this.fretboardMenu = new FretboardMenu(PROPS);
-    // the props could be updated by the FretboardMenu
-    // so pass the new props to Fretboard
-    this.fretboard = new Fretboard(this.fretboardMenu.props);
+    this.fretboard = new Fretboard(PROPS);
 
     // catch a pointer down/up event that happens in the FretboardMultitool
     // push/clear that pointer id if it hasn't been pushed/cleared by Fretboard
@@ -81,28 +80,12 @@ class FretboardMultitool extends Container {
       false
     );
 
-    this.showHideButton = new SquashyMenuIcon(
-      "3.5em",
-      "3em",
-      PROPS.colorTheme.foreground
-    );
-    this.showHideButton.container.addEventListener(
-      "pointerdown",
-      () => {
-        this.fretboardMenu.container.style.display =
-          this.fretboardMenu.container.style.display === "none"
-            ? "block"
-            : "none";
-      },
-      true
-    );
-
     this.fretboardMenu.instrumentSelect.addEventListener("change", (event) => {
       this.fretboard.props = {
         ...this.fretboard.props,
         ...INSTRUMENT_CONFIGS.instruments[event.target.value],
-        fromFret: this.fretboardMenu.props.fromFret, // default fret value is set in INSTRUMENT_CONFIGS, so update it here
-        toFret: this.fretboardMenu.props.toFret, // default fret value is set in INSTRUMENT_CONFIGS, so update it here
+        fromFret: this.fretboardMenu.fromFretSelect.value, // default fret value is set in INSTRUMENT_CONFIGS, so update it here
+        toFret: this.fretboardMenu.toFretSelect.value, // default fret value is set in INSTRUMENT_CONFIGS, so update it here
       };
       this.fretboard.update();
     });
@@ -160,6 +143,7 @@ class FretboardMultitool extends Container {
     // this means we must check which noteSize is bigger and set that
     // to first or second based on option choice, even if it's the same as
     // the previous option choice
+    // this also works for selecting same value with keyboard shortcuts "k" and "l"
     this.fretboardMenu.noteSizeSelect.addEventListener("change", () => {
       let largeValue, smallValue;
       // comparing strings with [VALUE]% works!
@@ -205,12 +189,38 @@ class FretboardMultitool extends Container {
       this.showHideButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground
       );
+      this.addToolButton.setColorTheme(
+        COLOR_THEMES[event.target.value].foreground
+      );
       this.fretboard.update();
     });
+
+    this.showHideButton = new SquashyMenuIcon(
+      "3.5em",
+      "3em",
+      PROPS.colorTheme.foreground
+    );
+    this.showHideButton.container.addEventListener(
+      "pointerdown",
+      () => {
+        this.fretboardMenu.container.style.display =
+          this.fretboardMenu.container.style.display === "none"
+            ? "block"
+            : "none";
+      },
+      true
+    );
+
+    this.addToolButton = new SpinningPlusIcon(
+      "3em",
+      "3em",
+      PROPS.colorTheme.foreground
+    );
 
     this.render(this.fretboardMenu.container);
     this.render(this.fretboard.container);
     this.render(this.showHideButton.container);
+    this.render(this.addToolButton.container);
 
     this.addKeyboardShortcuts();
   }
@@ -390,25 +400,15 @@ class FretboardMultitool extends Container {
           this.fretboardMenu.modeSelect.dispatchEvent(new Event("change"));
           break;
         // NOTE SIZE SHORTCUTS
-        // caution: a change event simple swaps values for noteSizes.first and
-        // noteSizes.second, so only change if value is different
         case "l":
         case "L":
-          if (this.fretboardMenu.noteSizeSelect.value !== "Large") {
-            this.fretboardMenu.noteSizeSelect.value = "Large";
-            this.fretboardMenu.noteSizeSelect.dispatchEvent(
-              new Event("change")
-            );
-          }
+          this.fretboardMenu.noteSizeSelect.value = "Large";
+          this.fretboardMenu.noteSizeSelect.dispatchEvent(new Event("change"));
           break;
         case "k":
         case "K":
-          if (this.fretboardMenu.noteSizeSelect.value !== "Small") {
-            this.fretboardMenu.noteSizeSelect.value = "Small";
-            this.fretboardMenu.noteSizeSelect.dispatchEvent(
-              new Event("change")
-            );
-          }
+          this.fretboardMenu.noteSizeSelect.value = "Small";
+          this.fretboardMenu.noteSizeSelect.dispatchEvent(new Event("change"));
           break;
       }
     });
