@@ -14,7 +14,8 @@ class FretboardMenu extends Container {
   constructor(props = {}) {
     super();
 
-    this.props = {
+    // don't need to store this.props in this class
+    const PROPS = {
       instrument: "Guitar",
       rootNote: 0,
       sequence: [0, 2, 4, 5, 7, 9, 11],
@@ -34,42 +35,30 @@ class FretboardMenu extends Container {
       ...props,
     };
 
-    this.container.style.backgroundColor = this.props.colorTheme.background;
+    this.container.style.backgroundColor = PROPS.colorTheme.background;
 
-    if (!this.props.width) {
+    if (!PROPS.width) {
       this.container.style.maxWidth = "750px";
     } else {
-      this.container.style.maxWidth = this.props.width + "px";
+      this.container.style.maxWidth = PROPS.width + "px";
     }
 
     const SELECT_STYLE = {
       "font-size": "2em",
-      "background-color": this.props.colorTheme.background,
-      color: this.props.colorTheme.foreground,
+      "background-color": PROPS.colorTheme.background,
+      color: PROPS.colorTheme.foreground,
       margin: "0.2em",
       "border-radius": "0.2em",
     };
 
-    this.instrumentSelect = getFretboardTuningSelect(this.props.instrument);
+    this.instrumentSelect = getFretboardTuningSelect(PROPS.instrument);
     Object.assign(this.instrumentSelect.style, SELECT_STYLE);
-    this.instrumentSelect.addEventListener("change", (event) => {
-      this.props.instrument = event.target.value;
-    });
 
-    this.rootNoteSelect = getNoteNamesSelect(NOTE_NAMES[this.props.rootNote]);
+    this.rootNoteSelect = getNoteNamesSelect(NOTE_NAMES[PROPS.rootNote]);
     Object.assign(this.rootNoteSelect.style, SELECT_STYLE);
-    this.rootNoteSelect.addEventListener("change", (event) => {
-      this.props.rootNote = getIndexFromName(event.target.value);
-    });
 
     this.noteSequenceSelect = getNoteSequenceSelect("Ionian / Major");
     Object.assign(this.noteSequenceSelect.style, SELECT_STYLE);
-    this.noteSequenceSelect.addEventListener("change", (event) => {
-      this.props.sequence =
-        NOTE_SEQUENCES[
-          event.target.querySelector("option:checked").parentElement.label
-        ][event.target.value].sequence;
-    });
 
     this.fromFretSelect = document.createElement("select");
     Object.assign(this.fromFretSelect.style, SELECT_STYLE);
@@ -81,15 +70,14 @@ class FretboardMenu extends Container {
       const FROM_FRET_OPTION = document.createElement("option");
       FROM_FRET_OPTION.text = i;
       this.fromFretSelect.add(FROM_FRET_OPTION);
-      if (i === this.props.fromFret) {
+      if (i === PROPS.fromFret) {
         FROM_FRET_OPTION.selected = true;
       }
     }
-    this.fromFretSelect.addEventListener("change", (event) => {
-      this.props.fromFret = parseInt(event.target.value);
-      const fretNum = event.target.value;
-      event.target.value =
-        parseInt(fretNum) > this.props.toFret ? this.props.toFret : fretNum;
+    this.fromFretSelect.addEventListener("change", () => {
+      const FROM_FRET = this.fromFretSelect.value;
+      const TO_FRET = this.toFretSelect.value;
+      this.fromFretSelect.value = FROM_FRET > TO_FRET ? TO_FRET : FROM_FRET;
     });
 
     this.toFretSelect = document.createElement("select");
@@ -102,15 +90,14 @@ class FretboardMenu extends Container {
       const TO_FRET_OPTION = document.createElement("option");
       TO_FRET_OPTION.text = i;
       this.toFretSelect.add(TO_FRET_OPTION);
-      if (i === this.props.toFret) {
+      if (i === PROPS.toFret) {
         TO_FRET_OPTION.selected = true;
       }
     }
-    this.toFretSelect.addEventListener("change", (event) => {
-      this.props.toFret = parseInt(event.target.value);
-      const fretNum = event.target.value;
-      event.target.value =
-        parseInt(fretNum) < this.props.fromFret ? this.props.fromFret : fretNum;
+    this.toFretSelect.addEventListener("change", () => {
+      const FROM_FRET = this.fromFretSelect.value;
+      const TO_FRET = this.toFretSelect.value;
+      this.toFretSelect.value = TO_FRET < FROM_FRET ? FROM_FRET : TO_FRET;
     });
 
     this.modeSelect = document.createElement("select");
@@ -128,10 +115,7 @@ class FretboardMenu extends Container {
     const MODE_EDITALL_OPTION = document.createElement("option");
     MODE_EDITALL_OPTION.text = "Edit All";
     this.modeSelect.add(MODE_EDITALL_OPTION);
-    this.modeSelect.value = this.props.mode;
-    this.modeSelect.addEventListener("change", (event) => {
-      this.props.mode = event.target.value;
-    });
+    this.modeSelect.value = PROPS.mode;
 
     this.handSelect = document.createElement("select");
     Object.assign(this.handSelect.style, SELECT_STYLE);
@@ -145,22 +129,13 @@ class FretboardMenu extends Container {
     const HAND_RIGHT_OPTION = document.createElement("option");
     HAND_RIGHT_OPTION.text = "Right";
     this.handSelect.add(HAND_RIGHT_OPTION);
-    this.handSelect.value = this.props.hand;
-    this.handSelect.addEventListener("change", (event) => {
-      this.props.hand = event.target.value;
-    });
+    this.handSelect.value = PROPS.hand;
 
     this.noteLabelsSelect = getNoteLabelsSelect("None");
     Object.assign(this.noteLabelsSelect.style, SELECT_STYLE);
-    this.noteLabelsSelect.addEventListener("change", (event) => {
-      this.props.noteLabels = [...NOTE_LABELS[event.target.value]];
-    });
 
     this.noteColorsSelect = getNoteColorsSelect("Muso Dojo");
     Object.assign(this.noteColorsSelect.style, SELECT_STYLE);
-    this.noteColorsSelect.addEventListener("change", (event) => {
-      this.props.noteColors = [...NOTE_COLORS[event.target.value]];
-    });
 
     this.noteSizeSelect = document.createElement("select");
     Object.assign(this.noteSizeSelect.style, SELECT_STYLE);
@@ -175,13 +150,6 @@ class FretboardMenu extends Container {
     NOTE_SIZE_SMALL_OPTION.text = "Small";
     this.noteSizeSelect.add(NOTE_SIZE_SMALL_OPTION);
     this.noteSizeSelect.value = "Large";
-    this.noteSizeSelect.addEventListener("change", () => {
-      // large is first by default - swap values around on a change event
-      this.props.noteSizes = {
-        first: this.props.noteSizes.second,
-        second: this.props.noteSizes.first,
-      };
-    });
 
     this.noteDurationSelect = document.createElement("select");
     Object.assign(this.noteDurationSelect.style, SELECT_STYLE);
@@ -210,20 +178,17 @@ class FretboardMenu extends Container {
     NOTE_DURATION_3_OPTION.value = "3";
     this.noteDurationSelect.add(NOTE_DURATION_3_OPTION);
     this.noteDurationSelect.value = "0";
-    this.noteDurationSelect.addEventListener("change", (event) => {
-      this.props.noteDuration = parseFloat(event.target.value);
-    });
 
     this.colorThemeSelect = getColorThemeSelect("Dark");
     Object.assign(this.colorThemeSelect.style, SELECT_STYLE);
     this.colorThemeSelect.addEventListener("change", (event) => {
-      this.props.colorTheme = COLOR_THEMES[event.target.value];
+      const COLOR_THEME = COLOR_THEMES[event.target.value];
       const CHILD_NODES = this.container.childNodes;
       CHILD_NODES.forEach((node) => {
-        node.style.backgroundColor = this.props.colorTheme.background;
-        node.style.color = this.props.colorTheme.foreground;
+        node.style.backgroundColor = COLOR_THEME.background;
+        node.style.color = COLOR_THEME.foreground;
       });
-      this.container.style.backgroundColor = this.props.colorTheme.background;
+      this.container.style.backgroundColor = COLOR_THEME.background;
     });
 
     this.render(this.instrumentSelect);
