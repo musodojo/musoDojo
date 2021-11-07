@@ -1,4 +1,5 @@
 class SquashyMenuIcon {
+  // include units in width and height e.g. "20px", "2em"
   constructor(
     width,
     height,
@@ -31,7 +32,7 @@ class SquashyMenuIcon {
       height: `calc(${height} / 7)`,
       margin: `calc(${height} / 7) auto`,
       "background-color": foregroundColor,
-      transition: "transform 0.15s ease-out",
+      transition: "transform 0.2s ease",
     };
 
     this.bar1 = document.createElement("div");
