@@ -84,8 +84,8 @@ class FretboardMultitool extends Container {
       this.fretboard.props = {
         ...this.fretboard.props,
         ...INSTRUMENT_CONFIGS.instruments[event.target.value],
-        fromFret: this.fretboardMenu.fromFretSelect.value, // default fret value is set in INSTRUMENT_CONFIGS, so update it here
-        toFret: this.fretboardMenu.toFretSelect.value, // default fret value is set in INSTRUMENT_CONFIGS, so update it here
+        fromFret: parseInt(this.fretboardMenu.fromFretSelect.value), // default fret value is set in INSTRUMENT_CONFIGS, so update it here
+        toFret: parseInt(this.fretboardMenu.toFretSelect.value), // default fret value is set in INSTRUMENT_CONFIGS, so update it here
       };
       this.fretboard.update();
     });
