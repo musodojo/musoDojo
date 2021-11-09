@@ -64,10 +64,10 @@ class Fretboard extends Container {
         );
       }
 
-      this.props.pointerDownIds = new Array();
-      this.props.areas = new Object();
-      this.props.notes = new Object();
-      this.props.audioBuffers = new Object();
+      this.pointerDownIds = new Array();
+      this.areas = new Object();
+      this.notes = new Object();
+      this.audioBuffers = new Object();
 
       this.renderFretboard();
       if (this.props.sequence) this.renderSequence();
@@ -145,10 +145,10 @@ class Fretboard extends Container {
 
   update() {
     this.container.innerHTML = "";
-    this.props.pointerDownIds = [];
-    this.props.areas = {};
-    this.props.notes = {};
-    this.props.audioBuffers = {};
+    this.pointerDownIds = [];
+    this.areas = {};
+    this.notes = {};
+    this.audioBuffers = {};
     this.renderFretboard();
     if (this.props.sequence) this.renderSequence();
   }
@@ -274,7 +274,7 @@ class Fretboard extends Container {
         (this.props.height / this.props.tuning.length) * this.props.mainScale +
           "px"
       );
-      this.props.areas[`${stringNum}_${fretNum}`] = FRETBOARD_AREA;
+      this.areas[`${stringNum}_${fretNum}`] = FRETBOARD_AREA;
 
       // reverse the order of the string numbers because the string tunings
       // are passed in lowest=1 to highest, but strings are traditionally
@@ -292,9 +292,9 @@ class Fretboard extends Container {
         "pointerdown",
         (event) => {
           try {
-            this.props.pointerDownIds.push(event.pointerId);
+            this.pointerDownIds.push(event.pointerId);
             event.target.releasePointerCapture(event.pointerId);
-            if (this.props.notes[`${stringNum}_${fretNum}`])
+            if (this.notes[`${stringNum}_${fretNum}`])
               this.playNote(stringNum, fretNum);
             if (this.props.mode === "Edit One")
               this.toggleNote(stringNum, fretNum);
@@ -311,8 +311,8 @@ class Fretboard extends Container {
         "pointerover",
         (event) => {
           try {
-            if (this.props.pointerDownIds.includes(event.pointerId)) {
-              if (this.props.notes[`${stringNum}_${fretNum}`])
+            if (this.pointerDownIds.includes(event.pointerId)) {
+              if (this.notes[`${stringNum}_${fretNum}`])
                 this.playNote(stringNum, fretNum);
               if (this.props.mode === "Edit One")
                 this.toggleNote(stringNum, fretNum);
@@ -332,9 +332,9 @@ class Fretboard extends Container {
           try {
             // pointer id will already be removed by the FreboardMultitool
             // if the Fretboard is inside a FreboardMultitool
-            const INDEX = this.props.pointerDownIds.indexOf(event.pointerId);
+            const INDEX = this.pointerDownIds.indexOf(event.pointerId);
             if (INDEX >= 0) {
-              this.props.pointerDownIds.splice(INDEX, 1);
+              this.pointerDownIds.splice(INDEX, 1);
             }
           } catch (err) {
             console.error(err);
@@ -350,13 +350,13 @@ class Fretboard extends Container {
           "pointerup",
           () => {
             try {
-              if (this.props.audioBuffers[`${stringNum}_${fretNum}`]) {
+              if (this.audioBuffers[`${stringNum}_${fretNum}`]) {
                 AudioInterface.stopNote(
-                  this.props.audioBuffers[`${stringNum}_${fretNum}`]
+                  this.audioBuffers[`${stringNum}_${fretNum}`]
                 );
-                this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+                this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
                   "transparent";
-                delete this.props.audioBuffers[`${stringNum}_${fretNum}`];
+                delete this.audioBuffers[`${stringNum}_${fretNum}`];
               }
             } catch (err) {
               console.error(err);
@@ -368,13 +368,13 @@ class Fretboard extends Container {
           "pointerleave",
           () => {
             try {
-              if (this.props.audioBuffers[`${stringNum}_${fretNum}`]) {
+              if (this.audioBuffers[`${stringNum}_${fretNum}`]) {
                 AudioInterface.stopNote(
-                  this.props.audioBuffers[`${stringNum}_${fretNum}`]
+                  this.audioBuffers[`${stringNum}_${fretNum}`]
                 );
-                this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+                this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
                   "transparent";
-                delete this.props.audioBuffers[`${stringNum}_${fretNum}`];
+                delete this.audioBuffers[`${stringNum}_${fretNum}`];
               }
             } catch (err) {
               console.error(err);
@@ -396,36 +396,33 @@ class Fretboard extends Container {
     // duration = x means play note for x seconds (max = note's duration in audio sprite)
     try {
       // clear the previous timeout if the note is currently active
-      if (this.props.audioBuffers[`${stringNum}_${fretNum}`]) {
-        clearTimeout(
-          this.props.audioBuffers[`${stringNum}_${fretNum}`].timeout
-        );
+      if (this.audioBuffers[`${stringNum}_${fretNum}`]) {
+        clearTimeout(this.audioBuffers[`${stringNum}_${fretNum}`].timeout);
       }
       // stores an object {buffer, gain, noteDuration} in audioBuffers object
       // the noteDuration can be updated by AudioInterface.startNote
       // if noteDuration = 0
       // OR if noteDuration > sprite note's full duration
       // future looping functionality in AudioInterface class might change this
-      this.props.audioBuffers[`${stringNum}_${fretNum}`] =
-        AudioInterface.startNote(
-          this.props.instrument,
-          this.getMidiFromStringFret(stringNum, fretNum),
-          duration
-        );
+      this.audioBuffers[`${stringNum}_${fretNum}`] = AudioInterface.startNote(
+        this.props.instrument,
+        this.getMidiFromStringFret(stringNum, fretNum),
+        duration
+      );
 
-      this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+      this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
         this.props.colorTheme.foreground;
 
       // the === 0 case is handled by event listeners in the FretboardArea
       // adds the timeout property to the audioBuffer definition in audioBuffers
       if (duration !== 0) {
-        this.props.audioBuffers[`${stringNum}_${fretNum}`].timeout = setTimeout(
+        this.audioBuffers[`${stringNum}_${fretNum}`].timeout = setTimeout(
           () => {
-            this.props.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+            this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
               "transparent";
-            delete this.props.audioBuffers[`${stringNum}_${fretNum}`];
+            delete this.audioBuffers[`${stringNum}_${fretNum}`];
           },
-          this.props.audioBuffers[`${stringNum}_${fretNum}`].duration * 1000
+          this.audioBuffers[`${stringNum}_${fretNum}`].duration * 1000
         );
       }
     } catch (err) {
@@ -435,7 +432,7 @@ class Fretboard extends Container {
 
   toggleNote(stringNum, fretNum) {
     try {
-      const NOTE = this.props.notes[`${stringNum}_${fretNum}`];
+      const NOTE = this.notes[`${stringNum}_${fretNum}`];
       if (!NOTE) {
         this.playNote(stringNum, fretNum);
         this.renderNote(stringNum, fretNum, this.props.noteSizes.first);
@@ -461,7 +458,7 @@ class Fretboard extends Container {
 
   togglePitchClass(stringNum, fretNum) {
     try {
-      const NOTE = this.props.notes[`${stringNum}_${fretNum}`];
+      const NOTE = this.notes[`${stringNum}_${fretNum}`];
       const SELECTED_PITCH_CLASS =
         this.getMidiFromStringFret(stringNum, fretNum) % 12;
       let currentPitchClass, currentNote;
@@ -476,7 +473,7 @@ class Fretboard extends Container {
         for (let j = 1; j <= this.props.tuning.length; j++) {
           currentPitchClass = this.getMidiFromStringFret(j, i) % 12;
           if (currentPitchClass === SELECTED_PITCH_CLASS) {
-            currentNote = this.props.notes[`${j}_${i}`];
+            currentNote = this.notes[`${j}_${i}`];
             if (!NOTE) {
               this.renderNote(j, i, this.props.noteSizes.first);
             } else {
@@ -502,10 +499,10 @@ class Fretboard extends Container {
   }
 
   removeNote(stringNum, fretNum) {
-    const NOTE = this.props.notes[`${stringNum}_${fretNum}`];
+    const NOTE = this.notes[`${stringNum}_${fretNum}`];
     if (NOTE) {
       NOTE.container.remove();
-      delete this.props.notes[`${stringNum}_${fretNum}`];
+      delete this.notes[`${stringNum}_${fretNum}`];
     }
   }
 
@@ -514,7 +511,7 @@ class Fretboard extends Container {
     try {
       this.checkStringNum(stringNum);
       this.checkFretNum(fretNum);
-      let note = this.props.notes[`${stringNum}_${fretNum}`];
+      let note = this.notes[`${stringNum}_${fretNum}`];
       const MIDI = this.getMidiFromStringFret(stringNum, fretNum);
       const COLOR = this.props.noteColors
         ? this.props.noteColors[MIDI % 12]
@@ -541,9 +538,9 @@ class Fretboard extends Container {
       }
       if (!note) {
         const PARENT_WIDTH =
-          this.props.areas[`${stringNum}_${fretNum}`].container.style.width;
+          this.areas[`${stringNum}_${fretNum}`].container.style.width;
         const PARENT_HEIGHT =
-          this.props.areas[`${stringNum}_${fretNum}`].container.style.height;
+          this.areas[`${stringNum}_${fretNum}`].container.style.height;
         note = new FretboardNote(
           size,
           PARENT_WIDTH,
@@ -552,8 +549,8 @@ class Fretboard extends Container {
           COLOR,
           label
         );
-        this.props.areas[`${stringNum}_${fretNum}`].render(note.container);
-        this.props.notes[`${stringNum}_${fretNum}`] = note;
+        this.areas[`${stringNum}_${fretNum}`].render(note.container);
+        this.notes[`${stringNum}_${fretNum}`] = note;
       } else {
         note.size = size;
       }
