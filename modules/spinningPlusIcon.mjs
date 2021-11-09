@@ -23,9 +23,6 @@ class SpinningPlusIcon {
     this.textDiv.style.left = "50%";
     this.textDiv.style.transform = "translate(-50%, -50%)";
     this.textDiv.style.transition = "transform 0.2s ease";
-    this.textDiv.addEventListener("transitionend", () => {
-      this.textDiv.style.transform = "translate(-50%, -50%)";
-    });
     this.container.appendChild(this.textDiv);
 
     this.bar1 = document.createElement("div");
@@ -59,6 +56,10 @@ class SpinningPlusIcon {
 
   toggle() {
     this.textDiv.style.transform = "translate(-50%, -50%) rotate(45deg)";
+    // 0.2s in this.textDiv.style.transition = 200ms in setTimeout in toggle function
+    setTimeout(() => {
+      this.textDiv.style.transform = "translate(-50%, -50%)";
+    }, 200);
   }
 
   setColorTheme(foregroundColor, backgroundColor = "transparent") {
