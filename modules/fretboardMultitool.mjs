@@ -8,6 +8,7 @@ import { COLOR_THEMES } from "./colorThemes.mjs";
 import { Fretboard } from "./fretboard.mjs";
 import { SquashyMenuIcon } from "./squashyMenuIcon.mjs";
 import { SpinningPlusIcon } from "./spinningPlusIcon.mjs";
+import { SpinningMinusIcon } from "./spinningMinusIcon.mjs";
 
 class FretboardMultitool extends Container {
   constructor(props = {}) {
@@ -15,7 +16,6 @@ class FretboardMultitool extends Container {
     // don't need to store this.props in this class
     const PROPS = { ...INSTRUMENT_CONFIGS.defaults, ...props };
 
-    this.container.style.margin = "1em";
     this.container.style.backgroundColor = PROPS.colorTheme.background;
 
     this.fretboardMenu = new FretboardMenu(PROPS);
@@ -29,12 +29,10 @@ class FretboardMultitool extends Container {
       "pointerdown",
       (event) => {
         try {
-          const INDEX = this.fretboard.props.pointerDownIds.indexOf(
-            event.pointerId
-          );
+          const INDEX = this.fretboard.pointerDownIds.indexOf(event.pointerId);
           // if id was not found, push it
           if (INDEX < 0) {
-            this.fretboard.props.pointerDownIds.push(event.pointerId);
+            this.fretboard.pointerDownIds.push(event.pointerId);
             event.target.releasePointerCapture(event.pointerId);
           }
         } catch (err) {
@@ -47,12 +45,10 @@ class FretboardMultitool extends Container {
       "pointerup",
       (event) => {
         try {
-          const INDEX = this.fretboard.props.pointerDownIds.indexOf(
-            event.pointerId
-          );
+          const INDEX = this.fretboard.pointerDownIds.indexOf(event.pointerId);
           // if id was found, it wasn't cleared by Fretboard
           if (INDEX >= 0) {
-            this.fretboard.props.pointerDownIds.splice(INDEX, 1);
+            this.fretboard.pointerDownIds.splice(INDEX, 1);
           }
         } catch (err) {
           console.error(err);
@@ -67,11 +63,9 @@ class FretboardMultitool extends Container {
       "pointerleave",
       (event) => {
         try {
-          const INDEX = this.fretboard.props.pointerDownIds.indexOf(
-            event.pointerId
-          );
+          const INDEX = this.fretboard.pointerDownIds.indexOf(event.pointerId);
           if (INDEX >= 0) {
-            this.fretboard.props.pointerDownIds.splice(INDEX, 1);
+            this.fretboard.pointerDownIds.splice(INDEX, 1);
           }
         } catch (err) {
           console.error(err);
@@ -200,27 +194,43 @@ class FretboardMultitool extends Container {
       "3em",
       PROPS.colorTheme.foreground
     );
-    this.showHideButton.container.addEventListener(
-      "pointerdown",
-      () => {
-        this.fretboardMenu.container.style.display =
-          this.fretboardMenu.container.style.display === "none"
-            ? "block"
-            : "none";
-      },
-      true
-    );
+    this.showHideButton.container.addEventListener("pointerdown", () => {
+      this.fretboardMenu.container.style.display =
+        this.fretboardMenu.container.style.display === "none"
+          ? "block"
+          : "none";
+    });
 
     this.addToolButton = new SpinningPlusIcon(
       "3em",
       "3em",
       PROPS.colorTheme.foreground
     );
+    this.addToolButton.container.style.marginLeft = "0.7em";
+    this.addToolButton.container.addEventListener("pointerdown", () => {
+      this.container.dispatchEvent(
+        new CustomEvent("addtool", {
+          detail: this.fretboard.props,
+          bubbles: true,
+        })
+      );
+    });
+
+    this.removeToolButton = new SpinningMinusIcon(
+      "3em",
+      "3em",
+      PROPS.colorTheme.foreground
+    );
+    this.removeToolButton.container.style.marginLeft = "0.7em";
+    this.removeToolButton.container.addEventListener("pointerdown", () => {
+      this.container.dispatchEvent(new Event("removetool", { bubbles: true }));
+    });
 
     this.render(this.fretboardMenu.container);
     this.render(this.fretboard.container);
     this.render(this.showHideButton.container);
     this.render(this.addToolButton.container);
+    this.render(this.removeToolButton.container);
 
     this.addKeyboardShortcuts();
   }
