@@ -7,12 +7,16 @@ class Multitool extends Container {
     super();
     this.container.style.display = "flex";
     this.container.style.flexFlow = "row wrap";
-
     this.props = { ...props };
-    this.tools = new Array();
+    this.container.addEventListener("addtool", (event) => {
+      this.addTool(event.detail);
+    });
+    this.container.addEventListener("removetool", (event) => {
+      event.target.remove();
+    });
   }
 
-  addTool(props) {
+  addTool(props = {}) {
     let tool;
     const PROPS = { ...this.props, ...props };
     switch (PROPS.instrument) {
@@ -43,7 +47,7 @@ class Multitool extends Container {
       default:
         tool = new FretboardMultitool(PROPS);
     }
-    this.tools.push(tool);
+    tool.container.style.margin = "1em";
     this.render(tool.container);
   }
 }
