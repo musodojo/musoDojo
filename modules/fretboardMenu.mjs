@@ -1,13 +1,28 @@
 import { Container } from "./container.mjs";
-import { getFretboardTuningSelect } from "./fretboardTunings.mjs";
 import {
-  getSequenceNameFromArray,
+  getFretboardTuningNameFromValue,
+  getFretboardTuningSelect,
+} from "./fretboardTunings.mjs";
+import { NOTE_NAMES, getNoteNamesSelect } from "./noteNames.mjs";
+import {
+  getSequenceNameFromValue,
   getNoteSequenceSelect,
 } from "./noteSequences.mjs";
-import { NOTE_NAMES, getNoteNamesSelect } from "./noteNames.mjs";
-import { NOTE_LABELS, getNoteLabelsSelect } from "./noteLabels.mjs";
-import { NOTE_COLORS, getNoteColorsSelect } from "./noteColors.mjs";
-import { COLOR_THEMES, getColorThemeSelect } from "./colorThemes.mjs";
+import {
+  NOTE_LABELS,
+  getLabelsNameFromValue,
+  getNoteLabelsSelect,
+} from "./noteLabels.mjs";
+import {
+  NOTE_COLORS,
+  getNoteColorsNameFromValue,
+  getNoteColorsSelect,
+} from "./noteColors.mjs";
+import {
+  COLOR_THEMES,
+  getColorThemeNameFromValue,
+  getColorThemeSelect,
+} from "./colorThemes.mjs";
 
 class FretboardMenu extends Container {
   constructor(props = {}) {
@@ -23,7 +38,7 @@ class FretboardMenu extends Container {
       // mode = "Play" || "Edit One" || "Edit All"
       mode: "Play",
       hand: "Right",
-      noteLabels: [...NOTE_LABELS["None"]],
+      noteLabels: NOTE_LABELS["None"],
       noteColors: NOTE_COLORS["Muso Dojo"],
       noteSizes: { first: "91%", second: "55%" },
       // noteDuration = -1 means play full note duration
@@ -50,14 +65,16 @@ class FretboardMenu extends Container {
       "border-radius": "0.2em",
     };
 
-    this.instrumentSelect = getFretboardTuningSelect(PROPS.instrument);
+    this.instrumentSelect = getFretboardTuningSelect(
+      getFretboardTuningNameFromValue(PROPS.tuning)
+    );
     Object.assign(this.instrumentSelect.style, SELECT_STYLE);
 
     this.rootNoteSelect = getNoteNamesSelect(NOTE_NAMES[PROPS.rootNote]);
     Object.assign(this.rootNoteSelect.style, SELECT_STYLE);
 
     this.noteSequenceSelect = getNoteSequenceSelect(
-      getSequenceNameFromArray(PROPS.sequence)
+      getSequenceNameFromValue(PROPS.sequence)
     );
     Object.assign(this.noteSequenceSelect.style, SELECT_STYLE);
 
@@ -132,10 +149,14 @@ class FretboardMenu extends Container {
     this.handSelect.add(HAND_RIGHT_OPTION);
     this.handSelect.value = PROPS.hand;
 
-    this.noteLabelsSelect = getNoteLabelsSelect("None");
+    this.noteLabelsSelect = getNoteLabelsSelect(
+      getLabelsNameFromValue(PROPS.noteLabels)
+    );
     Object.assign(this.noteLabelsSelect.style, SELECT_STYLE);
 
-    this.noteColorsSelect = getNoteColorsSelect("Muso Dojo");
+    this.noteColorsSelect = getNoteColorsSelect(
+      getNoteColorsNameFromValue(PROPS.noteColors)
+    );
     Object.assign(this.noteColorsSelect.style, SELECT_STYLE);
 
     this.noteSizeSelect = document.createElement("select");
@@ -150,7 +171,10 @@ class FretboardMenu extends Container {
     const NOTE_SIZE_SMALL_OPTION = document.createElement("option");
     NOTE_SIZE_SMALL_OPTION.text = "Small";
     this.noteSizeSelect.add(NOTE_SIZE_SMALL_OPTION);
-    this.noteSizeSelect.value = "Large";
+    this.noteSizeSelect.value =
+      parseInt(PROPS.noteSizes.first) > parseInt(PROPS.noteSizes.second)
+        ? "Large"
+        : "Small";
 
     this.noteDurationSelect = document.createElement("select");
     Object.assign(this.noteDurationSelect.style, SELECT_STYLE);
@@ -178,9 +202,11 @@ class FretboardMenu extends Container {
     NOTE_DURATION_3_OPTION.text = "3s";
     NOTE_DURATION_3_OPTION.value = "3";
     this.noteDurationSelect.add(NOTE_DURATION_3_OPTION);
-    this.noteDurationSelect.value = "0";
+    this.noteDurationSelect.value = PROPS.noteDuration;
 
-    this.colorThemeSelect = getColorThemeSelect("Dark");
+    this.colorThemeSelect = getColorThemeSelect(
+      getColorThemeNameFromValue(PROPS.colorTheme)
+    );
     Object.assign(this.colorThemeSelect.style, SELECT_STYLE);
     this.colorThemeSelect.addEventListener("change", (event) => {
       const COLOR_THEME = COLOR_THEMES[event.target.value];
