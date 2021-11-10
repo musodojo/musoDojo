@@ -9,10 +9,14 @@ class Multitool extends Container {
     this.container.style.flexFlow = "row wrap";
     this.props = { ...props };
     this.container.addEventListener("addtool", (event) => {
+      // event.detail contains Fretboard.props of the fretboard to be cloned
       this.addTool(event.detail);
     });
     this.container.addEventListener("removetool", (event) => {
-      event.target.remove();
+      // 200ms is same as css transition time in spinningMinusIcon
+      setTimeout(() => {
+        event.target.remove();
+      }, 200);
     });
   }
 
