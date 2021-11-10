@@ -17,6 +17,16 @@ const FRETBOARD_TUNINGS = {
   //DADFAD: [38, 45, 50, 53, 57, 62], // Open D minor
 };
 
+const getFretboardTuningNameFromValue = (value) => {
+  const VALUE_STRING = JSON.stringify(value);
+  const TUNINGS = Object.entries(FRETBOARD_TUNINGS);
+  for (const [TUNING_NAME, TUNING_VALUE] of TUNINGS) {
+    if (JSON.stringify(TUNING_VALUE) === VALUE_STRING) {
+      return TUNING_NAME;
+    }
+  }
+};
+
 const getFretboardTuningSelect = (selected = "Guitar") => {
   const SELECT = document.createElement("select");
   const LABEL = document.createElement("option");
@@ -34,4 +44,8 @@ const getFretboardTuningSelect = (selected = "Guitar") => {
   return SELECT;
 };
 
-export { FRETBOARD_TUNINGS, getFretboardTuningSelect };
+export {
+  FRETBOARD_TUNINGS,
+  getFretboardTuningNameFromValue,
+  getFretboardTuningSelect,
+};
