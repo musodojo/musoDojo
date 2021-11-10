@@ -519,21 +519,13 @@ class Fretboard extends Container {
       let label;
       switch (this.props.noteLabels[0]) {
         case "C":
-          label =
-            this.props.noteLabels[
-              this.getMidiFromStringFret(stringNum, fretNum) % 12
-            ];
+          label = this.props.noteLabels[MIDI % 12];
           break;
         case "<%MIDI%>":
           label = MIDI;
           break;
         default:
-          label =
-            this.props.noteLabels[
-              (this.getMidiFromStringFret(stringNum, fretNum) -
-                this.props.rootNote) %
-                12
-            ];
+          label = this.props.noteLabels[(MIDI - this.props.rootNote) % 12];
           break;
       }
       if (!note) {
