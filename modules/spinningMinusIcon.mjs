@@ -13,7 +13,6 @@ class SpinningMinusIcon {
     this.container.style.width = width;
     this.container.style.height = height;
     this.container.style.backgroundColor = backgroundColor;
-    this.container.style.color = foregroundColor;
 
     this.textDiv = document.createElement("div");
     this.textDiv.style.position = "relative";
@@ -26,14 +25,14 @@ class SpinningMinusIcon {
     this.textDiv.style.transition = "transform 0.2s ease";
     this.container.appendChild(this.textDiv);
 
-    this.bar1 = document.createElement("div");
-    this.bar1.style.position = "absolute";
-    this.bar1.style.width = "100%";
-    this.bar1.style.height = `calc(${this.textDiv.style.height} / 5)`;
-    this.bar1.style.top = "50%";
-    this.bar1.style.transform = "translateY(-50%)";
-    this.bar1.style.backgroundColor = foregroundColor;
-    this.textDiv.appendChild(this.bar1);
+    this.bar = document.createElement("div");
+    this.bar.style.position = "absolute";
+    this.bar.style.width = "100%";
+    this.bar.style.height = `calc(${this.textDiv.style.height} / 5)`;
+    this.bar.style.top = "50%";
+    this.bar.style.transform = "translateY(-50%)";
+    this.bar.style.backgroundColor = foregroundColor;
+    this.textDiv.appendChild(this.bar);
 
     this.container.addEventListener(
       "pointerdown",
@@ -56,8 +55,7 @@ class SpinningMinusIcon {
 
   setColorTheme(foregroundColor, backgroundColor = "transparent") {
     this.container.style.backgroundColor = backgroundColor;
-    this.bar1.style.backgroundColor = foregroundColor;
-    this.bar2.style.backgroundColor = foregroundColor;
+    this.bar.style.backgroundColor = foregroundColor;
   }
 }
 
