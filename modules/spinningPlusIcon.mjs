@@ -13,7 +13,6 @@ class SpinningPlusIcon {
     this.container.style.width = width;
     this.container.style.height = height;
     this.container.style.backgroundColor = backgroundColor;
-    this.container.style.color = foregroundColor;
 
     this.textDiv = document.createElement("div");
     this.textDiv.style.position = "relative";
