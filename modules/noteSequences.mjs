@@ -266,14 +266,14 @@ const NOTE_SEQUENCES = {
   },
 };
 
-const getSequenceNameFromArray = (arrayToCheck) => {
-  const ARRAY_STRING = arrayToCheck.toString();
+const getSequenceNameFromValue = (value) => {
+  const VALUE_STRING = JSON.stringify(value);
   const GROUPS_VALUES = Object.values(NOTE_SEQUENCES);
   for (const GROUPS_VALUE of GROUPS_VALUES) {
     for (const [SEQUENCE_NAME, SEQUENCE_VALUE] of Object.entries(
       GROUPS_VALUE
     )) {
-      if (SEQUENCE_VALUE.sequence.toString() === ARRAY_STRING) {
+      if (JSON.stringify(SEQUENCE_VALUE.sequence) === VALUE_STRING) {
         return SEQUENCE_NAME;
       }
     }
@@ -302,4 +302,4 @@ const getNoteSequenceSelect = (selected = "Ionian / Major") => {
   return SELECT;
 };
 
-export { NOTE_SEQUENCES, getSequenceNameFromArray, getNoteSequenceSelect };
+export { NOTE_SEQUENCES, getSequenceNameFromValue, getNoteSequenceSelect };
