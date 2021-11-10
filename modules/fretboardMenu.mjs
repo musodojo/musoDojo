@@ -1,12 +1,11 @@
 import { Container } from "./container.mjs";
 import { getFretboardTuningSelect } from "./fretboardTunings.mjs";
-import { NOTE_SEQUENCES, getNoteSequenceSelect } from "./noteSequences.mjs";
 import {
-  NOTE_NAMES,
-  getNoteNamesSelect,
-  getIndexFromName,
-} from "./noteNames.mjs";
-import { NOTE_LABELS, getNoteLabelsSelect } from "./noteSequences.mjs";
+  getSequenceNameFromArray,
+  getNoteSequenceSelect,
+} from "./noteSequences.mjs";
+import { NOTE_NAMES, getNoteNamesSelect } from "./noteNames.mjs";
+import { NOTE_LABELS, getNoteLabelsSelect } from "./noteLabels.mjs";
 import { NOTE_COLORS, getNoteColorsSelect } from "./noteColors.mjs";
 import { COLOR_THEMES, getColorThemeSelect } from "./colorThemes.mjs";
 
@@ -57,7 +56,9 @@ class FretboardMenu extends Container {
     this.rootNoteSelect = getNoteNamesSelect(NOTE_NAMES[PROPS.rootNote]);
     Object.assign(this.rootNoteSelect.style, SELECT_STYLE);
 
-    this.noteSequenceSelect = getNoteSequenceSelect("Ionian / Major");
+    this.noteSequenceSelect = getNoteSequenceSelect(
+      getSequenceNameFromArray(PROPS.sequence)
+    );
     Object.assign(this.noteSequenceSelect.style, SELECT_STYLE);
 
     this.fromFretSelect = document.createElement("select");
@@ -75,8 +76,8 @@ class FretboardMenu extends Container {
       }
     }
     this.fromFretSelect.addEventListener("change", () => {
-      const FROM_FRET = this.fromFretSelect.value;
-      const TO_FRET = this.toFretSelect.value;
+      const FROM_FRET = parseInt(this.fromFretSelect.value);
+      const TO_FRET = parseInt(this.toFretSelect.value);
       this.fromFretSelect.value = FROM_FRET > TO_FRET ? TO_FRET : FROM_FRET;
     });
 
@@ -95,8 +96,8 @@ class FretboardMenu extends Container {
       }
     }
     this.toFretSelect.addEventListener("change", () => {
-      const FROM_FRET = this.fromFretSelect.value;
-      const TO_FRET = this.toFretSelect.value;
+      const FROM_FRET = parseInt(this.fromFretSelect.value);
+      const TO_FRET = parseInt(this.toFretSelect.value);
       this.toFretSelect.value = TO_FRET < FROM_FRET ? FROM_FRET : TO_FRET;
     });
 
