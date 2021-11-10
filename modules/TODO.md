@@ -6,7 +6,6 @@
 # Fretboard Menu
 
 - 0-referenced colors, e.g. root is red and 5th is green for all keys
-- when creating FretboardMenu, reverse lookup noteLabels, noteColorTheme, noteSize, noteDuration, and Theme
 
 # Audio Interface
 
