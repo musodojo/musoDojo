@@ -1,5 +1,7 @@
 import { FRETBOARD_TUNINGS } from "./fretboardTunings.mjs";
+import { NOTE_SEQUENCES } from "./noteSequences.mjs";
 import { NOTE_COLORS } from "./noteColors.mjs";
+import { NOTE_LABELS } from "./noteLabels.mjs";
 import { COLOR_THEMES } from "./colorThemes.mjs";
 
 const FRET_MARKERS = {
@@ -12,13 +14,13 @@ const INSTRUMENT_CONFIGS = {
     instrument: "Guitar",
     tuning: FRETBOARD_TUNINGS["Guitar"],
     rootNote: 0,
-    sequence: [0, 2, 4, 5, 7, 9, 11],
+    sequence: NOTE_SEQUENCES["Modes"]["Ionian / Major"].sequence,
     fromFret: 0,
     toFret: 21,
     // mode = "Play" || "Edit One" || "Edit All"
     mode: "Play",
     hand: "Right",
-    noteLabels: ["", "", "", "", "", "", "", "", "", "", "", ""],
+    noteLabels: NOTE_LABELS["None"],
     noteColors: NOTE_COLORS["Muso Dojo"],
     noteSizes: { first: "91%", second: "55%" },
     // noteDuration = -1 means play full note duration in audio sprite
