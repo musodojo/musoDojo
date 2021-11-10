@@ -2,7 +2,8 @@ import { Container } from "./container.mjs";
 import { INSTRUMENT_CONFIGS } from "./instrumentConfigs.mjs";
 import { FretboardMenu } from "./fretboardMenu.mjs";
 import { NOTE_NAMES, getIndexFromName } from "./noteNames.mjs";
-import { NOTE_SEQUENCES, NOTE_LABELS } from "./noteSequences.mjs";
+import { NOTE_SEQUENCES } from "./noteSequences.mjs";
+import { NOTE_LABELS } from "./noteLabels.mjs";
 import { NOTE_COLORS } from "./noteColors.mjs";
 import { COLOR_THEMES } from "./colorThemes.mjs";
 import { Fretboard } from "./fretboard.mjs";
@@ -184,6 +185,9 @@ class FretboardMultitool extends Container {
         COLOR_THEMES[event.target.value].foreground
       );
       this.addToolButton.setColorTheme(
+        COLOR_THEMES[event.target.value].foreground
+      );
+      this.removeToolButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground
       );
       this.fretboard.update();
