@@ -101,18 +101,14 @@ const NOTE_LABELS = {
   ],
 };
 
-const getLabelNameFromArray = (arrayToCheck) => {
-  //   const ARRAY_STRING = arrayToCheck.toString();
-  //   const GROUPS_VALUES = Object.values(NOTE_SEQUENCES);
-  //   for (const GROUPS_VALUE of GROUPS_VALUES) {
-  //     for (const [SEQUENCE_NAME, SEQUENCE_VALUE] of Object.entries(
-  //       GROUPS_VALUE
-  //     )) {
-  //       if (SEQUENCE_VALUE.sequence.toString() === ARRAY_STRING) {
-  //         return SEQUENCE_NAME;
-  //       }
-  //     }
-  //   }
+const getLabelsNameFromValue = (value) => {
+  const VALUE_STRING = JSON.stringify(value);
+  const LABELS = Object.entries(NOTE_LABELS);
+  for (const [LABELS_NAME, LABELS_VALUE] of LABELS) {
+    if (JSON.stringify(LABELS_VALUE) === VALUE_STRING) {
+      return LABELS_NAME;
+    }
+  }
 };
 
 const getNoteLabelsSelect = (selected = "None") => {
@@ -132,4 +128,4 @@ const getNoteLabelsSelect = (selected = "None") => {
   return SELECT;
 };
 
-export { NOTE_LABELS, getLabelNameFromArray, getNoteLabelsSelect };
+export { NOTE_LABELS, getLabelsNameFromValue, getNoteLabelsSelect };
