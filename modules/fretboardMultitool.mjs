@@ -139,12 +139,13 @@ class FretboardMultitool extends Container {
     // to first or second based on option choice, even if it's the same as
     // the previous option choice
     // this also works for selecting same value with keyboard shortcuts "k" and "l"
+    // which dispatch a change event, even if the same
     this.fretboardMenu.noteSizeSelect.addEventListener("change", () => {
       let largeValue, smallValue;
-      // comparing strings with [VALUE]% works!
+      // check if first value is bigger than second
       if (
-        this.fretboard.props.noteSizes.first >
-        this.fretboard.props.noteSizes.second
+        parseInt(this.fretboard.props.noteSizes.first) >
+        parseInt(this.fretboard.props.noteSizes.second)
       ) {
         largeValue = this.fretboard.props.noteSizes.first;
         smallValue = this.fretboard.props.noteSizes.second;
@@ -152,6 +153,7 @@ class FretboardMultitool extends Container {
         largeValue = this.fretboard.props.noteSizes.second;
         smallValue = this.fretboard.props.noteSizes.first;
       }
+      // set Fretboard.props.noteSizes
       if (this.fretboardMenu.noteSizeSelect.value === "Large") {
         this.fretboard.props.noteSizes = {
           first: largeValue,
@@ -248,7 +250,7 @@ class FretboardMultitool extends Container {
     this.fretboard.props.sequence = SEQUENCE.sequence;
     // reset note names
     const NOTE_LABELS_TYPE = this.fretboardMenu.noteLabelsSelect.value;
-    this.fretboard.props.noteLabels = [...NOTE_LABELS[NOTE_LABELS_TYPE]];
+    this.fretboard.props.noteLabels = NOTE_LABELS[NOTE_LABELS_TYPE];
     if (SEQUENCE.labels && SEQUENCE.labels[NOTE_LABELS_TYPE]) {
       Object.entries(SEQUENCE.labels[NOTE_LABELS_TYPE]).forEach(
         ([integer, name]) => {
