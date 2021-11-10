@@ -13,9 +13,13 @@ class Multitool extends Container {
       this.addTool(event.detail);
     });
     this.container.addEventListener("removetool", (event) => {
+      const TOOL = event.target;
+      // fade out
+      TOOL.style.transition = "opacity 0.2s linear";
+      TOOL.style.opacity = "0.25";
       // 200ms is same as css transition time in spinningMinusIcon
       setTimeout(() => {
-        event.target.remove();
+        TOOL.remove();
       }, 200);
     });
   }
