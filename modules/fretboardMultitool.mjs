@@ -82,27 +82,27 @@ class FretboardMultitool extends Container {
         fromFret: parseInt(this.fretboardMenu.fromFretSelect.value), // default fret value is set in INSTRUMENT_CONFIGS, so update it here
         toFret: parseInt(this.fretboardMenu.toFretSelect.value), // default fret value is set in INSTRUMENT_CONFIGS, so update it here
       };
-      this.fretboard.update();
+      this.fretboard.reset();
     });
 
     this.fretboardMenu.rootNoteSelect.addEventListener("change", (event) => {
       this.fretboard.props.rootNote = getIndexFromName(event.target.value);
-      this.fretboard.update();
+      this.fretboard.reset();
     });
 
     this.fretboardMenu.noteSequenceSelect.addEventListener("change", () => {
       this.sequenceAndLabelsUpdate();
-      this.fretboard.update();
+      this.fretboard.reset();
     });
 
     this.fretboardMenu.fromFretSelect.addEventListener("change", (event) => {
       this.fretboard.props.fromFret = parseInt(event.target.value);
-      this.fretboard.update();
+      this.fretboard.reset();
     });
 
     this.fretboardMenu.toFretSelect.addEventListener("change", (event) => {
       this.fretboard.props.toFret = parseInt(event.target.value);
-      this.fretboard.update();
+      this.fretboard.reset();
     });
 
     this.fretboardMenu.modeSelect.addEventListener("change", (event) => {
@@ -165,8 +165,9 @@ class FretboardMultitool extends Container {
           second: largeValue,
         };
       }
-
-      this.fretboard.update();
+      // passing true means note sizes will be reset to
+      // Fretboard.props.noteSizes.first
+      this.fretboard.update(true);
     });
 
     this.fretboardMenu.noteDurationSelect.addEventListener(
