@@ -4,13 +4,13 @@ Welcome to Muso Dojo where you can access a suite of tools to help teachers and 
 
 ## View the Latest Version
 
-View version 1.0.0 of the redesigned Muso Dojo Project at
+View version 1.1.0 of the redesigned Muso Dojo Project at
 
 https://musodojo.github.io/musodojo/
 
 ### Description
 
-This is the initial release of the redesigned Muso Dojo software. It uses modern Javascript techniques and is more robust and reusable than the previous design. Further features are planned but there is core functionality here that could be useful to music teachers and students.
+This is an improvement on the initial release of the Muso Dojo software. Users can now add and remove multiple tools to the main multitool environment. Several useability features have been added including keeping edited notes as they were when non-core settings have been changed - e.g. Mode, Hand, Note Labels,Note Colors.
 
 ### Download
 
