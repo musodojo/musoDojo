@@ -1,7 +1,6 @@
 # Fretboard
 
 - strum mode, which plays nearest large note in direction of nut
-- option to redraw edited notes along with sequences
 
 # Fretboard Menu
 
