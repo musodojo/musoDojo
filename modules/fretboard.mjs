@@ -143,7 +143,8 @@ class Fretboard extends Container {
     }
   }
 
-  update() {
+  // resets the fretboard and redraws sequence if available
+  reset() {
     this.container.innerHTML = "";
     this.pointerDownIds = [];
     this.areas = {};
@@ -151,6 +152,26 @@ class Fretboard extends Container {
     this.audioBuffers = {};
     this.renderFretboard();
     if (this.props.sequence) this.renderSequence();
+  }
+
+  // resets the fretboard and keeps all notes as they were
+  // including edited notes, unless resetNoteSize is true
+  update(resetNoteSize = false) {
+    this.container.innerHTML = "";
+    this.pointerDownIds = [];
+    this.areas = {};
+    const NOTES_COPY = { ...this.notes };
+    this.notes = {};
+    this.audioBuffers = {};
+    this.renderFretboard();
+    Object.entries(NOTES_COPY).forEach(([string_fret, note]) => {
+      const SPLIT = string_fret.split("_");
+      this.renderNote(
+        parseInt(SPLIT[0]),
+        parseInt(SPLIT[1]),
+        resetNoteSize ? this.props.noteSizes.first : note.size
+      );
+    });
   }
 
   renderFrets() {
