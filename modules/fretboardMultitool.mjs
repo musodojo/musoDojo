@@ -251,14 +251,18 @@ class FretboardMultitool extends Container {
     this.fretboard.props.sequence = SEQUENCE.sequence;
     // reset note names
     const NOTE_LABELS_TYPE = this.fretboardMenu.noteLabelsSelect.value;
-    this.fretboard.props.noteLabels = NOTE_LABELS[NOTE_LABELS_TYPE];
+    // spread NOTE_LABELS[NOTE_LABELS_TYPE] so it is a deep copy
+    // because values can be overwritten below
+    let labels = [...NOTE_LABELS[NOTE_LABELS_TYPE]];
     if (SEQUENCE.labels && SEQUENCE.labels[NOTE_LABELS_TYPE]) {
       Object.entries(SEQUENCE.labels[NOTE_LABELS_TYPE]).forEach(
         ([integer, name]) => {
-          this.fretboard.props.noteLabels[parseInt(integer)] = name;
+          labels[parseInt(integer)] = name;
         }
       );
     }
+    // set Fretboard.props to the deep copy of labels
+    this.fretboard.props.noteLabels = labels;
   }
 
   set tabIndex(index) {
