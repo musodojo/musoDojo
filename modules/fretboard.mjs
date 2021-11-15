@@ -210,6 +210,7 @@ class Fretboard extends Container {
 
       const FRET_NUMBER_LABEL = document.createElement("div");
       FRET_NUMBER_LABEL.style.fontSize = this.props.height / 23 + "px";
+      this.container.style.color = this.props.colorTheme.foreground;
       FRET_NUMBER_LABEL.innerText = i;
       FRETBOARD_AREA.render(FRET_NUMBER_LABEL);
       this.render(FRETBOARD_AREA.container);

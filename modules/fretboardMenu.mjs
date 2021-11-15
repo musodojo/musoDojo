@@ -2,27 +2,27 @@ import { Container } from "./container.mjs";
 import {
   getFretboardTuningNameFromValue,
   getFretboardTuningSelect,
-} from "./fretboardTunings.mjs";
-import { NOTE_NAMES, getNoteNamesSelect } from "./noteNames.mjs";
+} from "./data/fretboardTunings.mjs";
+import { NOTE_NAMES, getNoteNamesSelect } from "./data/noteNames.mjs";
 import {
   getSequenceNameFromValue,
   getNoteSequenceSelect,
-} from "./noteSequences.mjs";
+} from "./data/noteSequences.mjs";
 import {
   NOTE_LABELS,
   getLabelsNameFromValue,
   getNoteLabelsSelect,
-} from "./noteLabels.mjs";
+} from "./data/noteLabels.mjs";
 import {
   NOTE_COLORS,
   getNoteColorsNameFromValue,
   getNoteColorsSelect,
-} from "./noteColors.mjs";
+} from "./data/noteColors.mjs";
 import {
   COLOR_THEMES,
   getColorThemeNameFromValue,
   getColorThemeSelect,
-} from "./colorThemes.mjs";
+} from "./data/colorThemes.mjs";
 
 class FretboardMenu extends Container {
   constructor(props = {}) {

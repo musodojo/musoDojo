@@ -1,5 +1,5 @@
 import { Container } from "./container.mjs";
-import { INSTRUMENT_CONFIGS } from "./instrumentConfigs.mjs";
+import { INSTRUMENT_CONFIGS } from "./data/instrumentConfigs.mjs";
 import { FretboardMultitool } from "./fretboardMultitool.mjs";
 
 class Multitool extends Container {
