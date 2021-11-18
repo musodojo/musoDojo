@@ -29,6 +29,7 @@ class SpinningMinusIcon {
     this.bar.style.position = "absolute";
     this.bar.style.width = "100%";
     this.bar.style.height = `calc(${this.textDiv.style.height} / 5)`;
+    this.bar.style.borderRadius = `calc(${this.textDiv.style.height} / 10)`;
     this.bar.style.top = "50%";
     this.bar.style.transform = "translateY(-50%)";
     this.bar.style.backgroundColor = foregroundColor;

@@ -30,6 +30,7 @@ class SquashyMenuIcon {
     const BAR_STYLE = {
       width: `calc(${width} * 0.9)`,
       height: `calc(${height} / 7)`,
+      "border-radius": `calc(${height} / 14)`,
       margin: `calc(${height} / 7) auto`,
       "background-color": foregroundColor,
       transition: "transform 0.2s ease",

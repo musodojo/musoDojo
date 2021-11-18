@@ -28,6 +28,7 @@ class SpinningPlusIcon {
     this.bar1.style.position = "absolute";
     this.bar1.style.width = `calc(${this.textDiv.style.width} / 5)`;
     this.bar1.style.height = "100%";
+    this.bar1.style.borderRadius = `calc(${this.textDiv.style.width} / 10)`;
     this.bar1.style.left = "50%";
     this.bar1.style.transform = "translateX(-50%)";
     this.bar1.style.backgroundColor = foregroundColor;
@@ -37,6 +38,7 @@ class SpinningPlusIcon {
     this.bar2.style.position = "absolute";
     this.bar2.style.width = "100%";
     this.bar2.style.height = `calc(${this.textDiv.style.height} / 5)`;
+    this.bar2.style.borderRadius = `calc(${this.textDiv.style.height} / 10)`;
     this.bar2.style.top = "50%";
     this.bar2.style.transform = "translateY(-50%)";
     this.bar2.style.backgroundColor = foregroundColor;

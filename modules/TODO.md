@@ -10,6 +10,3 @@
 
 - HQ audio sprite - violin high note missing
 
-# Icons
-
-- rounded edges
