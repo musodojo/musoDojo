@@ -16,8 +16,8 @@ class SpinningPlusIcon {
 
     this.textDiv = document.createElement("div");
     this.textDiv.style.position = "relative";
-    this.textDiv.style.width = `min( calc(${width} * 0.8), calc(${height} * 0.8))`;
-    this.textDiv.style.height = `min( calc(${width} * 0.8), calc(${height} * 0.8))`;
+    this.textDiv.style.width = `min( calc(${width}), calc(${height}))`;
+    this.textDiv.style.height = `min( calc(${width}), calc(${height}))`;
     this.textDiv.style.top = "50%";
     this.textDiv.style.left = "50%";
     this.textDiv.style.transform = "translate(-50%, -50%)";

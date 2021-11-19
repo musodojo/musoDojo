@@ -28,18 +28,19 @@ class SquashyMenuIcon {
     // note: margins don't sum in between bars
     // the bar backgroundColor is to actually be the text color!
     const BAR_STYLE = {
-      width: `calc(${width} * 0.9)`,
-      height: `calc(${height} / 7)`,
-      "border-radius": `calc(${height} / 14)`,
-      margin: `calc(${height} / 7) auto`,
+      width: `calc(${width})`,
+      height: `calc(${height} / 5)`,
+      "border-radius": `calc(${height} / 10)`,
       "background-color": foregroundColor,
       transition: "transform 0.2s ease",
     };
 
     this.bar1 = document.createElement("div");
     Object.assign(this.bar1.style, BAR_STYLE);
+    this.bar1.style.marginBottom = `calc(${height} / 5)`;
     this.bar2 = document.createElement("div");
     Object.assign(this.bar2.style, BAR_STYLE);
+    this.bar2.style.marginBottom = `calc(${height} / 5)`;
     this.bar3 = document.createElement("div");
     Object.assign(this.bar3.style, BAR_STYLE);
 
