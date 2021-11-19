@@ -1,15 +1,15 @@
 import { Container } from "./container.mjs";
 import { FretboardMenu } from "./fretboardMenu.mjs";
 import { Fretboard } from "./fretboard.mjs";
-import { INSTRUMENT_CONFIGS } from "./data/instrumentConfigs.mjs";
-import { NOTE_NAMES, getIndexFromName } from "./data/noteNames.mjs";
-import { NOTE_SEQUENCES } from "./data/noteSequences.mjs";
-import { NOTE_LABELS } from "./data/noteLabels.mjs";
-import { NOTE_COLORS } from "./data/noteColors.mjs";
-import { COLOR_THEMES } from "./data/colorThemes.mjs";
-import { SquashyMenuIcon } from "./icons/squashyMenuIcon.mjs";
-import { SpinningPlusIcon } from "./icons/spinningPlusIcon.mjs";
-import { SpinningMinusIcon } from "./icons/spinningMinusIcon.mjs";
+import { INSTRUMENT_CONFIGS } from "../data/instrumentConfigs.mjs";
+import { NOTE_NAMES, getIndexFromName } from "../data/noteNames.mjs";
+import { NOTE_SEQUENCES } from "../data/noteSequences.mjs";
+import { NOTE_LABELS } from "../data/noteLabels.mjs";
+import { NOTE_COLORS } from "../data/noteColors.mjs";
+import { COLOR_THEMES } from "../data/colorThemes.mjs";
+import { SquashyMenuIcon } from "../icons/squashyMenuIcon.mjs";
+import { SpinningPlusIcon } from "../icons/spinningPlusIcon.mjs";
+import { SpinningMinusIcon } from "../icons/spinningMinusIcon.mjs";
 
 class FretboardMultitool extends Container {
   constructor(props = {}) {
