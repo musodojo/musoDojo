@@ -21,6 +21,7 @@ class FretboardMultitool extends Container {
 
     this.fretboardMenu = new FretboardMenu(PROPS);
     this.fretboard = new Fretboard(PROPS);
+    this.fretboard.container.style.marginBottom = "0.5em"
 
     // catch a pointer down/up event that happens in the FretboardMultitool
     // push/clear that pointer id if it hasn't been pushed/cleared by Fretboard
