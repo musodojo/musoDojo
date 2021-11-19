@@ -266,7 +266,7 @@ const NOTE_SEQUENCES = {
   },
 };
 
-const getSequenceNameFromValue = (value) => {
+function getSequenceNameFromValue(value) {
   const VALUE_STRING = JSON.stringify(value);
   const GROUPS_VALUES = Object.values(NOTE_SEQUENCES);
   for (const GROUPS_VALUE of GROUPS_VALUES) {
@@ -278,9 +278,9 @@ const getSequenceNameFromValue = (value) => {
       }
     }
   }
-};
+}
 
-const getNoteSequenceSelect = (selected = "Ionian / Major") => {
+function getNoteSequenceSelect(selected = "Ionian / Major") {
   const SELECT = document.createElement("select");
   const LABEL = document.createElement("option");
   LABEL.text = "Sequence";
@@ -300,6 +300,6 @@ const getNoteSequenceSelect = (selected = "Ionian / Major") => {
     });
   });
   return SELECT;
-};
+}
 
 export { NOTE_SEQUENCES, getSequenceNameFromValue, getNoteSequenceSelect };

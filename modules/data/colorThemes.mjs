@@ -16,7 +16,7 @@ const COLOR_THEMES = {
   },
 };
 
-const getColorThemeNameFromValue = (value) => {
+function getColorThemeNameFromValue(value) {
   const VALUE_STRING = JSON.stringify(value);
   const THEMES = Object.entries(COLOR_THEMES);
   for (const [THEME_NAME, THEME_VALUE] of THEMES) {
@@ -24,9 +24,9 @@ const getColorThemeNameFromValue = (value) => {
       return THEME_NAME;
     }
   }
-};
+}
 
-const getColorThemeSelect = (selected = "Dark") => {
+function getColorThemeSelect(selected = "Dark") {
   const SELECT = document.createElement("select");
   const LABEL = document.createElement("option");
   LABEL.text = "Theme";
@@ -41,6 +41,6 @@ const getColorThemeSelect = (selected = "Dark") => {
     }
   });
   return SELECT;
-};
+}
 
 export { COLOR_THEMES, getColorThemeNameFromValue, getColorThemeSelect };

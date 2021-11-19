@@ -101,7 +101,7 @@ const NOTE_LABELS = {
   ],
 };
 
-const getLabelsNameFromValue = (value) => {
+function getLabelsNameFromValue(value) {
   const VALUE_STRING = JSON.stringify(value);
   const LABELS = Object.entries(NOTE_LABELS);
   for (const [LABELS_NAME, LABELS_VALUE] of LABELS) {
@@ -109,9 +109,9 @@ const getLabelsNameFromValue = (value) => {
       return LABELS_NAME;
     }
   }
-};
+}
 
-const getNoteLabelsSelect = (selected = "None") => {
+function getNoteLabelsSelect(selected = "None") {
   const SELECT = document.createElement("select");
   const LABEL = document.createElement("option");
   LABEL.text = "Note Labels";
@@ -126,6 +126,6 @@ const getNoteLabelsSelect = (selected = "None") => {
     }
   });
   return SELECT;
-};
+}
 
 export { NOTE_LABELS, getLabelsNameFromValue, getNoteLabelsSelect };

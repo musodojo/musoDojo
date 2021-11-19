@@ -71,7 +71,7 @@ const NOTE_COLORS = {
   ],
 };
 
-const isColorValid = (color) => {
+function isColorValid(color) {
   // ^          -> match beginning
   // #          -> a hash symbol
   // [0-9A-F]   -> any integer from 0 to 9 and any letter from A to F
@@ -79,9 +79,9 @@ const isColorValid = (color) => {
   // $          -> match end
   // i          -> ignore case
   return /^#([0-9A-F]{3}){1,2}$/i.test(color) ? true : false;
-};
+}
 
-const getNoteColorsNameFromValue = (value) => {
+function getNoteColorsNameFromValue(value) {
   const VALUE_STRING = JSON.stringify(value);
   const COLORS = Object.entries(NOTE_COLORS);
   for (const [COLORS_NAME, COLORS_VALUE] of COLORS) {
@@ -89,9 +89,9 @@ const getNoteColorsNameFromValue = (value) => {
       return COLORS_NAME;
     }
   }
-};
+}
 
-const getNoteColorsSelect = (selected = "Muso Dojo") => {
+function getNoteColorsSelect(selected = "Muso Dojo") {
   const SELECT = document.createElement("select");
   const LABEL = document.createElement("option");
   LABEL.text = "Note Colors";
@@ -106,7 +106,7 @@ const getNoteColorsSelect = (selected = "Muso Dojo") => {
     }
   });
   return SELECT;
-};
+}
 
 export {
   NOTE_COLORS,

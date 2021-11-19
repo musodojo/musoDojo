@@ -13,7 +13,7 @@ const NOTE_NAMES = [
   "B / B♮ / C♭ / A♯♯",
 ];
 
-const getNoteNamesSelect = (selected = NOTE_NAMES[0]) => {
+function getNoteNamesSelect(selected = NOTE_NAMES[0]) {
   const SELECT = document.createElement("select");
   const LABEL = document.createElement("option");
   LABEL.text = "Root";
@@ -28,17 +28,16 @@ const getNoteNamesSelect = (selected = NOTE_NAMES[0]) => {
     }
   });
   return SELECT;
-};
+}
 
-const getNameFromIndex = (index) => {
+function getNameFromIndex(index) {
   return NOTE_NAMES[Math.abs(index % 12)];
-};
+}
 
-const getIndexFromName = (name) => {
+function getIndexFromName(name) {
   let index = NOTE_NAMES.indexOf(name);
   if (index < 0) {
-    index = NOTE_NAMES.findIndex((element) =>
-      element.split(" / ").includes(name)
+    index = NOTE_NAMES.findIndex((element) => element.split(" / ").includes(name)
     );
     // if findIndex of partial name match is invalid (===-1), throw an error
     if (index < 0) {
@@ -48,6 +47,6 @@ const getIndexFromName = (name) => {
     }
   }
   return index;
-};
+}
 
 export { NOTE_NAMES, getNoteNamesSelect, getNameFromIndex, getIndexFromName };
