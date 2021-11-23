@@ -21,7 +21,7 @@ class FretboardMultitool extends Container {
 
     this.fretboardMenu = new FretboardMenu(PROPS);
     this.fretboard = new Fretboard(PROPS);
-    this.fretboard.container.style.marginBottom = "0.5em"
+    this.fretboard.container.style.marginBottom = "0.5em";
 
     // catch a pointer down/up event that happens in the FretboardMultitool
     // push/clear that pointer id if it hasn't been pushed/cleared by Fretboard
@@ -31,10 +31,12 @@ class FretboardMultitool extends Container {
       "pointerdown",
       (event) => {
         try {
-          const INDEX = this.fretboard.pointerDownIds.indexOf(event.pointerId);
+          const INDEX = this.fretboard.state.pointerDownIds.indexOf(
+            event.pointerId
+          );
           // if id was not found, push it
           if (INDEX < 0) {
-            this.fretboard.pointerDownIds.push(event.pointerId);
+            this.fretboard.state.pointerDownIds.push(event.pointerId);
             event.target.releasePointerCapture(event.pointerId);
           }
         } catch (err) {
@@ -47,10 +49,12 @@ class FretboardMultitool extends Container {
       "pointerup",
       (event) => {
         try {
-          const INDEX = this.fretboard.pointerDownIds.indexOf(event.pointerId);
+          const INDEX = this.fretboard.state.pointerDownIds.indexOf(
+            event.pointerId
+          );
           // if id was found, it wasn't cleared by Fretboard
           if (INDEX >= 0) {
-            this.fretboard.pointerDownIds.splice(INDEX, 1);
+            this.fretboard.state.pointerDownIds.splice(INDEX, 1);
           }
         } catch (err) {
           console.error(err);
@@ -65,9 +69,11 @@ class FretboardMultitool extends Container {
       "pointerleave",
       (event) => {
         try {
-          const INDEX = this.fretboard.pointerDownIds.indexOf(event.pointerId);
+          const INDEX = this.fretboard.state.pointerDownIds.indexOf(
+            event.pointerId
+          );
           if (INDEX >= 0) {
-            this.fretboard.pointerDownIds.splice(INDEX, 1);
+            this.fretboard.state.pointerDownIds.splice(INDEX, 1);
           }
         } catch (err) {
           console.error(err);
@@ -183,8 +189,8 @@ class FretboardMultitool extends Container {
       this.container.style.backgroundColor =
         COLOR_THEMES[event.target.value].background;
       this.fretboard.props.colorTheme = COLOR_THEMES[event.target.value];
-      this.fretboard.container.style.backgroundColor =
-        COLOR_THEMES[event.target.value].background;
+      this.fretboard.resetColors();
+      this.fretboard.update();
       this.showHideButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground
       );
@@ -194,7 +200,6 @@ class FretboardMultitool extends Container {
       this.removeToolButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground
       );
-      this.fretboard.update();
     });
 
     this.showHideButton = new SquashyMenuIcon(
