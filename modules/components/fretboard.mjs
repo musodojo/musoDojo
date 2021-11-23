@@ -6,68 +6,77 @@ import { AudioInterface } from "./audioInterface.mjs";
 class Fretboard extends Container {
   constructor(props = {}) {
     try {
+      // set up this.render and this.container
       super();
+
+      // properties are defined here
       this.props = {
-        width: 750, // don't include the implied "px" units
-        height: 250, // don't include the implied "px" units
+        // don't include the implied "px" units in width or height
+        width: 750,
+        height: 250,
+
+        // used to tell AudioInterface.startNote which type of sound to play
         instrument: "Guitar",
-        tuning: [40, 45, 50, 55, 59, 64], // EADGBE
+
+        // standard guitar tuning: [E=40,A=45,D=50,G=55,B=59,E=64]
+        tuning: [40, 45, 50, 55, 59, 64],
+
+        // these available settings are not set here, but can be passed in via props
+        // rootNote: 0, // would be "C / C♮ / D♭♭ / B♯"
+        // sequence: [0, 2, 4, 5, 7, 9, 11] // would be "Ionian / Major"
+        // sequence: [0] // would be just the root note
+
         fromFret: 0,
         toFret: 21,
+
         // mode = "Play" || "Edit One" || "Edit All"
         mode: "Play",
+
+        // this value is used as hand.toLowerCase() in position calculations
+        // the capitalized "R" in "Right" comes from the menu settings using capital letters
+        // and for consistency with data/instrumentConfigs.mjs
         hand: "Right",
+
+        // default to no labels displayed inside the notes
         noteLabels: ["", "", "", "", "", "", "", "", "", "", "", ""],
-        noteColors: null,
+
+        // default to no note colors definition, which then uses the colorTheme.foreground
+        noteColors: ["", "", "", "", "", "", "", "", "", "", "", ""],
+
+        // notes can be sized with first or second size value (or removed) by using
+        // props.mode's Edit One" and "Edit All" functionality
         noteSizes: { first: "91%", second: "55%" },
+
         // noteDuration = -1 means play full note duration
         // noteDuration = 0 means play note until up event occurs
         // noteDuration = x means play note for x seconds (clipped at note's duration in audio sprite)
         noteDuration: 0,
+
+        // default to a dark theme
         colorTheme: {
           background: "#000000",
           midground: "#999999",
           foreground: "#FFFFFF",
         },
+
+        // standard settings for guitar
         showStrings: true,
         showFrets: true,
         fretMarkers: [3, 5, 7, 9, 12, 15, 17, 19, 21, 24],
         showFretNumbers: true,
         showFretboardMarkers: true,
+
+        // then overwrite with any of the passed props
         ...props,
       };
 
+      // something for
       this.container.style.position = "relative";
-      this.container.style.backgroundColor = this.props.colorTheme.background;
-      this.container.style.color = this.props.colorTheme.foreground;
 
-      // width and heigth are numbers in px
-      this.container.style.width = this.props.width + "px";
-      this.container.style.height = this.props.height + "px";
+      this.resetLook();
 
-      this.props.mainScale = this.props.showFretNumbers ? 0.95 : 1;
-
-      if (this.props.fromFret > this.props.toFret) {
-        throw new Error(
-          `Fretboard fromFret=${this.props.fromFret} should be less than toFret=${this.props.toFret}`
-        );
-      }
-
-      if (
-        !(
-          this.props.hand.toLowerCase() === "left" ||
-          this.props.hand.toLowerCase() === "right"
-        )
-      ) {
-        throw new Error(
-          `Fretboard hand=${this.props.hand.toLowerCase()} should be left or right`
-        );
-      }
-
-      this.pointerDownIds = new Array();
-      this.areas = new Object();
-      this.notes = new Object();
-      this.audioBuffers = new Object();
+      this.state = {};
+      this.resetState();
 
       this.renderFretboard();
       if (this.props.sequence) this.renderSequence();
@@ -78,6 +87,9 @@ class Fretboard extends Container {
     }
   }
 
+  // ERROR HANDLERS
+
+  // return a div with an error message inside
   getErrorContainer(err) {
     const ERROR_HTML = document.createElement("div");
     ERROR_HTML.style.textAlign = "center";
@@ -86,42 +98,138 @@ class Fretboard extends Container {
     return ERROR_HTML;
   }
 
-  // calculate an extra fret over what is drawn on screen
-  // so the nut is spaced nicely from the edge
-  get fretsToCalculate() {
+  // UPDATERS
+
+  // reset colors and sizes and check some property values
+  resetLook() {
+    this.resetColors();
+
+    this.resetSize();
+
+    // sets how much space is fretboard and how much is fret numbers
+    this.props.mainScale = this.props.showFretNumbers ? 0.95 : 1;
+
+    // this makes sure fromFret isn't bigger than toFret
+    this.checkFretNum(this.props.fromFret);
+
+    this.checkHand();
+  }
+
+  resetColors() {
+    this.container.style.backgroundColor = this.props.colorTheme.background;
+    this.container.style.color = this.props.colorTheme.foreground;
+  }
+
+  // width and heigth are numbers in px (with no units)
+  resetSize(width = this.props.width, height = this.props.height) {
+    this.props.width = width;
+    this.container.style.width = width + "px";
+    this.props.height = height;
+    this.container.style.height = height + "px";
+  }
+
+  // reset the state object
+  resetState() {
+    this.state.pointerDownIds = [];
+    this.state.areas = {};
+    this.state.notes = {};
+    this.state.audioBuffers = {};
+  }
+
+  // GETTERS OF INFORMATION
+
+  // returns one fret more than what is displayed on the fretboard
+  // so the nut is spaced nicely from the edge when drawing frets, etc.
+  // in calculations, this gets you to the end of the fretboard, past fret #0, to fret #-1
+  getFretsToCalculate() {
     return this.props.toFret - this.props.fromFret + 1;
   }
 
+  // returns the MIDI number of a note on a given string and fret
   getMidiFromStringFret(stringNum, fretNum) {
     return this.props.tuning[this.props.tuning.length - stringNum] + fretNum;
   }
 
-  getFretWidth(fretNum) {
+  // returns a number representing the width in px between (fretNum-1) and (fretNum)
+  // fret numbers are labelled to the right of the fret area to be
+  // pressed by finger (on a right handed instrument)
+  // units are not included in returned number
+  // getFretsToCalculate() is like fret #-1
+  // e.g. fromFret = 0; toFret = 12; fretNum = 0
+  // calculations are actually done from the bridge end, fret #0 is
+  // calculated using fret #12
+  // 12+1=13 (fret #-1) is getFretsToCalculate
+  // so get the difference between 13 frets from end (fret #-1)
+  // and 12 frets from the end (fret#0)
+  // which is correct for fret #0's fret area (finger area)
+  getFretAreaWidth(fretNum) {
     return (
       ((Math.pow(
         2,
-        (this.fretsToCalculate + this.props.fromFret - fretNum) / 12
+        (this.getFretsToCalculate() + this.props.fromFret - fretNum) / 12
       ) -
         Math.pow(
           2,
-          (this.fretsToCalculate + this.props.fromFret - fretNum - 1) / 12
+          (this.getFretsToCalculate() + this.props.fromFret - fretNum - 1) / 12
         )) /
-        (Math.pow(2, this.fretsToCalculate / 12) - 1)) *
+        (Math.pow(2, this.getFretsToCalculate() / 12) - 1)) *
       this.props.width
     );
   }
 
+  // returns a number representing the width in px between the bridge end
+  // and fret #fretNum
   getFretDistance(fretNum) {
     return (
       ((Math.pow(
         2,
-        (this.fretsToCalculate - 1 + this.props.fromFret - fretNum) / 12
+        (this.getFretsToCalculate() - 1 + this.props.fromFret - fretNum) / 12
       ) -
         1) /
-        (Math.pow(2, this.fretsToCalculate / 12) - 1)) *
+        (Math.pow(2, this.getFretsToCalculate() / 12) - 1)) *
       this.props.width
     );
   }
+
+  // SETTINGS CHECKING
+
+  // stringNum should be greater than 1
+  // and less than the length of the tuning definition array
+  checkStringNum(stringNum) {
+    if (stringNum < 1 || stringNum > this.props.tuning.length) {
+      throw new Error(
+        `Fretboard checkStringNum(stringNum): stringNum=${stringNum} is out of range (1 - ${this.props.tuning.length})`
+      );
+    }
+  }
+
+  // fretNum should not be less than Fretboard's fromFret
+  // or greater than toFret
+  checkFretNum(fretNum) {
+    if (fretNum < this.props.fromFret || fretNum > this.props.toFret) {
+      throw new Error(
+        `Fretboard checkFretNum(fretNum): fretNum=${fretNum} is out of range (${this.props.fromFret} to ${this.props.toFret})`
+      );
+    }
+  }
+
+  // make sure hand is either "Left" or "Right"
+  // the capital first letter is used in instrumentConfigs.mjs
+  // and FretboardMenu.mjs
+  checkHand() {
+    if (
+      !(
+        this.props.hand.toLowerCase() === "left" ||
+        this.props.hand.toLowerCase() === "right"
+      )
+    ) {
+      throw new Error(
+        `Fretboard hand=${this.props.hand} should be Left or Right`
+      );
+    }
+  }
+
+  // RENDERERS
 
   renderFretboard() {
     try {
@@ -146,10 +254,7 @@ class Fretboard extends Container {
   // resets the fretboard and redraws sequence if available
   reset() {
     this.container.innerHTML = "";
-    this.pointerDownIds = [];
-    this.areas = {};
-    this.notes = {};
-    this.audioBuffers = {};
+    this.resetState();
     this.renderFretboard();
     if (this.props.sequence) this.renderSequence();
   }
@@ -158,11 +263,11 @@ class Fretboard extends Container {
   // including edited notes, unless resetNoteSize is true
   update(resetNoteSize = false) {
     this.container.innerHTML = "";
-    this.pointerDownIds = [];
-    this.areas = {};
-    const NOTES_COPY = { ...this.notes };
-    this.notes = {};
-    this.audioBuffers = {};
+    this.state.pointerDownIds = [];
+    this.state.areas = {};
+    const NOTES_COPY = { ...this.state.notes };
+    this.state.notes = {};
+    this.state.audioBuffers = {};
     this.renderFretboard();
     Object.entries(NOTES_COPY).forEach(([string_fret, note]) => {
       const SPLIT = string_fret.split("_");
@@ -175,53 +280,61 @@ class Fretboard extends Container {
   }
 
   renderFrets() {
-    // done by eye
-    let fretWidth = this.props.width / 500 < 1 ? 1 : this.props.width / 500;
     for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
-      const FRET = document.createElement("div");
-      FRET.style.backgroundColor = this.props.colorTheme.foreground;
-      FRET.style.position = "absolute";
-      FRET.style.top = 0;
-      FRET.style.width = fretWidth + "px";
-      FRET.style.height = this.props.height * this.props.mainScale + "px";
-      FRET.style[this.props.hand.toLowerCase()] =
-        this.getFretDistance(i) + "px";
-      this.render(FRET);
+      this.render(this.getFret(i));
     }
   }
 
-  renderFretNumbers(numbersFollowMarkers = true) {
-    for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
-      if (
-        numbersFollowMarkers &&
-        !this.props.fretMarkers.includes(i) &&
-        i !== 0
-      ) {
-        continue;
-      }
-      const FRETBOARD_AREA = new FretboardArea(
-        this.getFretWidth(i) + "px",
-        this.props.height * (1 - this.props.mainScale) + "px"
-      );
-      FRETBOARD_AREA.container.style.top =
-        this.props.height * this.props.mainScale + "px";
-      FRETBOARD_AREA.container.style[this.props.hand.toLowerCase()] =
-        this.getFretDistance(i) + "px";
+  getFret(fretNum) {
+    const FRET = document.createElement("div");
+    FRET.style.backgroundColor = this.props.colorTheme.foreground;
+    FRET.style.position = "absolute";
+    FRET.style.top = 0;
+    // fret width is done by eye
+    let fretWidth = this.props.width / 500 < 1 ? 1 : this.props.width / 500;
+    FRET.style.width = fretWidth + "px";
+    FRET.style.height = this.props.height * this.props.mainScale + "px";
+    FRET.style[this.props.hand.toLowerCase()] =
+      this.getFretDistance(fretNum) + "px";
+    return FRET;
+  }
 
-      const FRET_NUMBER_LABEL = document.createElement("div");
-      FRET_NUMBER_LABEL.style.fontSize = this.props.height / 23 + "px";
-      this.container.style.color = this.props.colorTheme.foreground;
-      FRET_NUMBER_LABEL.innerText = i;
-      FRETBOARD_AREA.render(FRET_NUMBER_LABEL);
-      this.render(FRETBOARD_AREA.container);
+  renderFretNumbers() {
+    for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
+      this.render(this.getFretNumberArea(i).container);
     }
+  }
+
+  getFretNumberArea(fretNum, onlyLabelDefinedMarkers = true) {
+    const FRET_NUMBER_AREA = new FretboardArea(
+      this.getFretAreaWidth(fretNum) + "px",
+      this.props.height * (1 - this.props.mainScale) + "px"
+    );
+    FRET_NUMBER_AREA.container.style.top =
+      this.props.height * this.props.mainScale + "px";
+    FRET_NUMBER_AREA.container.style[this.props.hand.toLowerCase()] =
+      this.getFretDistance(fretNum) + "px";
+
+    if (
+      onlyLabelDefinedMarkers &&
+      !this.props.fretMarkers.includes(fretNum) &&
+      fretNum !== 0
+    ) {
+      return FRET_NUMBER_AREA;
+    }
+
+    const FRET_NUMBER_LABEL = document.createElement("div");
+    FRET_NUMBER_LABEL.style.fontSize = this.props.height / 23 + "px";
+    FRET_NUMBER_LABEL.innerText = fretNum;
+    FRET_NUMBER_AREA.render(FRET_NUMBER_LABEL);
+    return FRET_NUMBER_AREA;
   }
 
   renderFretboardMarkers(fretMarkers = this.props.fretMarkers) {
     for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
       if (fretMarkers.includes(i)) {
         const FRETBOARD_AREA = new FretboardArea(
-          this.getFretWidth(i) + "px",
+          this.getFretAreaWidth(i) + "px",
           this.props.height * this.props.mainScale + "px"
         );
         FRETBOARD_AREA.container.style.top = 0;
@@ -248,55 +361,49 @@ class Fretboard extends Container {
   // string numbers start counting from 1
   renderStrings() {
     for (let i = 1; i <= this.props.tuning.length; i++) {
-      let string = document.createElement("div");
-      string.style.backgroundColor = this.props.colorTheme.foreground;
-      string.style.position = "absolute";
-      string.style.width = "100%";
-      string.style.top =
-        ((i - 0.5) / this.props.tuning.length) *
-          this.props.height *
-          this.props.mainScale +
-        "px";
-      string.style.height = this.props.height / 200 + "px";
-      this.render(string);
+      this.render(this.getString(i));
     }
   }
 
-  checkStringNum(stringNum) {
-    if (stringNum < 1 || stringNum > this.props.tuning.length) {
-      throw new Error(
-        `Fretboard checkStringNum(stringNum): stringNum=${stringNum} is out of range (1 - ${this.tuning.length})`
-      );
-    }
+  // returns a div styled as a string in the correct position on fretboard
+  // string numbers start counting from 1
+  getString(stringNum) {
+    const STRING = document.createElement("div");
+    STRING.style.backgroundColor = this.props.colorTheme.foreground;
+    STRING.style.position = "absolute";
+    STRING.style.width = "100%";
+    STRING.style.top =
+      ((stringNum - 0.5) / this.props.tuning.length) *
+        this.props.height *
+        this.props.mainScale +
+      "px";
+    STRING.style.height = this.props.height / 200 + "px";
+    return STRING;
   }
 
-  checkFretNum(fretNum) {
-    if (fretNum < this.props.fromFret || fretNum > this.props.toFret) {
-      throw new Error(
-        `Fretboard checkFretNum(fretNum): fretNum=${fretNum} is out of range (${this.fromFret} to ${this.toFret})`
-      );
-    }
-  }
-
+  // fill the Fretboard.container with interactive FretboardArea.container divs
   renderStringFretAreas() {
     for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
       for (let j = 1; j <= this.props.tuning.length; j++) {
-        this.renderStringFretArea(j, i);
+        this.render(this.getStringFretArea(j, i).container);
       }
     }
   }
 
+  // returns an interactive FretboardArea for a string/fret area on the fretboard
+  // FretboardArea inherits Container, which means it's div container can be accessed
+  // via FretboardArea.container
   // string numbers start counting from 1
-  renderStringFretArea(stringNum, fretNum) {
+  getStringFretArea(stringNum, fretNum) {
     try {
       this.checkStringNum(stringNum);
       this.checkFretNum(fretNum);
       const FRETBOARD_AREA = new FretboardArea(
-        this.getFretWidth(fretNum) + "px",
+        this.getFretAreaWidth(fretNum) + "px",
         (this.props.height / this.props.tuning.length) * this.props.mainScale +
           "px"
       );
-      this.areas[`${stringNum}_${fretNum}`] = FRETBOARD_AREA;
+      this.state.areas[`${stringNum}_${fretNum}`] = FRETBOARD_AREA;
 
       // reverse the order of the string numbers because the string tunings
       // are passed in lowest=1 to highest, but strings are traditionally
@@ -314,9 +421,9 @@ class Fretboard extends Container {
         "pointerdown",
         (event) => {
           try {
-            this.pointerDownIds.push(event.pointerId);
+            this.state.pointerDownIds.push(event.pointerId);
             event.target.releasePointerCapture(event.pointerId);
-            if (this.notes[`${stringNum}_${fretNum}`])
+            if (this.state.notes[`${stringNum}_${fretNum}`])
               this.playNote(stringNum, fretNum);
             if (this.props.mode === "Edit One")
               this.toggleNote(stringNum, fretNum);
@@ -333,8 +440,8 @@ class Fretboard extends Container {
         "pointerover",
         (event) => {
           try {
-            if (this.pointerDownIds.includes(event.pointerId)) {
-              if (this.notes[`${stringNum}_${fretNum}`])
+            if (this.state.pointerDownIds.includes(event.pointerId)) {
+              if (this.state.notes[`${stringNum}_${fretNum}`])
                 this.playNote(stringNum, fretNum);
               if (this.props.mode === "Edit One")
                 this.toggleNote(stringNum, fretNum);
@@ -354,9 +461,9 @@ class Fretboard extends Container {
           try {
             // pointer id will already be removed by the FreboardMultitool
             // if the Fretboard is inside a FreboardMultitool
-            const INDEX = this.pointerDownIds.indexOf(event.pointerId);
+            const INDEX = this.state.pointerDownIds.indexOf(event.pointerId);
             if (INDEX >= 0) {
-              this.pointerDownIds.splice(INDEX, 1);
+              this.state.pointerDownIds.splice(INDEX, 1);
             }
           } catch (err) {
             console.error(err);
@@ -372,13 +479,13 @@ class Fretboard extends Container {
           "pointerup",
           () => {
             try {
-              if (this.audioBuffers[`${stringNum}_${fretNum}`]) {
+              if (this.state.audioBuffers[`${stringNum}_${fretNum}`]) {
                 AudioInterface.stopNote(
-                  this.audioBuffers[`${stringNum}_${fretNum}`]
+                  this.state.audioBuffers[`${stringNum}_${fretNum}`]
                 );
-                this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+                this.state.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
                   "transparent";
-                delete this.audioBuffers[`${stringNum}_${fretNum}`];
+                delete this.state.audioBuffers[`${stringNum}_${fretNum}`];
               }
             } catch (err) {
               console.error(err);
@@ -390,13 +497,13 @@ class Fretboard extends Container {
           "pointerleave",
           () => {
             try {
-              if (this.audioBuffers[`${stringNum}_${fretNum}`]) {
+              if (this.state.audioBuffers[`${stringNum}_${fretNum}`]) {
                 AudioInterface.stopNote(
-                  this.audioBuffers[`${stringNum}_${fretNum}`]
+                  this.state.audioBuffers[`${stringNum}_${fretNum}`]
                 );
-                this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+                this.state.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
                   "transparent";
-                delete this.audioBuffers[`${stringNum}_${fretNum}`];
+                delete this.state.audioBuffers[`${stringNum}_${fretNum}`];
               }
             } catch (err) {
               console.error(err);
@@ -406,7 +513,7 @@ class Fretboard extends Container {
         );
       }
 
-      this.render(FRETBOARD_AREA.container);
+      return FRETBOARD_AREA;
     } catch (err) {
       console.error(err);
     }
@@ -418,33 +525,36 @@ class Fretboard extends Container {
     // duration = x means play note for x seconds (max = note's duration in audio sprite)
     try {
       // clear the previous timeout if the note is currently active
-      if (this.audioBuffers[`${stringNum}_${fretNum}`]) {
-        clearTimeout(this.audioBuffers[`${stringNum}_${fretNum}`].timeout);
+      if (this.state.audioBuffers[`${stringNum}_${fretNum}`]) {
+        clearTimeout(
+          this.state.audioBuffers[`${stringNum}_${fretNum}`].timeout
+        );
       }
       // stores an object {buffer, gain, noteDuration} in audioBuffers object
       // the noteDuration can be updated by AudioInterface.startNote
       // if noteDuration = 0
       // OR if noteDuration > sprite note's full duration
       // future looping functionality in AudioInterface class might change this
-      this.audioBuffers[`${stringNum}_${fretNum}`] = AudioInterface.startNote(
-        this.props.instrument,
-        this.getMidiFromStringFret(stringNum, fretNum),
-        duration
-      );
+      this.state.audioBuffers[`${stringNum}_${fretNum}`] =
+        AudioInterface.startNote(
+          this.props.instrument,
+          this.getMidiFromStringFret(stringNum, fretNum),
+          duration
+        );
 
-      this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+      this.state.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
         this.props.colorTheme.foreground;
 
       // the === 0 case is handled by event listeners in the FretboardArea
       // adds the timeout property to the audioBuffer definition in audioBuffers
       if (duration !== 0) {
-        this.audioBuffers[`${stringNum}_${fretNum}`].timeout = setTimeout(
+        this.state.audioBuffers[`${stringNum}_${fretNum}`].timeout = setTimeout(
           () => {
-            this.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
+            this.state.areas[`${stringNum}_${fretNum}`].backgroundDivColor =
               "transparent";
-            delete this.audioBuffers[`${stringNum}_${fretNum}`];
+            delete this.state.audioBuffers[`${stringNum}_${fretNum}`];
           },
-          this.audioBuffers[`${stringNum}_${fretNum}`].duration * 1000
+          this.state.audioBuffers[`${stringNum}_${fretNum}`].duration * 1000
         );
       }
     } catch (err) {
@@ -454,7 +564,7 @@ class Fretboard extends Container {
 
   toggleNote(stringNum, fretNum) {
     try {
-      const NOTE = this.notes[`${stringNum}_${fretNum}`];
+      const NOTE = this.state.notes[`${stringNum}_${fretNum}`];
       if (!NOTE) {
         this.playNote(stringNum, fretNum);
         this.renderNote(stringNum, fretNum, this.props.noteSizes.first);
@@ -480,7 +590,7 @@ class Fretboard extends Container {
 
   togglePitchClass(stringNum, fretNum) {
     try {
-      const NOTE = this.notes[`${stringNum}_${fretNum}`];
+      const NOTE = this.state.notes[`${stringNum}_${fretNum}`];
       const SELECTED_PITCH_CLASS =
         this.getMidiFromStringFret(stringNum, fretNum) % 12;
       let currentPitchClass, currentNote;
@@ -495,7 +605,7 @@ class Fretboard extends Container {
         for (let j = 1; j <= this.props.tuning.length; j++) {
           currentPitchClass = this.getMidiFromStringFret(j, i) % 12;
           if (currentPitchClass === SELECTED_PITCH_CLASS) {
-            currentNote = this.notes[`${j}_${i}`];
+            currentNote = this.state.notes[`${j}_${i}`];
             if (!NOTE) {
               this.renderNote(j, i, this.props.noteSizes.first);
             } else {
@@ -521,10 +631,10 @@ class Fretboard extends Container {
   }
 
   removeNote(stringNum, fretNum) {
-    const NOTE = this.notes[`${stringNum}_${fretNum}`];
+    const NOTE = this.state.notes[`${stringNum}_${fretNum}`];
     if (NOTE) {
       NOTE.container.remove();
-      delete this.notes[`${stringNum}_${fretNum}`];
+      delete this.state.notes[`${stringNum}_${fretNum}`];
     }
   }
 
@@ -533,9 +643,9 @@ class Fretboard extends Container {
     try {
       this.checkStringNum(stringNum);
       this.checkFretNum(fretNum);
-      let note = this.notes[`${stringNum}_${fretNum}`];
+      let note = this.state.notes[`${stringNum}_${fretNum}`];
       const MIDI = this.getMidiFromStringFret(stringNum, fretNum);
-      const COLOR = this.props.noteColors
+      const COLOR = this.props.noteColors[MIDI % 12]
         ? this.props.noteColors[MIDI % 12]
         : this.props.colorTheme.foreground;
       let label;
@@ -552,9 +662,9 @@ class Fretboard extends Container {
       }
       if (!note) {
         const PARENT_WIDTH =
-          this.areas[`${stringNum}_${fretNum}`].container.style.width;
+          this.state.areas[`${stringNum}_${fretNum}`].container.style.width;
         const PARENT_HEIGHT =
-          this.areas[`${stringNum}_${fretNum}`].container.style.height;
+          this.state.areas[`${stringNum}_${fretNum}`].container.style.height;
         note = new FretboardNote(
           size,
           PARENT_WIDTH,
@@ -563,8 +673,8 @@ class Fretboard extends Container {
           COLOR,
           label
         );
-        this.areas[`${stringNum}_${fretNum}`].render(note.container);
-        this.notes[`${stringNum}_${fretNum}`] = note;
+        this.state.areas[`${stringNum}_${fretNum}`].render(note.container);
+        this.state.notes[`${stringNum}_${fretNum}`] = note;
       } else {
         note.size = size;
       }
