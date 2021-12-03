@@ -30,9 +30,10 @@ const INSTRUMENT_CONFIGS = {
     colorTheme: COLOR_THEMES["Dark"],
     showStrings: true,
     showFrets: true,
-    fretMarkers: FRET_MARKERS["Guitar Style"],
-    showFretNumbers: true,
+    showFretLabels: true,
     showFretboardMarkers: true,
+    fretMarkers: FRET_MARKERS["Guitar Style"],
+    fingerboardFraction: 0.94,
   },
   instruments: {
     Guitar: {
@@ -43,7 +44,7 @@ const INSTRUMENT_CONFIGS = {
       showStrings: true,
       showFrets: true,
       fretMarkers: FRET_MARKERS["Guitar Style"],
-      showFretNumbers: true,
+      showFretLabels: true,
       showFretboardMarkers: true,
     },
     "Guitar DADGAD": {
@@ -54,7 +55,7 @@ const INSTRUMENT_CONFIGS = {
       showStrings: true,
       showFrets: true,
       fretMarkers: FRET_MARKERS["Guitar Style"],
-      showFretNumbers: true,
+      showFretLabels: true,
       showFretboardMarkers: true,
     },
     "Guitar DADGBE": {
@@ -65,7 +66,7 @@ const INSTRUMENT_CONFIGS = {
       showStrings: true,
       showFrets: true,
       fretMarkers: FRET_MARKERS["Guitar Style"],
-      showFretNumbers: true,
+      showFretLabels: true,
       showFretboardMarkers: true,
     },
     Bass: {
@@ -76,7 +77,7 @@ const INSTRUMENT_CONFIGS = {
       showStrings: true,
       showFrets: true,
       fretMarkers: FRET_MARKERS["Guitar Style"],
-      showFretNumbers: true,
+      showFretLabels: true,
       showFretboardMarkers: true,
     },
     Violin: {
@@ -87,7 +88,7 @@ const INSTRUMENT_CONFIGS = {
       showStrings: true,
       showFrets: false,
       fretMarkers: FRET_MARKERS["Guitar Style"],
-      showFretNumbers: true,
+      showFretLabels: true,
       showFretboardMarkers: false,
     },
     Ukulele: {
@@ -98,7 +99,7 @@ const INSTRUMENT_CONFIGS = {
       showStrings: true,
       showFrets: true,
       fretMarkers: FRET_MARKERS["Ukulele Style"],
-      showFretNumbers: true,
+      showFretLabels: true,
       showFretboardMarkers: true,
     },
     Mandolin: {
@@ -109,8 +110,8 @@ const INSTRUMENT_CONFIGS = {
       showStrings: true,
       showFrets: true,
       fretMarkers: FRET_MARKERS["Ukulele Style"],
-      showFretNumbers: true,
-      showFretboardMarkers: false,
+      showFretLabels: true,
+      showFretboardMarkers: true,
     },
   },
 };

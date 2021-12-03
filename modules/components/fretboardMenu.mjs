@@ -25,7 +25,7 @@ import {
 } from "../data/colorThemes.mjs";
 
 class FretboardMenu extends Container {
-  constructor(props = {}) {
+  constructor(props = {}, width = "46em") {
     super();
 
     // don't need to store this.props in this class
@@ -50,15 +50,10 @@ class FretboardMenu extends Container {
     };
 
     this.container.style.backgroundColor = PROPS.colorTheme.background;
-
-    if (!PROPS.width) {
-      this.container.style.maxWidth = "750px";
-    } else {
-      this.container.style.maxWidth = PROPS.width + "px";
-    }
+    this.container.style.maxWidth = width;
 
     const SELECT_STYLE = {
-      "font-size": "2em",
+      "font-size": "1em",
       "background-color": PROPS.colorTheme.background,
       color: PROPS.colorTheme.foreground,
       margin: "0.2em",

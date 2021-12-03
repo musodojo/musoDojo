@@ -1,14 +1,13 @@
 class SpinningPlusIcon {
-  // include units in width and height e.g. "20px", "2em"
   constructor(
-    width,
-    height,
     foregroundColor = "#000000",
-    backgroundColor = "transparent"
+    backgroundColor = "transparent",
+    width = "1.5em",
+    height = "1.5em"
   ) {
-    this.container = document.createElement("div");
+    this.container = document.createElement("button");
     this.container.style.position = "relative";
-    this.container.style.display = "inline-block";
+    this.container.style.border = "0";
     this.container.style.cursor = "pointer";
     this.container.style.width = width;
     this.container.style.height = height;

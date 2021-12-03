@@ -26,9 +26,7 @@
 
       // await AudioInterface.loadAudioSprite(AUDIO_SPRITE_DATA);
       AudioInterface.loadAudioSprite(AUDIO_SPRITE_DATA);
-      const MULTITOOL = new Multitool({
-        colorTheme: COLOR_THEMES[THEME],
-      });
+      const MULTITOOL = new Multitool();
       MULTITOOL.addTool();
       document.body.appendChild(MULTITOOL.container);
     </script>

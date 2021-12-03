@@ -1,14 +1,13 @@
 class SpinningMinusIcon {
-  // include units in width and height e.g. "20px", "2em"
   constructor(
-    width,
-    height,
     foregroundColor = "#000000",
-    backgroundColor = "transparent"
+    backgroundColor = "transparent",
+    width = "1.5em",
+    height = "1.5em"
   ) {
-    this.container = document.createElement("div");
+    this.container = document.createElement("button");
     this.container.style.position = "relative";
-    this.container.style.display = "inline-block";
+    this.container.style.border = "0";
     this.container.style.cursor = "pointer";
     this.container.style.width = width;
     this.container.style.height = height;
@@ -16,8 +15,8 @@ class SpinningMinusIcon {
 
     this.textDiv = document.createElement("div");
     this.textDiv.style.position = "relative";
-    this.textDiv.style.width = `min( calc(${width}), calc(${height}))`;
-    this.textDiv.style.height = `min( calc(${width}), calc(${height}))`;
+    this.textDiv.style.width = `min( ${width}, ${height})`;
+    this.textDiv.style.height = `min( ${width}, ${height})`;
     this.textDiv.style.top = "50%";
     this.textDiv.style.left = "50%";
     this.textDiv.style.transform = "translate(-50%, -50%)";
