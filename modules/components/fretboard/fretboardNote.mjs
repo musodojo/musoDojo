@@ -23,8 +23,8 @@ class FretboardNote {
 
     // set the font details for the potential label
     const WIDTH = fretboard.getFretAreaWidth(fretNum);
-    const HEIGHT = `calc((${fretboard.height} / ${fretboard.props.tuning.length}) * ${fretboard.props.mainScale})`;
-    this.fretboardNote.style.fontSize = `min( calc(${HEIGHT} / 2), calc(${WIDTH} / 3) )`;
+    const HEIGHT = `calc(${fretboard.fingerboard.style.height} / ${fretboard.props.tuning.length})`;
+    this.fretboardNote.style.fontSize = `min( calc(${HEIGHT} / 2), calc(${WIDTH} / 2) )`;
     this.fretboardNote.style.fontWeight = "bold";
     this.fretboardNote.style.textShadow = `-1px 1px 2px ${fretboard.props.colorTheme.background}, 
     1px 1px 2px ${fretboard.props.colorTheme.background}, 
@@ -32,7 +32,8 @@ class FretboardNote {
     -1px -1px 2px ${fretboard.props.colorTheme.background}`;
     this.fontColor = fretboard.props.colorTheme.foreground;
 
-    const MIDI_NUM = fretboard.getMidi(courseNum, fretNum);
+    // only deal with the first string in each course
+    const MIDI_NUM = fretboard.getMidi(courseNum, fretNum)[0];
     this.noteColor = fretboard.props.noteColors[MIDI_NUM % 12]
       ? fretboard.props.noteColors[MIDI_NUM % 12]
       : fretboard.props.colorTheme.foreground;

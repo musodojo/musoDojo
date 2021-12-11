@@ -105,11 +105,11 @@ class FretboardCourseFret {
               `${this.courseNum}_${this.fretNum}`
             ]
           ) {
-            AudioInterface.stopNote(
-              this.fretboard.state.audioBuffers[
-                `${this.courseNum}_${this.fretNum}`
-              ]
-            );
+            this.fretboard.state.audioBuffers[
+              `${this.courseNum}_${this.fretNum}`
+            ].forEach((audioBuffer) => {
+              AudioInterface.stopNote(audioBuffer);
+            });
             this.highlighter.style.backgroundColor = "transparent";
             delete this.fretboard.state.audioBuffers[
               `${this.courseNum}_${this.fretNum}`
@@ -126,11 +126,11 @@ class FretboardCourseFret {
               `${this.courseNum}_${this.fretNum}`
             ]
           ) {
-            AudioInterface.stopNote(
-              this.fretboard.state.audioBuffers[
-                `${this.courseNum}_${this.fretNum}`
-              ]
-            );
+            this.fretboard.state.audioBuffers[
+              `${this.courseNum}_${this.fretNum}`
+            ].forEach((audioBuffer) => {
+              AudioInterface.stopNote(audioBuffer);
+            });
             this.highlighter.style.backgroundColor = "transparent";
             delete this.fretboard.state.audioBuffers[
               `${this.courseNum}_${this.fretNum}`
@@ -142,7 +142,7 @@ class FretboardCourseFret {
     }
   }
 
-  play(duration = this.fretboard.props.duration) {
+  play(duration = this.fretboard.props.noteDuration) {
     // duration = -1 means play full note duration in audio sprite
     // duration = 0 means play note until up event occurs (event handled externally)
     // duration = x means play note for x seconds (max = note's duration in audio sprite)
@@ -151,38 +151,50 @@ class FretboardCourseFret {
     if (
       this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`]
     ) {
-      clearTimeout(
-        this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`]
-          .timeout
-      );
+      this.fretboard.state.audioBuffers[
+        `${this.courseNum}_${this.fretNum}`
+      ].forEach((audioBuffer) => {
+        clearTimeout(audioBuffer.timeout);
+      });
     }
+
+    // inisitalize the audioBuffer here for a course/fret
+    // makes sure it doesn't return undefined when accessed
+    // in forEach below, resulting in undefined[index]
+    this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`] = [];
 
     // stores an object {buffer, gain, noteDuration} in audioBuffers object
     // the noteDuration can be updated by AudioInterface.startNote
     // if noteDuration = 0
     // OR if noteDuration > sprite note's full duration
-    this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`] =
-      AudioInterface.startNote(
-        this.fretboard.props.instrument,
-        this.fretboard.getMidi(this.courseNum, this.fretNum),
-        duration
-      );
+    this.fretboard
+      .getMidi(this.courseNum, this.fretNum)
+      .forEach((midiValue, index) => {
+        this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`][
+          index
+        ] = AudioInterface.startNote(
+          this.fretboard.props.instrument,
+          midiValue,
+          duration,
+          index * 0.04 // set by ear
+        );
+        // adds the timeout property to the audioBuffer definition in audioBuffers
+        // this can be cleared in the play function
+        // the === 0 case is handled by event listeners in the addInteractivity function
+        if (duration !== 0) {
+          this.fretboard.state.audioBuffers[
+            `${this.courseNum}_${this.fretNum}`
+          ][index].timeout = setTimeout(() => {
+            this.highlighter.style.backgroundColor = "transparent";
+            delete this.fretboard.state.audioBuffers[
+              `${this.courseNum}_${this.fretNum}`
+            ];
+          }, this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`][index].duration * 1000);
+        }
+      });
 
     this.highlighter.style.backgroundColor =
       this.fretboard.props.colorTheme.foreground;
-
-    // the === 0 case is handled by event listeners in the fretboardCourseFretNote
-    // adds the timeout property to the audioBuffer definition in audioBuffers
-    if (duration !== 0) {
-      this.fretboard.state.audioBuffers[
-        `${this.courseNum}_${this.fretNum}`
-      ].timeout = setTimeout(() => {
-        this.highlighter.style.backgroundColor = "transparent";
-        delete this.fretboard.state.audioBuffers[
-          `${this.courseNum}_${this.fretNum}`
-        ];
-      }, this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`].duration * 1000);
-    }
   }
 }
 

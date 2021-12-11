@@ -9,12 +9,12 @@ const FRET_MARKERS = {
   "Ukulele Style": [3, 5, 7, 10, 12, 15],
 };
 
-const INSTRUMENT_CONFIGS = {
+const FRETBOARD_INSTRUMENTS_PROPS = {
   defaults: {
     instrument: "Guitar",
     tuning: FRETBOARD_TUNINGS["Guitar"],
     rootNote: 0,
-    sequence: NOTE_SEQUENCES["Modes"]["Ionian / Major"].sequence,
+    sequence: NOTE_SEQUENCES["Mode"]["Ionian / Major"].sequence,
     fromFret: 0,
     toFret: 21,
     // mode = "Play" || "Edit One" || "Edit All"
@@ -104,7 +104,7 @@ const INSTRUMENT_CONFIGS = {
     },
     Mandolin: {
       instrument: "Guitar",
-      tuning: FRETBOARD_TUNINGS["Violin"],
+      tuning: FRETBOARD_TUNINGS["Mandolin"],
       fromFret: 0,
       toFret: 20,
       showStrings: true,
@@ -116,4 +116,4 @@ const INSTRUMENT_CONFIGS = {
   },
 };
 
-export { INSTRUMENT_CONFIGS };
+export { FRETBOARD_INSTRUMENTS_PROPS };

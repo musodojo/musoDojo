@@ -1,33 +1,30 @@
-import { Container } from "./container.mjs";
 import {
   getFretboardTuningNameFromValue,
   getFretboardTuningSelect,
-} from "../data/fretboardTunings.mjs";
-import { NOTE_NAMES, getNoteNamesSelect } from "../data/noteNames.mjs";
+} from "../../data/fretboardTunings.mjs";
+import { NOTE_NAMES, getNoteNamesSelect } from "../../data/noteNames.mjs";
 import {
   getSequenceNameFromValue,
   getNoteSequenceSelect,
-} from "../data/noteSequences.mjs";
+} from "../../data/noteSequences.mjs";
 import {
   NOTE_LABELS,
   getLabelsNameFromValue,
   getNoteLabelsSelect,
-} from "../data/noteLabels.mjs";
+} from "../../data/noteLabels.mjs";
 import {
   NOTE_COLORS,
   getNoteColorsNameFromValue,
   getNoteColorsSelect,
-} from "../data/noteColors.mjs";
+} from "../../data/noteColors.mjs";
 import {
   COLOR_THEMES,
   getColorThemeNameFromValue,
   getColorThemeSelect,
-} from "../data/colorThemes.mjs";
+} from "../../data/colorThemes.mjs";
 
-class FretboardMenu extends Container {
+class FretboardMenu {
   constructor(props = {}, width = "46em") {
-    super();
-
     // don't need to store this.props in this class
     const PROPS = {
       instrument: "Guitar",
@@ -49,14 +46,15 @@ class FretboardMenu extends Container {
       ...props,
     };
 
-    this.container.style.backgroundColor = PROPS.colorTheme.background;
-    this.container.style.maxWidth = width;
+    this.fretboardMenu = document.createElement("div");
+    this.fretboardMenu.style.backgroundColor = PROPS.colorTheme.background;
+    this.fretboardMenu.style.maxWidth = width;
 
     const SELECT_STYLE = {
       "font-size": "1em",
       "background-color": PROPS.colorTheme.background,
       color: PROPS.colorTheme.foreground,
-      margin: "0.2em",
+      margin: "0.1em",
       "border-radius": "0.2em",
     };
 
@@ -205,26 +203,26 @@ class FretboardMenu extends Container {
     Object.assign(this.colorThemeSelect.style, SELECT_STYLE);
     this.colorThemeSelect.addEventListener("change", (event) => {
       const COLOR_THEME = COLOR_THEMES[event.target.value];
-      const CHILD_NODES = this.container.childNodes;
+      const CHILD_NODES = this.fretboardMenu.childNodes;
       CHILD_NODES.forEach((node) => {
         node.style.backgroundColor = COLOR_THEME.background;
         node.style.color = COLOR_THEME.foreground;
       });
-      this.container.style.backgroundColor = COLOR_THEME.background;
+      this.fretboardMenu.style.backgroundColor = COLOR_THEME.background;
     });
 
-    this.render(this.instrumentSelect);
-    this.render(this.rootNoteSelect);
-    this.render(this.noteSequenceSelect);
-    this.render(this.fromFretSelect);
-    this.render(this.toFretSelect);
-    this.render(this.modeSelect);
-    this.render(this.handSelect);
-    this.render(this.noteLabelsSelect);
-    this.render(this.noteColorsSelect);
-    this.render(this.noteSizeSelect);
-    this.render(this.noteDurationSelect);
-    this.render(this.colorThemeSelect);
+    this.fretboardMenu.appendChild(this.instrumentSelect);
+    this.fretboardMenu.appendChild(this.rootNoteSelect);
+    this.fretboardMenu.appendChild(this.noteSequenceSelect);
+    this.fretboardMenu.appendChild(this.fromFretSelect);
+    this.fretboardMenu.appendChild(this.toFretSelect);
+    this.fretboardMenu.appendChild(this.modeSelect);
+    this.fretboardMenu.appendChild(this.handSelect);
+    this.fretboardMenu.appendChild(this.noteLabelsSelect);
+    this.fretboardMenu.appendChild(this.noteColorsSelect);
+    this.fretboardMenu.appendChild(this.noteSizeSelect);
+    this.fretboardMenu.appendChild(this.noteDurationSelect);
+    this.fretboardMenu.appendChild(this.colorThemeSelect);
   }
 }
 

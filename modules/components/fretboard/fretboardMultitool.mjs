@@ -1,22 +1,21 @@
-import { Container } from "./container.mjs";
 import { FretboardMenu } from "./fretboardMenu.mjs";
-import { Fretboard } from "./fretboard/fretboard.mjs";
-import { INSTRUMENT_CONFIGS } from "../data/instrumentConfigs.mjs";
-import { NOTE_NAMES, getIndexFromName } from "../data/noteNames.mjs";
-import { NOTE_SEQUENCES } from "../data/noteSequences.mjs";
-import { NOTE_LABELS } from "../data/noteLabels.mjs";
-import { NOTE_COLORS } from "../data/noteColors.mjs";
-import { COLOR_THEMES } from "../data/colorThemes.mjs";
-import { SquashyMenuIcon } from "../icons/squashyMenuIcon.mjs";
-import { SpinningPlusIcon } from "../icons/spinningPlusIcon.mjs";
-import { SpinningMinusIcon } from "../icons/spinningMinusIcon.mjs";
+import { Fretboard } from "./fretboard.mjs";
+import { FRETBOARD_INSTRUMENTS_PROPS } from "../../data/fretboardInstrumentsProps.mjs";
+import { NOTE_NAMES, getIndexFromName } from "../../data/noteNames.mjs";
+import { NOTE_SEQUENCES } from "../../data/noteSequences.mjs";
+import { NOTE_LABELS } from "../../data/noteLabels.mjs";
+import { NOTE_COLORS } from "../../data/noteColors.mjs";
+import { COLOR_THEMES } from "../../data/colorThemes.mjs";
+import { SquashyMenuIcon } from "../../icons/squashyMenuIcon.mjs";
+import { SpinningPlusIcon } from "../../icons/spinningPlusIcon.mjs";
+import { SpinningMinusIcon } from "../../icons/spinningMinusIcon.mjs";
 
-class FretboardMultitool extends Container {
+class FretboardMultitool {
   constructor(props = {}) {
-    super();
-    const PROPS = { ...INSTRUMENT_CONFIGS.defaults, ...props };
+    const PROPS = { ...FRETBOARD_INSTRUMENTS_PROPS.defaults, ...props };
 
-    this.container.style.backgroundColor = PROPS.colorTheme.background;
+    this.fretboardMultitool = document.createElement("div");
+    this.fretboardMultitool.style.backgroundColor = PROPS.colorTheme.background;
 
     this.fretboardMenu = new FretboardMenu(PROPS);
     this.fretboard = new Fretboard(PROPS);
@@ -26,7 +25,7 @@ class FretboardMultitool extends Container {
     // push/clear that pointer id if it hasn't been pushed/cleared by Fretboard
     // which will happen if it happens outside of the Fretboard but
     // inside of the FretboardMultitool
-    this.container.addEventListener(
+    this.fretboardMultitool.addEventListener(
       "pointerdown",
       (event) => {
         try {
@@ -44,7 +43,7 @@ class FretboardMultitool extends Container {
       },
       false
     );
-    this.container.addEventListener(
+    this.fretboardMultitool.addEventListener(
       "pointerup",
       (event) => {
         try {
@@ -64,7 +63,7 @@ class FretboardMultitool extends Container {
 
     // clear the pointer id when you leave the
     // multitool's area with pointer down
-    this.container.addEventListener(
+    this.fretboardMultitool.addEventListener(
       "pointerleave",
       (event) => {
         try {
@@ -84,9 +83,9 @@ class FretboardMultitool extends Container {
     this.fretboardMenu.instrumentSelect.addEventListener("change", (event) => {
       this.fretboard.props = {
         ...this.fretboard.props,
-        ...INSTRUMENT_CONFIGS.instruments[event.target.value],
-        fromFret: parseInt(this.fretboardMenu.fromFretSelect.value), // default fret value is set in INSTRUMENT_CONFIGS, so update it here
-        toFret: parseInt(this.fretboardMenu.toFretSelect.value), // default fret value is set in INSTRUMENT_CONFIGS, so update it here
+        ...FRETBOARD_INSTRUMENTS_PROPS.instruments[event.target.value],
+        fromFret: parseInt(this.fretboardMenu.fromFretSelect.value), // default fret value is set in FRETBOARD_INSTRUMENTS_PROPS, so update it here
+        toFret: parseInt(this.fretboardMenu.toFretSelect.value), // default fret value is set in FRETBOARD_INSTRUMENTS_PROPS, so update it here
       };
       this.fretboard.reset();
     });
@@ -185,7 +184,7 @@ class FretboardMultitool extends Container {
     );
 
     this.fretboardMenu.colorThemeSelect.addEventListener("change", (event) => {
-      this.container.style.backgroundColor =
+      this.fretboardMultitool.style.backgroundColor =
         COLOR_THEMES[event.target.value].background;
       this.fretboard.props.colorTheme = COLOR_THEMES[event.target.value];
       this.fretboard.setColors();
@@ -202,17 +201,17 @@ class FretboardMultitool extends Container {
     });
 
     this.showHideButton = new SquashyMenuIcon(PROPS.colorTheme.foreground);
-    this.showHideButton.container.addEventListener("pointerdown", () => {
-      this.fretboardMenu.container.style.display =
-        this.fretboardMenu.container.style.display === "none"
+    this.showHideButton.button.addEventListener("pointerdown", () => {
+      this.fretboardMenu.fretboardMenu.style.display =
+        this.fretboardMenu.fretboardMenu.style.display === "none"
           ? "block"
           : "none";
     });
 
     this.addToolButton = new SpinningPlusIcon(PROPS.colorTheme.foreground);
-    this.addToolButton.container.style.marginLeft = "1em";
-    this.addToolButton.container.addEventListener("pointerdown", () => {
-      this.container.dispatchEvent(
+    this.addToolButton.button.style.marginLeft = "1em";
+    this.addToolButton.button.addEventListener("pointerdown", () => {
+      this.fretboardMultitool.dispatchEvent(
         new CustomEvent("addtool", {
           detail: this.fretboard.props,
           bubbles: true,
@@ -221,16 +220,18 @@ class FretboardMultitool extends Container {
     });
 
     this.removeToolButton = new SpinningMinusIcon(PROPS.colorTheme.foreground);
-    this.removeToolButton.container.style.marginLeft = "1em";
-    this.removeToolButton.container.addEventListener("pointerdown", () => {
-      this.container.dispatchEvent(new Event("removetool", { bubbles: true }));
+    this.removeToolButton.button.style.marginLeft = "1em";
+    this.removeToolButton.button.addEventListener("pointerdown", () => {
+      this.fretboardMultitool.dispatchEvent(
+        new Event("removetool", { bubbles: true })
+      );
     });
 
-    this.render(this.fretboardMenu.container);
-    this.render(this.fretboard.fretboard);
-    this.render(this.showHideButton.container);
-    this.render(this.addToolButton.container);
-    this.render(this.removeToolButton.container);
+    this.fretboardMultitool.appendChild(this.fretboardMenu.fretboardMenu);
+    this.fretboardMultitool.appendChild(this.fretboard.fretboard);
+    this.fretboardMultitool.appendChild(this.showHideButton.button);
+    this.fretboardMultitool.appendChild(this.addToolButton.button);
+    this.fretboardMultitool.appendChild(this.removeToolButton.button);
 
     this.addKeyboardShortcuts();
   }
@@ -244,7 +245,7 @@ class FretboardMultitool extends Container {
     this.fretboard.props.sequence = SEQUENCE.sequence;
     // reset note names
     const NOTE_LABELS_TYPE = this.fretboardMenu.noteLabelsSelect.value;
-    // spread NOTE_LABELS[NOTE_LABELS_TYPE] so it is a deep copy
+    // spread NOTE_LABELS[NOTE_LABELS_TYPE] so it is a copy
     // because values can be overwritten below
     let labels = [...NOTE_LABELS[NOTE_LABELS_TYPE]];
     if (SEQUENCE.labels && SEQUENCE.labels[NOTE_LABELS_TYPE]) {
@@ -260,15 +261,15 @@ class FretboardMultitool extends Container {
 
   set tabIndex(index) {
     // helps this div to be keyboard focusable
-    this.container.tabIndex = index;
+    this.fretboardMultitool.tabIndex = index;
   }
 
   addKeyboardShortcuts() {
     this.tabIndex = "-1";
-    this.container.addEventListener("pointerdown", () => {
-      this.container.focus();
+    this.fretboardMultitool.addEventListener("pointerdown", () => {
+      this.fretboardMultitool.focus();
     });
-    this.container.addEventListener("keydown", (event) => {
+    this.fretboardMultitool.addEventListener("keydown", (event) => {
       // ROOT NOTE SHORTCUTS
       switch (event.key) {
         case "z":

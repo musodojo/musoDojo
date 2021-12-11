@@ -3,22 +3,25 @@ class FretboardCourse {
     const COURSE = document.createElement("div");
     COURSE.style.position = "absolute";
     COURSE.style.display = "flex";
-    COURSE.style.alignItems = "center";
+    COURSE.style.flexDirection = "column";
+    COURSE.style.justifyContent = "center";
 
-    // assume each string area is equal in height
-    const HEIGHT = `calc(${fretboard.fingerboard.style.height} / ${fretboard.props.tuning.length})`;
-    COURSE.style.top = `calc(${HEIGHT} * (${courseNum} - 1))`;
+    const COURSE_HEIGHT = `calc(${fretboard.fingerboard.style.height} / ${fretboard.props.tuning.length})`;
+    const STRING_HEIGHT = `max(calc(${COURSE_HEIGHT} / 25), 1px)`;
+    COURSE.style.gap = STRING_HEIGHT;
+
+    COURSE.style.top = `calc(${COURSE_HEIGHT} * (${courseNum}))`;
     COURSE.style.width = "100%";
-    COURSE.style.height = HEIGHT;
+    COURSE.style.height = COURSE_HEIGHT;
 
     fretboard.fingerboard.appendChild(COURSE);
 
-    const STRING = document.createElement("div");
-    STRING.style.backgroundColor = fretboard.props.colorTheme.foreground;
-    STRING.style.width = "100%";
-    STRING.style.height = `max(calc(${HEIGHT} / 20), 1px)`;
-
-    COURSE.appendChild(STRING);
+    fretboard.props.tuning[courseNum].forEach(() => {
+      const STRING = document.createElement("div");
+      STRING.style.backgroundColor = fretboard.props.colorTheme.foreground;
+      STRING.style.height = STRING_HEIGHT;
+      COURSE.appendChild(STRING);
+    });
   }
 }
 

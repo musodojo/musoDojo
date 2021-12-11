@@ -1,13 +1,20 @@
 const FRETBOARD_TUNINGS = {
-  // tuning is an array of the fretboard's open strings' midi notes
+  // each tuning is an array of the fretboard's open courses' midi notes
   // listed from lowest string to highest
-  Guitar: [40, 45, 50, 55, 59, 64], // EADGBE
-  "Guitar DADGAD": [38, 45, 50, 55, 57, 62], // DADGAD
-  "Guitar DADGBE": [38, 45, 50, 55, 59, 64], // Drop D
-  Bass: [28, 33, 38, 43], // EADG
-  Violin: [55, 62, 69, 76], // GDAE
-  Ukulele: [55, 60, 64, 69], // GCEA
-  Mandolin: [55, 62, 69, 76], // GDAE
+  // a "course" may contain multiple strings e.g. on a Mandolin
+  // so each open course midi value is an array
+  Guitar: [[40], [45], [50], [55], [59], [64]], // EADGBE
+  "Guitar DADGAD": [[38], [45], [50], [55], [57], [62]], // DADGAD
+  "Guitar DADGBE": [[38], [45], [50], [55], [59], [64]], // Drop D
+  Bass: [[28], [33], [38], [43]], // EADG
+  Violin: [[55], [62], [69], [76]], // GDAE
+  Ukulele: [[55], [60], [64], [69]], // GCEA
+  Mandolin: [
+    [55, 55],
+    [62, 62],
+    [69, 69],
+    [76, 76],
+  ], // GDAE
   //DADGBD: [38, 45, 50, 55, 59, 62], // Double Drop D
   //EbAbDbGbBbEb: [39, 44, 49, 54, 58, 63], // Half Step Down
   //DGCFAD: [38, 43, 48, 53, 57, 62], // Whole Step Down

@@ -5,13 +5,13 @@ class SpinningMinusIcon {
     width = "1.5em",
     height = "1.5em"
   ) {
-    this.container = document.createElement("button");
-    this.container.style.position = "relative";
-    this.container.style.border = "0";
-    this.container.style.cursor = "pointer";
-    this.container.style.width = width;
-    this.container.style.height = height;
-    this.container.style.backgroundColor = backgroundColor;
+    this.button = document.createElement("button");
+    this.button.style.position = "relative";
+    this.button.style.border = "0";
+    this.button.style.cursor = "pointer";
+    this.button.style.width = width;
+    this.button.style.height = height;
+    this.button.style.backgroundColor = backgroundColor;
 
     this.textDiv = document.createElement("div");
     this.textDiv.style.position = "relative";
@@ -22,7 +22,7 @@ class SpinningMinusIcon {
     this.textDiv.style.transform = "translate(-50%, -50%)";
     // 0.2s in this.textDiv.style.transition = 200ms in setTimeout in toggle function
     this.textDiv.style.transition = "transform 0.2s ease";
-    this.container.appendChild(this.textDiv);
+    this.button.appendChild(this.textDiv);
 
     this.bar = document.createElement("div");
     this.bar.style.position = "absolute";
@@ -34,7 +34,7 @@ class SpinningMinusIcon {
     this.bar.style.backgroundColor = foregroundColor;
     this.textDiv.appendChild(this.bar);
 
-    this.container.addEventListener(
+    this.button.addEventListener(
       "pointerdown",
       () => {
         this.toggle();
@@ -54,7 +54,7 @@ class SpinningMinusIcon {
   }
 
   setColorTheme(foregroundColor, backgroundColor = "transparent") {
-    this.container.style.backgroundColor = backgroundColor;
+    this.button.style.backgroundColor = backgroundColor;
     this.bar.style.backgroundColor = foregroundColor;
   }
 }

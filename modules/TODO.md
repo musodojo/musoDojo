@@ -2,14 +2,21 @@
 
 - strum mode, which plays nearest large note in direction of nut!
 - subtract padding / border from width, height in CSS calc
-- handle if an array is returned from getMidi - make tuning[elements] and getMidi arrays only, not numbers
 - update without redrawing, if possible - investigate update() and reset()
 - changes in freboard height filter to fingerboard + side - grid?
+- reset and update should set the colors in colorTheme?
 
 # Fretboard Menu
 
 - 0-referenced colors, e.g. root is red and 5th is green for all keys
+- chrome holds onto pointerdown after a menu selection
 
 # Audio Interface
 
 - HQ audio sprite - violin high note missing
+
+# Other
+
+- fretboardConfings instead of instrument?
+- finish altered b13, etc...
+- investigate storing of this.everything in all mjs files

@@ -1,18 +1,17 @@
-import { Container } from "./container.mjs";
-import { FretboardMultitool } from "./fretboardMultitool.mjs";
-import { INSTRUMENT_CONFIGS } from "../data/instrumentConfigs.mjs";
+import { FretboardMultitool } from "./fretboard/fretboardMultitool.mjs";
+import { FRETBOARD_INSTRUMENTS_PROPS } from "../data/fretboardInstrumentsProps.mjs";
 
-class Multitool extends Container {
+class Multitool {
   constructor(props = {}) {
-    super();
-    this.container.style.display = "flex";
-    this.container.style.flexFlow = "row wrap";
+    this.multitool = document.createElement("div");
+    this.multitool.style.display = "flex";
+    this.multitool.style.flexFlow = "row wrap";
     this.props = { ...props };
-    this.container.addEventListener("addtool", (event) => {
+    this.multitool.addEventListener("addtool", (event) => {
       // event.detail contains Fretboard.props of the fretboard to be cloned
       this.addTool(event.detail);
     });
-    this.container.addEventListener("removetool", (event) => {
+    this.multitool.addEventListener("removetool", (event) => {
       const TOOL = event.target;
       // fade out
       TOOL.style.opacity = "0.25";
@@ -29,40 +28,40 @@ class Multitool extends Container {
     switch (PROPS.instrument) {
       case "Guitar":
         tool = new FretboardMultitool({
-          ...INSTRUMENT_CONFIGS.instruments[PROPS.instrument],
+          ...FRETBOARD_INSTRUMENTS_PROPS.instruments[PROPS.instrument],
           ...PROPS,
         });
         break;
       case "Bass":
         tool = new FretboardMultitool({
-          ...INSTRUMENT_CONFIGS.instruments[PROPS.instrument],
+          ...FRETBOARD_INSTRUMENTS_PROPS.instruments[PROPS.instrument],
           ...PROPS,
         });
         break;
       case "Violin":
         tool = new FretboardMultitool({
-          ...INSTRUMENT_CONFIGS.instruments[PROPS.instrument],
+          ...FRETBOARD_INSTRUMENTS_PROPS.instruments[PROPS.instrument],
           ...PROPS,
         });
         break;
       case "Ukulele":
         tool = new FretboardMultitool({
-          ...INSTRUMENT_CONFIGS.instruments[PROPS.instrument],
+          ...FRETBOARD_INSTRUMENTS_PROPS.instruments[PROPS.instrument],
           ...PROPS,
         });
         break;
       default:
         tool = new FretboardMultitool(PROPS);
     }
-    tool.container.style.margin = "1em";
+    tool.fretboardMultitool.style.margin = "1em";
     // 200ms is same as css transition time in spinningMinusIcon
-    tool.container.style.opacity = "0.25";
-    tool.container.style.transition = "opacity 0.2s linear";
-    this.render(tool.container);
+    tool.fretboardMultitool.style.opacity = "0.25";
+    tool.fretboardMultitool.style.transition = "opacity 0.2s linear";
+    this.multitool.appendChild(tool.fretboardMultitool);
     // needs a small delay before resetting css opacity
     // otherwise it doesn't transition
     setTimeout(() => {
-      tool.container.style.opacity = "1";
+      tool.fretboardMultitool.style.opacity = "1";
     }, 20);
   }
 }

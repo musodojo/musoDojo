@@ -14,7 +14,9 @@ class Fretboard {
         instrument: "Guitar",
 
         // standard guitar tuning: [E=40,A=45,D=50,G=55,B=59,E=64]
-        tuning: [40, 45, 50, 55, 59, 64],
+        // each element is the open course's midi value
+        // each course can contain multiple strings
+        tuning: [[40], [45], [50], [55], [59], [64]],
 
         // these available settings are not set here, but can be passed in via props
         // rootNote: 0, // would be "C / C♮ / D♭♭ / B♯"
@@ -29,7 +31,7 @@ class Fretboard {
 
         // this value is used as hand.toLowerCase() in position calculations
         // the capitalized "R" in "Right" comes from the menu settings using capital letters
-        // and for consistency with data/instrumentConfigs.mjs
+        // and for consistency with fretboardInstrumentsProps.mjs
         hand: "Right",
 
         // default to no labels displayed inside the notes
@@ -218,7 +220,7 @@ class Fretboard {
   }
 
   // make sure hand is either "Left" or "Right"
-  // the capital first letter is used in instrumentConfigs.mjs
+  // the capital first letter is used in fretboardInstrumentsProps.mjs
   // and FretboardMenu.mjs
   checkHand() {
     if (
@@ -257,19 +259,12 @@ class Fretboard {
     return this.props.toFret - this.props.fromFret + 1;
   }
 
-  // returns the MIDI number of a note on a given course and fret
-  // if a course contains multiple strings, i.e. props.tuning contains an array,
-  // an array of MIDI numbers is returned
+  // returns an array of MIDI numbers for notes on a given course and fret
+  // a course can contain multiple strings - props.tuning[x] contains an array,
   getMidi(courseNum, fretNum) {
-    const MIDI = this.props.tuning[this.props.tuning.length - courseNum];
-    if (typeof MIDI === "number")
-      return this.props.tuning[this.props.tuning.length - courseNum] + fretNum;
-    if (typeof MIDI === "object")
-      return this.props.tuning[this.props.tuning.length - courseNum].map(
-        (midiValue) => {
-          midiValue + fretnum;
-        }
-      );
+    return this.props.tuning[this.props.tuning.length - courseNum].map(
+      (midiValue) => midiValue + fretNum
+    );
   }
 
   // returns a number representing the width in px between (fretNum-1) and (fretNum)
@@ -385,10 +380,8 @@ class Fretboard {
     }
   }
 
-  // course numbers start counting from 1
   renderCourses() {
-    const NUM_COURSES = this.props.tuning.length;
-    for (let i = 1; i <= NUM_COURSES; i++) {
+    for (let i = 0; i < this.props.tuning.length; i++) {
       new FretboardCourse(this, i);
     }
   }
@@ -436,8 +429,9 @@ class Fretboard {
   togglePitchClass(courseNum, fretNum) {
     try {
       const NOTE = this.state.notes[`${courseNum}_${fretNum}`];
-      const SELECTED_PITCH_CLASS = this.getMidi(courseNum, fretNum) % 12;
-      let currentPitchClass, currentNote;
+      // only work with the first value if a course contains multiple strings
+      const SELECTED_PITCH_CLASS = this.getMidi(courseNum, fretNum)[0] % 12;
+      let currentPitchClass;
       // grab value of note width because it will change later
       if (NOTE) {
         var SIZE = NOTE.size;
@@ -447,9 +441,8 @@ class Fretboard {
       }
       for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
         for (let j = 1; j <= this.props.tuning.length; j++) {
-          currentPitchClass = this.getMidi(j, i) % 12;
+          currentPitchClass = this.getMidi(j, i)[0] % 12;
           if (currentPitchClass === SELECTED_PITCH_CLASS) {
-            currentNote = this.state.notes[`${j}_${i}`];
             if (!NOTE) {
               this.renderNote(j, i, this.props.noteSizes.first);
             } else {
@@ -507,7 +500,7 @@ class Fretboard {
     try {
       for (let i = this.props.fromFret; i <= this.props.toFret; i++) {
         for (let j = 1; j <= this.props.tuning.length; j++) {
-          const INTERVAL = (this.getMidi(j, i) - rootNote) % 12;
+          const INTERVAL = (this.getMidi(j, i)[0] - rootNote) % 12;
           if (sequence.includes(INTERVAL)) {
             this.renderNote(j, i, size);
           }

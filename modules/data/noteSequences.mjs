@@ -1,5 +1,5 @@
 const NOTE_SEQUENCES = {
-  Modes: {
+  Mode: {
     "Ionian / Major": {
       sequence: [0, 2, 4, 5, 7, 9, 11],
     },
@@ -14,7 +14,7 @@ const NOTE_SEQUENCES = {
       labels: {
         Quality: { 6: "A4" },
         Relative: { 6: "♯4" },
-        Extension: { 6: "#11" },
+        Extension: { 6: "♯11" },
       },
     },
     Mixolydian: {
@@ -25,6 +25,26 @@ const NOTE_SEQUENCES = {
     },
     Locrian: {
       sequence: [0, 1, 3, 5, 6, 8, 10],
+    },
+  },
+  Pentatonic: {
+    "Major Pentatonic": {
+      sequence: [0, 2, 4, 7, 9],
+    },
+    "Suspended Pentatonic": {
+      sequence: [0, 2, 5, 7, 10],
+    },
+    "Blues Minor Pentatonic": {
+      sequence: [0, 3, 5, 8, 10],
+    },
+    "Blues Major Pentatonic": {
+      sequence: [0, 2, 5, 7, 9],
+    },
+    "Minor Pentatonic": {
+      sequence: [0, 3, 5, 7, 10],
+    },
+    "Dominant Pentatonic": {
+      sequence: [0, 2, 4, 7, 10],
     },
   },
   Major: {
@@ -103,26 +123,6 @@ const NOTE_SEQUENCES = {
       },
     },
   },
-  Pentatonic: {
-    "Major Pentatonic": {
-      sequence: [0, 2, 4, 7, 9],
-    },
-    "Suspended Pentatonic": {
-      sequence: [0, 2, 5, 7, 10],
-    },
-    "Blues Minor Pentatonic": {
-      sequence: [0, 3, 5, 8, 10],
-    },
-    "Blues Major Pentatonic": {
-      sequence: [0, 2, 5, 7, 9],
-    },
-    "Minor Pentatonic": {
-      sequence: [0, 3, 5, 7, 10],
-    },
-    "Dominant Pentatonic": {
-      sequence: [0, 2, 4, 7, 10],
-    },
-  },
   Diminished: {
     "dim / o / Diminished Triad": {
       sequence: [0, 3, 6],
@@ -161,40 +161,40 @@ const NOTE_SEQUENCES = {
       sequence: [0, 4, 8],
       labels: {
         Quality: { 8: "A5" },
-        Relative: { 8: "#5" },
-        Extension: { 8: "#5" },
+        Relative: { 8: "♯5" },
+        Extension: { 8: "♯5" },
       },
     },
     "It+6 / Italian 6th": {
       sequence: [0, 4, 10],
       labels: {
         Quality: { 10: "A6" },
-        Relative: { 10: "#6" },
-        Extension: { 10: "#13" },
+        Relative: { 10: "♯6" },
+        Extension: { 10: "♯13" },
       },
     },
     "Fr+6 / French 6th": {
       sequence: [0, 4, 6, 10],
       labels: {
         Quality: { 10: "A6" },
-        Relative: { 10: "#6" },
-        Extension: { 10: "#13" },
+        Relative: { 10: "♯6" },
+        Extension: { 10: "♯13" },
       },
     },
     "Ger+6 / German 6th": {
       sequence: [0, 4, 7, 10],
       labels: {
         Quality: { 10: "A6" },
-        Relative: { 10: "#6" },
-        Extension: { 10: "#13" },
+        Relative: { 10: "♯6" },
+        Extension: { 10: "♯13" },
       },
     },
     "aug7 / +7 / 7#5 / Augmented Seventh": {
       sequence: [0, 4, 8, 10],
       labels: {
         Quality: { 8: "A5" },
-        Relative: { 8: "#5" },
-        Extension: { 8: "#5" },
+        Relative: { 8: "♯5" },
+        Extension: { 8: "♯5" },
       },
     },
   },
@@ -219,6 +219,11 @@ const NOTE_SEQUENCES = {
     },
     "Super Locrian / Altered": {
       sequence: [0, 1, 3, 4, 6, 8, 10],
+      labels: {
+        Quality: { 3: "A2", 6: "A4" },
+        Relative: { 3: "♯2", 6: "♯4" },
+        Extension: { 3: "♯9", 6: "♯11" },
+      },
     },
   },
   "Harmonic Minor": {
