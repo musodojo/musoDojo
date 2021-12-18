@@ -3,8 +3,11 @@
 - strum mode, which plays nearest large note in direction of nut!
 - subtract padding / border from width, height in CSS calc
 - update without redrawing, if possible - investigate update() and reset()
+- fretboard updateProps(props={}) - runs update/reset as necessary
 - changes in freboard height filter to fingerboard + side - grid?
 - reset and update should set the colors in colorTheme?
+- mode change updates fretboard - keep notes
+- change order in renderFretboard - courses last if mode = strum
 
 # Fretboard Menu
 
@@ -14,9 +17,9 @@
 # Audio Interface
 
 - HQ audio sprite - violin high note missing
+- Mandolin uses guitar audio - needs higher notes
 
 # Other
 
-- fretboardConfings instead of instrument?
 - finish altered b13, etc...
 - investigate storing of this.everything in all mjs files

@@ -6,6 +6,9 @@ class Multitool {
     this.multitool = document.createElement("div");
     this.multitool.style.display = "flex";
     this.multitool.style.flexFlow = "row wrap";
+    this.multitool.style.gap = "1em";
+    this.multitool.style.height = "100vh";
+
     this.props = { ...props };
     this.multitool.addEventListener("addtool", (event) => {
       // event.detail contains Fretboard.props of the fretboard to be cloned
@@ -15,7 +18,7 @@ class Multitool {
       const TOOL = event.target;
       // fade out
       TOOL.style.opacity = "0.25";
-      // 200ms is same as css transition time in spinningMinusIcon
+      // 200ms is same as css transition time in spinningMinusButton
       setTimeout(() => {
         TOOL.remove();
       }, 200);
@@ -53,7 +56,6 @@ class Multitool {
       default:
         tool = new FretboardMultitool(PROPS);
     }
-    tool.fretboardMultitool.style.margin = "1em";
     // 200ms is same as css transition time in spinningMinusIcon
     tool.fretboardMultitool.style.opacity = "0.25";
     tool.fretboardMultitool.style.transition = "opacity 0.2s linear";

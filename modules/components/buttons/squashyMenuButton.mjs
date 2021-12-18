@@ -1,4 +1,4 @@
-class SquashyMenuIcon {
+class SquashyMenuButton {
   constructor(
     foregroundColor = "#000000",
     backgroundColor = "transparent",
@@ -73,4 +73,4 @@ class SquashyMenuIcon {
   }
 }
 
-export { SquashyMenuIcon };
+export { SquashyMenuButton };

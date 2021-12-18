@@ -1,4 +1,4 @@
-class SpinningMinusIcon {
+class SpinningMinusButton {
   constructor(
     foregroundColor = "#000000",
     backgroundColor = "transparent",
@@ -59,4 +59,4 @@ class SpinningMinusIcon {
   }
 }
 
-export { SpinningMinusIcon };
+export { SpinningMinusButton };

@@ -6,9 +6,9 @@ import { NOTE_SEQUENCES } from "../../data/noteSequences.mjs";
 import { NOTE_LABELS } from "../../data/noteLabels.mjs";
 import { NOTE_COLORS } from "../../data/noteColors.mjs";
 import { COLOR_THEMES } from "../../data/colorThemes.mjs";
-import { SquashyMenuIcon } from "../../icons/squashyMenuIcon.mjs";
-import { SpinningPlusIcon } from "../../icons/spinningPlusIcon.mjs";
-import { SpinningMinusIcon } from "../../icons/spinningMinusIcon.mjs";
+import { SquashyMenuButton } from "../buttons/squashyMenuButton.mjs";
+import { SpinningPlusButton } from "../buttons/spinningPlusButton.mjs";
+import { SpinningMinusButton } from "../buttons/spinningMinusButton.mjs";
 
 class FretboardMultitool {
   constructor(props = {}) {
@@ -19,7 +19,7 @@ class FretboardMultitool {
 
     this.fretboardMenu = new FretboardMenu(PROPS);
     this.fretboard = new Fretboard(PROPS);
-    this.fretboard.fretboard.style.marginBottom = "0.3em";
+    this.fretboard.fretboard.style.margin = "0 0 0.5em 0";
 
     // catch a pointer down/up event that happens in the FretboardMultitool
     // push/clear that pointer id if it hasn't been pushed/cleared by Fretboard
@@ -200,15 +200,23 @@ class FretboardMultitool {
       );
     });
 
-    this.showHideButton = new SquashyMenuIcon(PROPS.colorTheme.foreground);
+    this.showHideButton = new SquashyMenuButton(PROPS.colorTheme.foreground);
+    this.fretboardMenu.fretboardMenu.style.transition = "transform 0.2s";
     this.showHideButton.button.addEventListener("pointerdown", () => {
-      this.fretboardMenu.fretboardMenu.style.display =
-        this.fretboardMenu.fretboardMenu.style.display === "none"
-          ? "block"
-          : "none";
+      if (this.fretboardMenu.fretboardMenu.style.display === "none") {
+        this.fretboardMenu.fretboardMenu.style.display = "block";
+        setTimeout(() => {
+          this.fretboardMenu.fretboardMenu.style.transform = "scaleY(1)";
+        }, 20);
+      } else {
+        this.fretboardMenu.fretboardMenu.style.transform = "scaleY(0)";
+        setTimeout(() => {
+          this.fretboardMenu.fretboardMenu.style.display = "none";
+        }, 200);
+      }
     });
 
-    this.addToolButton = new SpinningPlusIcon(PROPS.colorTheme.foreground);
+    this.addToolButton = new SpinningPlusButton(PROPS.colorTheme.foreground);
     this.addToolButton.button.style.marginLeft = "1em";
     this.addToolButton.button.addEventListener("pointerdown", () => {
       this.fretboardMultitool.dispatchEvent(
@@ -219,7 +227,9 @@ class FretboardMultitool {
       );
     });
 
-    this.removeToolButton = new SpinningMinusIcon(PROPS.colorTheme.foreground);
+    this.removeToolButton = new SpinningMinusButton(
+      PROPS.colorTheme.foreground
+    );
     this.removeToolButton.button.style.marginLeft = "1em";
     this.removeToolButton.button.addEventListener("pointerdown", () => {
       this.fretboardMultitool.dispatchEvent(
