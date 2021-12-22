@@ -7,7 +7,6 @@ class Multitool {
     this.multitool.style.display = "flex";
     this.multitool.style.flexFlow = "row wrap";
     this.multitool.style.gap = "1em";
-    this.multitool.style.height = "100vh";
 
     this.props = { ...props };
     this.multitool.addEventListener("addtool", (event) => {
