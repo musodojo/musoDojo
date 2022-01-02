@@ -1,7 +1,8 @@
 import {
-  getFretboardTuningNameFromValue,
-  getFretboardTuningSelect,
-} from "../../data/fretboardTunings.mjs";
+  FRETBOARD_INSTRUMENTS_PROPS,
+  getFretboardInstrumentNameFromTuning,
+  getFretboardInstrumentSelect,
+} from "../../data/fretboardInstrumentsProps.mjs";
 import { NOTE_NAMES, getNoteNamesSelect } from "../../data/noteNames.mjs";
 import {
   getSequenceNameFromValue,
@@ -27,22 +28,7 @@ class FretboardMenu {
   constructor(props = {}, width = "46em") {
     // don't need to store this.props in this class
     const PROPS = {
-      instrument: "Guitar",
-      rootNote: 0,
-      sequence: [0, 2, 4, 5, 7, 9, 11],
-      fromFret: 0,
-      toFret: 21,
-      // mode = "Play" || "Edit One" || "Edit All"
-      mode: "Play",
-      hand: "Right",
-      noteLabels: NOTE_LABELS["None"],
-      noteColors: NOTE_COLORS["Muso Dojo"],
-      noteSizes: { first: "91%", second: "55%" },
-      // noteDuration = -1 means play full note duration
-      // noteDuration = 0 means play note until up event occurs
-      // noteDuration = x means play note for x seconds (clipped at note's duration in audio sprite)
-      noteDuration: 0,
-      colorTheme: COLOR_THEMES["Dark"],
+      ...FRETBOARD_INSTRUMENTS_PROPS.defaults,
       ...props,
     };
 
@@ -50,6 +36,7 @@ class FretboardMenu {
     this.fretboardMenu.style.backgroundColor = PROPS.colorTheme.background;
     this.fretboardMenu.style.maxWidth = width;
 
+    // a general style for a HTML <select>
     const SELECT_STYLE = {
       "font-size": "1em",
       "background-color": PROPS.colorTheme.background,
@@ -58,19 +45,26 @@ class FretboardMenu {
       "border-radius": "0.2em",
     };
 
-    this.instrumentSelect = getFretboardTuningSelect(
-      getFretboardTuningNameFromValue(PROPS.tuning)
+    // Instrument Select
+    this.instrumentSelect = getFretboardInstrumentSelect(
+      getFretboardInstrumentNameFromTuning(PROPS.tuning)
     );
     Object.assign(this.instrumentSelect.style, SELECT_STYLE);
+    this.fretboardMenu.appendChild(this.instrumentSelect);
 
+    // Roor Note Select
     this.rootNoteSelect = getNoteNamesSelect(NOTE_NAMES[PROPS.rootNote]);
     Object.assign(this.rootNoteSelect.style, SELECT_STYLE);
+    this.fretboardMenu.appendChild(this.rootNoteSelect);
 
+    // Note Sequence Select
     this.noteSequenceSelect = getNoteSequenceSelect(
       getSequenceNameFromValue(PROPS.sequence)
     );
     Object.assign(this.noteSequenceSelect.style, SELECT_STYLE);
+    this.fretboardMenu.appendChild(this.noteSequenceSelect);
 
+    // From Fret Select
     this.fromFretSelect = document.createElement("select");
     Object.assign(this.fromFretSelect.style, SELECT_STYLE);
     const FROM_FRET_LABEL = document.createElement("option");
@@ -90,7 +84,9 @@ class FretboardMenu {
       const TO_FRET = parseInt(this.toFretSelect.value);
       this.fromFretSelect.value = FROM_FRET > TO_FRET ? TO_FRET : FROM_FRET;
     });
+    this.fretboardMenu.appendChild(this.fromFretSelect);
 
+    // To Fret Select
     this.toFretSelect = document.createElement("select");
     Object.assign(this.toFretSelect.style, SELECT_STYLE);
     const TO_FRET_LABEL = document.createElement("option");
@@ -110,7 +106,9 @@ class FretboardMenu {
       const TO_FRET = parseInt(this.toFretSelect.value);
       this.toFretSelect.value = TO_FRET < FROM_FRET ? FROM_FRET : TO_FRET;
     });
+    this.fretboardMenu.appendChild(this.toFretSelect);
 
+    // Mode Select
     this.modeSelect = document.createElement("select");
     Object.assign(this.modeSelect.style, SELECT_STYLE);
     const MODE_LABEL = document.createElement("option");
@@ -127,7 +125,9 @@ class FretboardMenu {
     MODE_EDITALL_OPTION.text = "Edit All";
     this.modeSelect.add(MODE_EDITALL_OPTION);
     this.modeSelect.value = PROPS.mode;
+    this.fretboardMenu.appendChild(this.modeSelect);
 
+    // Hand Select
     this.handSelect = document.createElement("select");
     Object.assign(this.handSelect.style, SELECT_STYLE);
     const HAND_LABEL = document.createElement("option");
@@ -141,17 +141,23 @@ class FretboardMenu {
     HAND_RIGHT_OPTION.text = "Right";
     this.handSelect.add(HAND_RIGHT_OPTION);
     this.handSelect.value = PROPS.hand;
+    this.fretboardMenu.appendChild(this.handSelect);
 
+    // Note Labels Select
     this.noteLabelsSelect = getNoteLabelsSelect(
       getLabelsNameFromValue(PROPS.noteLabels)
     );
     Object.assign(this.noteLabelsSelect.style, SELECT_STYLE);
+    this.fretboardMenu.appendChild(this.noteLabelsSelect);
 
+    // Note Colors/Colours Select
     this.noteColorsSelect = getNoteColorsSelect(
       getNoteColorsNameFromValue(PROPS.noteColors)
     );
     Object.assign(this.noteColorsSelect.style, SELECT_STYLE);
+    this.fretboardMenu.appendChild(this.noteColorsSelect);
 
+    // Note Size Select
     this.noteSizeSelect = document.createElement("select");
     Object.assign(this.noteSizeSelect.style, SELECT_STYLE);
     const NOTE_SIZE_LABEL = document.createElement("option");
@@ -168,7 +174,9 @@ class FretboardMenu {
       parseInt(PROPS.noteSizes.first) > parseInt(PROPS.noteSizes.second)
         ? "Large"
         : "Small";
+    this.fretboardMenu.appendChild(this.noteSizeSelect);
 
+    // Note Duration Select
     this.noteDurationSelect = document.createElement("select");
     Object.assign(this.noteDurationSelect.style, SELECT_STYLE);
     const NOTE_DURATION_LABEL = document.createElement("option");
@@ -196,7 +204,9 @@ class FretboardMenu {
     NOTE_DURATION_3_OPTION.value = "3";
     this.noteDurationSelect.add(NOTE_DURATION_3_OPTION);
     this.noteDurationSelect.value = PROPS.noteDuration;
+    this.fretboardMenu.appendChild(this.noteDurationSelect);
 
+    // COlor Theme Select
     this.colorThemeSelect = getColorThemeSelect(
       getColorThemeNameFromValue(PROPS.colorTheme)
     );
@@ -210,18 +220,6 @@ class FretboardMenu {
       });
       this.fretboardMenu.style.backgroundColor = COLOR_THEME.background;
     });
-
-    this.fretboardMenu.appendChild(this.instrumentSelect);
-    this.fretboardMenu.appendChild(this.rootNoteSelect);
-    this.fretboardMenu.appendChild(this.noteSequenceSelect);
-    this.fretboardMenu.appendChild(this.fromFretSelect);
-    this.fretboardMenu.appendChild(this.toFretSelect);
-    this.fretboardMenu.appendChild(this.modeSelect);
-    this.fretboardMenu.appendChild(this.handSelect);
-    this.fretboardMenu.appendChild(this.noteLabelsSelect);
-    this.fretboardMenu.appendChild(this.noteColorsSelect);
-    this.fretboardMenu.appendChild(this.noteSizeSelect);
-    this.fretboardMenu.appendChild(this.noteDurationSelect);
     this.fretboardMenu.appendChild(this.colorThemeSelect);
   }
 }
