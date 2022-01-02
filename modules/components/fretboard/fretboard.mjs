@@ -24,7 +24,7 @@ class Fretboard {
         // sequence: [0] // would be just the root note
 
         fromFret: 0,
-        toFret: 21,
+        toFret: 24,
 
         // mode = "Play" || "Edit One" || "Edit All"
         mode: "Play",

@@ -18,8 +18,11 @@ class FretboardMultitool {
     this.fretboardMultitool.style.backgroundColor = PROPS.colorTheme.background;
 
     this.fretboardMenu = new FretboardMenu(PROPS);
+    this.fretboardMultitool.appendChild(this.fretboardMenu.fretboardMenu);
+
     this.fretboard = new Fretboard(PROPS);
-    this.fretboard.fretboard.style.margin = "0 0 0.5em 0";
+    this.fretboard.fretboard.style.marginBottom = "0.5em";
+    this.fretboardMultitool.appendChild(this.fretboard.fretboard);
 
     // catch a pointer down/up event that happens in the FretboardMultitool
     // push/clear that pointer id if it hasn't been pushed/cleared by Fretboard
@@ -84,10 +87,11 @@ class FretboardMultitool {
       this.fretboard.props = {
         ...this.fretboard.props,
         ...FRETBOARD_INSTRUMENTS_PROPS.instruments[event.target.value],
-        fromFret: parseInt(this.fretboardMenu.fromFretSelect.value), // default fret value is set in FRETBOARD_INSTRUMENTS_PROPS, so update it here
-        toFret: parseInt(this.fretboardMenu.toFretSelect.value), // default fret value is set in FRETBOARD_INSTRUMENTS_PROPS, so update it here
       };
       this.fretboard.reset();
+      // update the fret number selects
+      this.fretboardMenu.fromFretSelect.value = this.fretboard.props.fromFret;
+      this.fretboardMenu.toFretSelect.value = this.fretboard.props.toFret;
     });
 
     this.fretboardMenu.rootNoteSelect.addEventListener("change", (event) => {
@@ -215,6 +219,7 @@ class FretboardMultitool {
         }, 200);
       }
     });
+    this.fretboardMultitool.appendChild(this.showHideButton.button);
 
     this.addToolButton = new SpinningPlusButton(PROPS.colorTheme.foreground);
     this.addToolButton.button.style.marginLeft = "1em";
@@ -226,6 +231,7 @@ class FretboardMultitool {
         })
       );
     });
+    this.fretboardMultitool.appendChild(this.addToolButton.button);
 
     this.removeToolButton = new SpinningMinusButton(
       PROPS.colorTheme.foreground
@@ -236,11 +242,6 @@ class FretboardMultitool {
         new Event("removetool", { bubbles: true })
       );
     });
-
-    this.fretboardMultitool.appendChild(this.fretboardMenu.fretboardMenu);
-    this.fretboardMultitool.appendChild(this.fretboard.fretboard);
-    this.fretboardMultitool.appendChild(this.showHideButton.button);
-    this.fretboardMultitool.appendChild(this.addToolButton.button);
     this.fretboardMultitool.appendChild(this.removeToolButton.button);
 
     this.addKeyboardShortcuts();
