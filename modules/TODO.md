@@ -23,3 +23,6 @@
 
 - finish altered b13, etc...
 - investigate storing of this.everything in all mjs files
+- extension Label dissapeared on replicate and change key, then sequence
+  -- NOTE_SEQUENCES labels overwrite
+- predifined select menu: ii Dorian, iii Phrygian, IV Lydian, ... before add new tool +

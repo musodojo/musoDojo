@@ -118,7 +118,6 @@ class FretboardMultitool {
       this.fretboard.props.mode = event.target.value;
     });
 
-    // Fretboard uses a lower case hand value to use in style calculations
     this.fretboardMenu.handSelect.addEventListener("change", (event) => {
       this.fretboard.props.hand = event.target.value;
       this.fretboard.update();
@@ -247,6 +246,11 @@ class FretboardMultitool {
     this.addKeyboardShortcuts();
   }
 
+  // if the sequence updates, the labels must update
+  // (unless labels are all empty, which is not accounted for)
+  // and if the labels update, we need to get the sequence anyway
+  // to check for overwrites on the defaults labels
+  // so combine their updates into one function
   sequenceAndLabelsUpdate() {
     const SEQUENCE =
       NOTE_SEQUENCES[
@@ -254,11 +258,13 @@ class FretboardMultitool {
           .parentElement.label
       ][this.fretboardMenu.noteSequenceSelect.value];
     this.fretboard.props.sequence = SEQUENCE.sequence;
-    // reset note names
+
     const NOTE_LABELS_TYPE = this.fretboardMenu.noteLabelsSelect.value;
     // spread NOTE_LABELS[NOTE_LABELS_TYPE] so it is a copy
     // because values can be overwritten below
     let labels = [...NOTE_LABELS[NOTE_LABELS_TYPE]];
+    // check if sequence specific labels exist
+    // and if the specific type exists in it, if they do exist
     if (SEQUENCE.labels && SEQUENCE.labels[NOTE_LABELS_TYPE]) {
       Object.entries(SEQUENCE.labels[NOTE_LABELS_TYPE]).forEach(
         ([integer, name]) => {

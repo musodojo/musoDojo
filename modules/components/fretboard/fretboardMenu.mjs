@@ -206,7 +206,7 @@ class FretboardMenu {
     this.noteDurationSelect.value = PROPS.noteDuration;
     this.fretboardMenu.appendChild(this.noteDurationSelect);
 
-    // COlor Theme Select
+    // Color Theme Select
     this.colorThemeSelect = getColorThemeSelect(
       getColorThemeNameFromValue(PROPS.colorTheme)
     );
