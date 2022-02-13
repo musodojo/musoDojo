@@ -207,9 +207,19 @@ const NOTE_SEQUENCES = {
     },
     "Lydian Augmented / Lydian ♯5": {
       sequence: [0, 2, 4, 6, 8, 9, 11],
+      labels: {
+        Quality: { 6: "A4", 8: "A5" },
+        Relative: { 6: "♯4", 8: "#5" },
+        Extension: { 6: "♯11", 8: "#5" },
+      },
     },
     "Lydian Dominant / Mixolydian ♯4": {
       sequence: [0, 2, 4, 6, 7, 9, 10],
+      labels: {
+        Quality: { 6: "A4" },
+        Relative: { 6: "♯4" },
+        Extension: { 6: "♯11" },
+      },
     },
     "Mixolydian ♭6": {
       sequence: [0, 2, 4, 5, 7, 8, 10],
@@ -220,9 +230,9 @@ const NOTE_SEQUENCES = {
     "Super Locrian / Altered": {
       sequence: [0, 1, 3, 4, 6, 8, 10],
       labels: {
-        Quality: { 3: "A2", 6: "A4" },
-        Relative: { 3: "♯2", 6: "♯4" },
-        Extension: { 3: "♯9", 6: "♯11" },
+        Quality: { 4: "d4" },
+        Relative: { 4: "♭4" },
+        Extension: { 4: "♭11" },
       },
     },
   },
@@ -235,18 +245,38 @@ const NOTE_SEQUENCES = {
     },
     "Ionian ♯5": {
       sequence: [0, 2, 4, 5, 8, 9, 11],
+      labels: {
+        Quality: { 8: "A5" },
+        Relative: { 8: "#5" },
+        Extension: { 8: "#5" },
+      },
     },
     "Dorian ♯4": {
       sequence: [0, 2, 3, 6, 7, 9, 10],
+      labels: {
+        Quality: { 6: "A4" },
+        Relative: { 6: "♯4" },
+        Extension: { 6: "♯11" },
+      },
     },
     "Phrygian Dominant": {
       sequence: [0, 1, 4, 5, 7, 8, 10],
     },
     "Lydian ♯2": {
       sequence: [0, 3, 4, 6, 7, 9, 11],
+      labels: {
+        Quality: { 3: "A2", 6: "A4" },
+        Relative: { 3: "♯2", 6: "♯4" },
+        Extension: { 3: "♯9", 6: "♯11" },
+      },
     },
     "Super Locrian ♭♭7": {
       sequence: [0, 1, 3, 4, 6, 8, 9],
+      labels: {
+        Quality: { 4: "d4", 9: "d7" },
+        Relative: { 4: "♭4", 9: "♭♭7" },
+        Extension: { 4: "♭11", 9: "♭♭7" },
+      },
     },
   },
   Other: {
