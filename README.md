@@ -1,19 +1,59 @@
 # Muso Dojo - pratcice music.
 
-Welcome to Muso Dojo where you can access a suite of tools to help teachers and students to study chords, scales, and arpeggios on various instruments including Guitar, Bass, Violin and Ukulele.
+Welcome to Muso Dojo. Here you can access a suite of tools to help teachers and students to study chords, scales, and arpeggios on various instruments including Guitar, Bass, Violin and Ukulele.
 
 ## View the Latest Version
 
-View version 1.1.0 of the redesigned Muso Dojo Project at
+View the latest version of Muso Dojo.
 
 https://musodojo.github.io/musodojo/
 
-### Description
+## Download
 
-This is an improvement on the initial release of the Muso Dojo software. Users can now add and remove multiple tools to the main multitool environment. Several useability features have been added including keeping edited notes as they were when non-core settings have been changed - e.g. Mode, Hand, Note Labels,Note Colors.
-
-### Download
-
-Version 1.0.0 is now released and is available to download from GitHub at
+Version 2.0.0 is now available to download.
 
 https://github.com/musodojo/musodojo/releases
+
+## Keyboard Shortcuts
+
+Change Root Note
+
+```
+   [S]   [D]         [G]   [H]   [J]
+[Z]   [X]   [C]   [V]   [B]   [N]   [M]   [,<]
+
+corresponds to
+
+   [C#]  [Eb]        [Gb]  [Ab]  [Bb]
+[C]   [D]   [E]   [F]   [G]   [A]   [B]   [C]
+```
+
+Change Note Sequence
+
+```
+[1] = Ionian / Major
+[2] = Dorian
+[3] = Phrygian
+[4] = Lydian
+[5] = Mixolydian
+[6] = Aeolian / Minor
+[7] = Locrian
+[8] = Root
+[9] = Chromatic
+[0] = Blank
+```
+
+Change Mode
+
+```
+[I] = Edit One
+[O] = Edit All
+[P] = Play
+```
+
+Change Note Sizes
+
+```
+[L] = Large
+[K] = Small
+```
