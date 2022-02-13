@@ -13,6 +13,8 @@
 
 - 0-referenced colors, e.g. root is red and 5th is green for all keys
 - chrome holds onto pointerdown after a menu selection
+- store it's own props, rather than doing reverse lookups on fretboard props
+  -- or add more info to fretboard props
 
 # Audio Interface
 
@@ -21,8 +23,9 @@
 
 # Other
 
-- finish altered b13, etc...
 - investigate storing of this.everything in all mjs files
 - extension Label dissapeared on replicate and change key, then sequence
   -- NOTE_SEQUENCES labels overwrite
-- predifined select menu: ii Dorian, iii Phrygian, IV Lydian, ... before add new tool +
+- add "scenes", e.g. blues, 2-5-1, 4-chord?
+- put hide, add, minus panel into a div
+- use drag events instead of keeping track of pointerdown id
