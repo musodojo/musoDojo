@@ -7,7 +7,7 @@
 - changes in freboard height filter to fingerboard + side - grid?
 - reset and update should set the colors in colorTheme?
 - mode change updates fretboard - keep notes
-- change order in renderFretboard - courses last if mode = strum
+- change order in renderFretboard - courses last if mode = strum ?
 
 # Fretboard Menu
 
