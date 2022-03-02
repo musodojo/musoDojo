@@ -252,27 +252,32 @@ class FretboardMultitool {
   // to check for overwrites on the defaults labels
   // so combine their updates into one function
   sequenceAndLabelsUpdate() {
+    const SEQUENCE_NAME = this.fretboardMenu.noteSequenceSelect.value;
     const SEQUENCE =
       NOTE_SEQUENCES[
         this.fretboardMenu.noteSequenceSelect.querySelector("option:checked")
           .parentElement.label
-      ][this.fretboardMenu.noteSequenceSelect.value];
+      ][SEQUENCE_NAME];
+    this.fretboard.props.sequenceName = SEQUENCE_NAME;
     this.fretboard.props.sequence = SEQUENCE.sequence;
 
-    const NOTE_LABELS_TYPE = this.fretboardMenu.noteLabelsSelect.value;
-    // spread NOTE_LABELS[NOTE_LABELS_TYPE] so it is a copy
+    const NOTE_LABELS_NAME = this.fretboardMenu.noteLabelsSelect.value;
+    // spread NOTE_LABELS[NOTE_LABELS_NAME] so it is a copy
     // because values can be overwritten below
-    let labels = [...NOTE_LABELS[NOTE_LABELS_TYPE]];
+    let labels = [...NOTE_LABELS[NOTE_LABELS_NAME]];
     // check if sequence specific labels exist
-    // and if the specific type exists in it, if they do exist
-    if (SEQUENCE.labels && SEQUENCE.labels[NOTE_LABELS_TYPE]) {
-      Object.entries(SEQUENCE.labels[NOTE_LABELS_TYPE]).forEach(
+    // if they do exist, check if the specific type exists
+    // if both of these are true, overwrite the default labels
+    // with the sequence specific ones
+    if (SEQUENCE.labels && SEQUENCE.labels[NOTE_LABELS_NAME]) {
+      Object.entries(SEQUENCE.labels[NOTE_LABELS_NAME]).forEach(
         ([integer, name]) => {
           labels[parseInt(integer)] = name;
         }
       );
     }
-    // set Fretboard.props to the deep copy of labels
+    // set Fretboard.props to the copy of labels
+    this.fretboard.props.noteLabelsName = NOTE_LABELS_NAME;
     this.fretboard.props.noteLabels = labels;
   }
 

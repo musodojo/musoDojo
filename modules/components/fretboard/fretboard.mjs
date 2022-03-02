@@ -6,7 +6,7 @@ import { FretboardFretLabel } from "./fretboardFretLabel.mjs";
 import { FretboardNote } from "./fretboardNote.mjs";
 
 class Fretboard {
-  constructor(props = {}, width = "46em", height = "15em") {
+  constructor(props = {}, width = "40em", height = "13em") {
     try {
       // properties are defined here
       this.props = {
@@ -19,9 +19,10 @@ class Fretboard {
         tuning: [[40], [45], [50], [55], [59], [64]],
 
         // these available settings are not set here, but can be passed in via props
-        // rootNote: 0, // would be "C / C♮ / D♭♭ / B♯"
-        // sequence: [0, 2, 4, 5, 7, 9, 11] // would be "Ionian / Major"
-        // sequence: [0] // would be just the root note
+        // rootNote: 0,   // would be "C / C♮ / D♭♭ / B♯"
+        // sequenceName: "Ionian / Major",   // used in FretboardMenu
+        // sequence: [0, 2, 4, 5, 7, 9, 11],   // would be "Ionian / Major"
+        // sequence: [0],   // would be just the root note
 
         fromFret: 0,
         toFret: 24,
@@ -33,6 +34,9 @@ class Fretboard {
         // the capitalized "R" in "Right" comes from the menu settings using capital letters
         // and for consistency with fretboardInstrumentsProps.mjs
         hand: "Right",
+
+        // these available settings are not set here, but can be passed in via props
+        // noteLabelsName : "None",
 
         // default to no labels displayed inside the notes
         noteLabels: ["", "", "", "", "", "", "", "", "", "", "", ""],

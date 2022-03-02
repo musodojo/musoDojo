@@ -14,12 +14,14 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     instrument: "Guitar",
     tuning: [[40], [45], [50], [55], [59], [64]], // EADGBE
     rootNote: 0,
+    sequenceName: "Ionian / Major",
     sequence: NOTE_SEQUENCES["Mode"]["Ionian / Major"].sequence,
     fromFret: 0,
     toFret: 24,
     // mode = "Play" || "Edit One" || "Edit All"
     mode: "Play",
     hand: "Right",
+    noteLabelsName: "None",
     noteLabels: NOTE_LABELS["None"],
     noteColors: NOTE_COLORS["Muso Dojo"],
     noteSizes: { first: "91%", second: "55%" },

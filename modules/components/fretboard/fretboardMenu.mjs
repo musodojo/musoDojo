@@ -1,20 +1,11 @@
 import {
   FRETBOARD_INSTRUMENTS_PROPS,
-  getFretboardInstrumentNameFromTuning,
   getFretboardInstrumentSelect,
 } from "../../data/fretboardInstrumentsProps.mjs";
 import { NOTE_NAMES, getNoteNamesSelect } from "../../data/noteNames.mjs";
+import { getNoteSequenceSelect } from "../../data/noteSequences.mjs";
+import { getNoteLabelsSelect } from "../../data/noteLabels.mjs";
 import {
-  getSequenceNameFromValue,
-  getNoteSequenceSelect,
-} from "../../data/noteSequences.mjs";
-import {
-  NOTE_LABELS,
-  getLabelsNameFromValue,
-  getNoteLabelsSelect,
-} from "../../data/noteLabels.mjs";
-import {
-  NOTE_COLORS,
   getNoteColorsNameFromValue,
   getNoteColorsSelect,
 } from "../../data/noteColors.mjs";
@@ -25,7 +16,7 @@ import {
 } from "../../data/colorThemes.mjs";
 
 class FretboardMenu {
-  constructor(props = {}, width = "46em") {
+  constructor(props = {}, width = "40em") {
     // don't need to store this.props in this class
     const PROPS = {
       ...FRETBOARD_INSTRUMENTS_PROPS.defaults,
@@ -46,21 +37,17 @@ class FretboardMenu {
     };
 
     // Instrument Select
-    this.instrumentSelect = getFretboardInstrumentSelect(
-      getFretboardInstrumentNameFromTuning(PROPS.tuning)
-    );
+    this.instrumentSelect = getFretboardInstrumentSelect(PROPS.instrument);
     Object.assign(this.instrumentSelect.style, SELECT_STYLE);
     this.fretboardMenu.appendChild(this.instrumentSelect);
 
-    // Roor Note Select
+    // Root Note Select
     this.rootNoteSelect = getNoteNamesSelect(NOTE_NAMES[PROPS.rootNote]);
     Object.assign(this.rootNoteSelect.style, SELECT_STYLE);
     this.fretboardMenu.appendChild(this.rootNoteSelect);
 
     // Note Sequence Select
-    this.noteSequenceSelect = getNoteSequenceSelect(
-      getSequenceNameFromValue(PROPS.sequence)
-    );
+    this.noteSequenceSelect = getNoteSequenceSelect(PROPS.sequenceName);
     Object.assign(this.noteSequenceSelect.style, SELECT_STYLE);
     this.fretboardMenu.appendChild(this.noteSequenceSelect);
 
@@ -144,9 +131,7 @@ class FretboardMenu {
     this.fretboardMenu.appendChild(this.handSelect);
 
     // Note Labels Select
-    this.noteLabelsSelect = getNoteLabelsSelect(
-      getLabelsNameFromValue(PROPS.noteLabels)
-    );
+    this.noteLabelsSelect = getNoteLabelsSelect(PROPS.noteLabelsName);
     Object.assign(this.noteLabelsSelect.style, SELECT_STYLE);
     this.fretboardMenu.appendChild(this.noteLabelsSelect);
 

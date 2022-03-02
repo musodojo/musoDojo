@@ -12,9 +12,7 @@
 # Fretboard Menu
 
 - 0-referenced colors, e.g. root is red and 5th is green for all keys
-- chrome holds onto pointerdown after a menu selection
-- store it's own props, rather than doing reverse lookups on fretboard props
-  -- or add more info to fretboard props
+- chrome holds onto pointerdown after a menu selection - only with mode select?
 
 # Audio Interface
 
@@ -23,9 +21,5 @@
 
 # Other
 
-- investigate storing of this.everything in all mjs files
-- extension Label dissapeared on replicate and change key, then sequence
-  -- NOTE_SEQUENCES labels overwrite
 - add "scenes", e.g. blues, 2-5-1, 4-chord?
-- put hide, add, minus panel into a div
-- use drag events instead of keeping track of pointerdown id
+- put hide, add, minus panel into a div/flex
