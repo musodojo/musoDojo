@@ -21,7 +21,6 @@ class FretboardMultitool {
     this.fretboardMultitool.appendChild(this.fretboardMenu.fretboardMenu);
 
     this.fretboard = new Fretboard(PROPS);
-    this.fretboard.fretboard.style.marginBottom = "0.5em";
     this.fretboardMultitool.appendChild(this.fretboard.fretboard);
 
     // catch a pointer down/up event that happens in the FretboardMultitool
@@ -203,6 +202,12 @@ class FretboardMultitool {
       );
     });
 
+    const BUTTONS_DIV = document.createElement("div");
+    BUTTONS_DIV.style.display = "flex";
+    BUTTONS_DIV.style.flexFlow = "row wrap";
+    BUTTONS_DIV.style.gap = "1em";
+    this.fretboardMultitool.appendChild(BUTTONS_DIV);
+
     this.showHideButton = new SquashyMenuButton(PROPS.colorTheme.foreground);
     this.fretboardMenu.fretboardMenu.style.transition = "transform 0.2s";
     this.showHideButton.button.addEventListener("pointerdown", () => {
@@ -218,10 +223,9 @@ class FretboardMultitool {
         }, 200);
       }
     });
-    this.fretboardMultitool.appendChild(this.showHideButton.button);
+    BUTTONS_DIV.appendChild(this.showHideButton.button);
 
     this.addToolButton = new SpinningPlusButton(PROPS.colorTheme.foreground);
-    this.addToolButton.button.style.marginLeft = "1em";
     this.addToolButton.button.addEventListener("pointerdown", () => {
       this.fretboardMultitool.dispatchEvent(
         new CustomEvent("addtool", {
@@ -230,18 +234,17 @@ class FretboardMultitool {
         })
       );
     });
-    this.fretboardMultitool.appendChild(this.addToolButton.button);
+    BUTTONS_DIV.appendChild(this.addToolButton.button);
 
     this.removeToolButton = new SpinningMinusButton(
       PROPS.colorTheme.foreground
     );
-    this.removeToolButton.button.style.marginLeft = "1em";
     this.removeToolButton.button.addEventListener("pointerdown", () => {
       this.fretboardMultitool.dispatchEvent(
         new Event("removetool", { bubbles: true })
       );
     });
-    this.fretboardMultitool.appendChild(this.removeToolButton.button);
+    BUTTONS_DIV.appendChild(this.removeToolButton.button);
 
     this.addKeyboardShortcuts();
   }

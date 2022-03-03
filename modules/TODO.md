@@ -1,18 +1,16 @@
 # Fretboard
 
-- strum mode, which plays nearest large note in direction of nut!
-- subtract padding / border from width, height in CSS calc
+- strum mode, which plays nearest large note in direction of nut
+  -- draw courses last if mode = strum?
 - update without redrawing, if possible - investigate update() and reset()
 - fretboard updateProps(props={}) - runs update/reset as necessary
-- changes in freboard height filter to fingerboard + side - grid?
 - reset and update should set the colors in colorTheme?
 - mode change updates fretboard - keep notes
-- change order in renderFretboard - courses last if mode = strum ?
 
 # Fretboard Menu
 
-- 0-referenced colors, e.g. root is red and 5th is green for all keys
-- chrome holds onto pointerdown after a menu selection - only with mode select?
+- chrome holds onto pointerdown after a menu selection
+  -- only with mode select?
 
 # Audio Interface
 
@@ -21,5 +19,6 @@
 
 # Other
 
-- add "scenes", e.g. blues, 2-5-1, 4-chord?
-- put hide, add, minus panel into a div/flex
+- 0-referenced colors, e.g. root is red and 5th is green for all keys
+- add "scenes", e.g. blues, 2-5-1, 4-chord, ...
+- squashyMenuButton not in right place on mobile chrome-based browsers
