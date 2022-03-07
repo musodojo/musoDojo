@@ -27,17 +27,22 @@ class FretboardMultitool {
     // push/clear that pointer id if it hasn't been pushed/cleared by Fretboard
     // which will happen if it happens outside of the Fretboard but
     // inside of the FretboardMultitool
+    // Don't add id to list if down was on SELECT
+    // this was causing Chrome-based browsers to play notes hovered over
+    // after selecting a select item that's already selected
     this.fretboardMultitool.addEventListener(
       "pointerdown",
       (event) => {
         try {
-          const INDEX = this.fretboard.state.pointerDownIds.indexOf(
-            event.pointerId
-          );
-          // if id was not found, push it
-          if (INDEX < 0) {
-            this.fretboard.state.pointerDownIds.push(event.pointerId);
-            event.target.releasePointerCapture(event.pointerId);
+          if (event.target.nodeName !== "SELECT") {
+            const INDEX = this.fretboard.state.pointerDownIds.indexOf(
+              event.pointerId
+            );
+            // if id was not found, push it
+            if (INDEX < 0) {
+              this.fretboard.state.pointerDownIds.push(event.pointerId);
+              event.target.releasePointerCapture(event.pointerId);
+            }
           }
         } catch (err) {
           console.error(err);
