@@ -37,8 +37,8 @@ class FretboardCourseFret {
     this.highlighter.style.display = "flex";
     this.highlighter.style.justifyContent = "center";
     this.highlighter.style.alignItems = "center";
-    this.highlighter.style.width = "97%";
-    this.highlighter.style.height = "97%";
+    this.highlighter.style.width = "98%";
+    this.highlighter.style.height = "98%";
     this.highlighter.style.borderRadius = "20%";
     COURSE_FRET.appendChild(this.highlighter);
 

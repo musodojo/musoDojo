@@ -194,7 +194,7 @@ class FretboardMultitool {
       this.fretboardMultitool.style.backgroundColor =
         COLOR_THEMES[event.target.value].background;
       this.fretboard.props.colorTheme = COLOR_THEMES[event.target.value];
-      this.fretboard.setColors();
+      this.fretboard.setColorThemeStyles();
       this.fretboard.update();
       this.showHideButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground

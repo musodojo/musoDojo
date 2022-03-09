@@ -106,7 +106,7 @@ class Fretboard {
     this.fretboard.style.position = "relative";
 
     this.setSize(width, height);
-    this.setColors();
+    this.setColorThemeStyles();
 
     const FINGERBOARD_FRACTION = this.props.showFretLabels
       ? this.props.fingerboardFraction
@@ -138,7 +138,7 @@ class Fretboard {
     this.fretboard.appendChild(this.side);
   }
 
-  setColors() {
+  setColorThemeStyles() {
     this.fretboard.style.backgroundColor = this.props.colorTheme.background;
     this.fretboard.style.color = this.props.colorTheme.foreground;
   }
@@ -341,7 +341,8 @@ class Fretboard {
     if (this.props.sequence) this.renderSequence();
   }
 
-  // resets the fretboard but keeps all notes as they were
+  // resets the fretboard but keeps notes currently on fretboard
+  // handy for updates to hand, note labels, note colors, ...
   // including edited notes, unless resetNoteSize is true
   update(resetNoteSize = false) {
     const NOTES_COPY = { ...this.state.notes };
