@@ -106,7 +106,6 @@ class Fretboard {
     this.fretboard.style.position = "relative";
 
     this.setSize(width, height);
-
     this.setColorThemeStyles();
 
     const FINGERBOARD_FRACTION = this.props.showFretLabels
