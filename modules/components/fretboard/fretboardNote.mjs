@@ -7,10 +7,6 @@ class FretboardNote {
     this.fretboardNote.style.alignItems = "center";
     this.fretboardNote.style.justifyContent = "center";
 
-    // fill up the parent FretboardCourseFret
-    this.fretboardNote.style.width = "100%";
-    this.fretboardNote.style.height = "100%";
-
     // let pointer events pass through this, past the highlighter div and
     // through to the FretboardsCourseFret
     this.fretboardNote.style.pointerEvents = "none";

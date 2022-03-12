@@ -46,7 +46,7 @@ class Fretboard {
 
         // notes can be sized with first or second size value (or removed) by using
         // props.mode's Edit One" and "Edit All" functionality
-        noteSizes: { first: "91%", second: "55%" },
+        noteSizes: { first: "88%", second: "55%" },
 
         // noteDuration = -1 means play full note duration
         // noteDuration = 0 means play note until up event occurs
@@ -104,6 +104,8 @@ class Fretboard {
     // create the main div and set style.position it so children can position relative to it
     this.fretboard = document.createElement("div");
     this.fretboard.style.position = "relative";
+    this.fretboard.style.resize = "both";
+    this.fretboard.style.overflow = "hidden";
 
     this.setSize(width, height);
     this.setColorThemeStyles();

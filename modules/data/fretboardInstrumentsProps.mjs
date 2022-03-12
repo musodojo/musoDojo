@@ -24,7 +24,7 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     noteLabelsName: "None",
     noteLabels: NOTE_LABELS["None"],
     noteColors: NOTE_COLORS["Muso Dojo"],
-    noteSizes: { first: "91%", second: "55%" },
+    noteSizes: { first: "88%", second: "55%" },
     // noteDuration = -1 means play full note duration in audio sprite
     // noteDuration = 0 means play note until up event occurs
     // noteDuration = x means play note for x seconds (clipped at note's duration in audio sprite)
