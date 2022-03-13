@@ -232,7 +232,7 @@ const NOTE_SEQUENCES = {
       labels: {
         Quality: { 4: "d4" },
         Relative: { 4: "♭4" },
-        Extension: { 4: "♭11" },
+        Extension: { 3: "♯9", 6: "#11" },
       },
     },
   },
