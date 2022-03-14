@@ -1,5 +1,6 @@
 import {
   FRETBOARD_INSTRUMENTS_PROPS,
+  getFretboardInstrumentNameFromTuning,
   getFretboardInstrumentSelect,
 } from "../../data/fretboardInstrumentsProps.mjs";
 import { NOTE_NAMES, getNoteNamesSelect } from "../../data/noteNames.mjs";
@@ -37,7 +38,10 @@ class FretboardMenu {
     };
 
     // Instrument Select
-    this.instrumentSelect = getFretboardInstrumentSelect(PROPS.instrument);
+    // this.instrumentSelect = getFretboardInstrumentSelect(PROPS.instrument);
+    this.instrumentSelect = getFretboardInstrumentSelect(
+      getFretboardInstrumentNameFromTuning(PROPS.tuning)
+    );
     Object.assign(this.instrumentSelect.style, SELECT_STYLE);
     this.fretboardMenu.appendChild(this.instrumentSelect);
 
