@@ -16,7 +16,7 @@ class AudioInterface {
 
   // returns an object containing {midi:..., start:..., duration:...}
   static closestSpriteNote(instrument, note) {
-    const MIDI_NUMBERS = this.audioSpriteData[instrument];
+    const MIDI_NUMBERS = this.audioSpriteData.instruments[instrument];
     const MIDI_NUMBERS_LENGTH = MIDI_NUMBERS.length;
     for (let i = 0; i < MIDI_NUMBERS_LENGTH; i++) {
       const CURRENT_SPRITE_NOTE = MIDI_NUMBERS[i].midi;
