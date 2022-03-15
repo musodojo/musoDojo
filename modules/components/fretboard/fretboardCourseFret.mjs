@@ -178,7 +178,7 @@ class FretboardCourseFret {
       this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`][
         index
       ] = AudioInterface.startNote(
-        this.fretboard.props.instrument,
+        this.fretboard.props.audio,
         midiValue,
         duration,
         index * 0.04 // set by ear

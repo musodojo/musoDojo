@@ -11,7 +11,8 @@ const FRET_MARKERS = {
 // see Fretboard class's contstructor for porperty explanations
 const FRETBOARD_INSTRUMENTS_PROPS = {
   defaults: {
-    instrument: "Guitar",
+    name: "Guitar",
+    audio: "Guitar",
     tuning: [[40], [45], [50], [55], [59], [64]], // EADGBE
     rootNote: 0,
     sequenceName: "Ionian / Major",
@@ -37,9 +38,10 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     fretMarkers: FRET_MARKERS["Guitar Style"],
     fingerboardFraction: 0.94,
   },
-  instruments: {
-    Guitar: {
-      instrument: "Guitar",
+  instruments: [
+    {
+      name: "Guitar",
+      audio: "Guitar",
       tuning: [[40], [45], [50], [55], [59], [64]], // EADGBE
       fromFret: 0,
       toFret: 24,
@@ -49,8 +51,9 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
       showFretLabels: true,
       showFretboardMarkers: true,
     },
-    "Guitar DADGAD": {
-      instrument: "Guitar",
+    {
+      name: "Guitar DADGAD",
+      audio: "Guitar",
       tuning: [[38], [45], [50], [55], [57], [62]], // DADGAD
       fromFret: 0,
       toFret: 24,
@@ -60,8 +63,9 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
       showFretLabels: true,
       showFretboardMarkers: true,
     },
-    "Guitar DADGBE": {
-      instrument: "Guitar",
+    {
+      name: "Guitar DADGBE",
+      audio: "Guitar",
       tuning: [[38], [45], [50], [55], [59], [64]], // Drop D
       fromFret: 0,
       toFret: 24,
@@ -71,8 +75,9 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
       showFretLabels: true,
       showFretboardMarkers: true,
     },
-    Bass: {
-      instrument: "Bass",
+    {
+      name: "Bass",
+      audio: "Bass",
       tuning: [[28], [33], [38], [43]], // EADG
       fromFret: 0,
       toFret: 24,
@@ -82,8 +87,9 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
       showFretLabels: true,
       showFretboardMarkers: true,
     },
-    "Bass 5-String": {
-      instrument: "Bass",
+    {
+      name: "Bass 5-String",
+      audio: "Bass",
       tuning: [[23], [28], [33], [38], [43]], // BEADG
       fromFret: 0,
       toFret: 24,
@@ -93,19 +99,9 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
       showFretLabels: true,
       showFretboardMarkers: true,
     },
-    Violin: {
-      instrument: "Violin",
-      tuning: [[55], [62], [69], [76]], // GDAE
-      fromFret: 0,
-      toFret: 17,
-      showStrings: true,
-      showFrets: false,
-      fretMarkers: FRET_MARKERS["Guitar Style"],
-      showFretLabels: true,
-      showFretboardMarkers: false,
-    },
-    Mandolin: {
-      instrument: "Guitar",
+    {
+      name: "Mandolin",
+      audio: "Guitar",
       tuning: [
         [55, 55],
         [62, 62],
@@ -120,8 +116,9 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
       showFretLabels: true,
       showFretboardMarkers: true,
     },
-    Ukulele: {
-      instrument: "Guitar",
+    {
+      name: "Ukulele",
+      audio: "Guitar",
       tuning: [[55], [60], [64], [69]], // GCEA
       fromFret: 0,
       toFret: 17,
@@ -131,6 +128,55 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
       showFretLabels: true,
       showFretboardMarkers: true,
     },
+    {
+      name: "Violin",
+      audio: "Strings",
+      tuning: [[55], [62], [69], [76]], // GDAE
+      fromFret: 0,
+      toFret: 17,
+      showStrings: true,
+      showFrets: false,
+      fretMarkers: FRET_MARKERS["Guitar Style"],
+      showFretLabels: true,
+      showFretboardMarkers: false,
+    },
+    {
+      name: "Viola",
+      audio: "Strings",
+      tuning: [[48], [55], [62], [69]], // GDAE
+      fromFret: 0,
+      toFret: 17,
+      showStrings: true,
+      showFrets: false,
+      fretMarkers: FRET_MARKERS["Guitar Style"],
+      showFretLabels: true,
+      showFretboardMarkers: false,
+    },
+    {
+      name: "Cello",
+      audio: "Strings",
+      tuning: [[36], [43], [50], [57]], // GDAE
+      fromFret: 0,
+      toFret: 17,
+      showStrings: true,
+      showFrets: false,
+      fretMarkers: FRET_MARKERS["Guitar Style"],
+      showFretLabels: true,
+      showFretboardMarkers: false,
+    },
+    {
+      name: "Double Bass",
+      audio: "Strings",
+      tuning: [[28], [33], [38], [43]], // GDAE
+      fromFret: 0,
+      toFret: 17,
+      showStrings: true,
+      showFrets: false,
+      fretMarkers: FRET_MARKERS["Guitar Style"],
+      showFretLabels: true,
+      showFretboardMarkers: false,
+    },
+
     //DADGBD: [38, 45, 50, 55, 59, 62], // Double Drop D
     //EbAbDbGbBbEb: [39, 44, 49, 54, 58, 63], // Half Step Down
     //DGCFAD: [38, 43, 48, 53, 57, 62], // Whole Step Down
@@ -138,18 +184,8 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     //DGDGBbD: [38, 43, 50, 55, 58, 62], // Open G minor
     //"DADF#AD": [38, 45, 50, 54, 57, 62], // Open D
     //DADFAD: [38, 45, 50, 53, 57, 62], // Open D minor
-  },
+  ],
 };
-
-function getFretboardInstrumentNameFromTuning(tuningArray) {
-  const VALUE_STRING = JSON.stringify(tuningArray);
-  const TUNINGS = Object.entries(FRETBOARD_INSTRUMENTS_PROPS.instruments);
-  for (const [INSTRUMENT_NAME, INSTRUMENT_PROPS] of TUNINGS) {
-    if (JSON.stringify(INSTRUMENT_PROPS.tuning) === VALUE_STRING) {
-      return INSTRUMENT_NAME;
-    }
-  }
-}
 
 function getFretboardInstrumentSelect(selected = "Guitar") {
   const SELECT = document.createElement("select");
@@ -157,18 +193,14 @@ function getFretboardInstrumentSelect(selected = "Guitar") {
   LABEL.text = "Instrument";
   LABEL.disabled = "disabled";
   SELECT.add(LABEL);
-  Object.keys(FRETBOARD_INSTRUMENTS_PROPS.instruments).forEach((instrument) => {
+  FRETBOARD_INSTRUMENTS_PROPS.instruments.forEach((instrument) => {
     const OPTION = document.createElement("option");
-    OPTION.text = instrument;
+    OPTION.text = instrument.name;
     SELECT.add(OPTION);
-    if (instrument === selected) {
+    if (instrument.name === selected) {
       OPTION.selected = true;
     }
   });
   return SELECT;
 }
-export {
-  FRETBOARD_INSTRUMENTS_PROPS,
-  getFretboardInstrumentNameFromTuning,
-  getFretboardInstrumentSelect,
-};
+export { FRETBOARD_INSTRUMENTS_PROPS, getFretboardInstrumentSelect };

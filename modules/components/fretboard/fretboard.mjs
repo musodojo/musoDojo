@@ -6,12 +6,15 @@ import { FretboardFretLabel } from "./fretboardFretLabel.mjs";
 import { FretboardNote } from "./fretboardNote.mjs";
 
 class Fretboard {
-  constructor(props = {}, width = "40em", height = "13em") {
+  constructor(props = {}, width = "42em", height = "14em") {
     try {
       // properties are defined here
       this.props = {
+        // used in FretboardMenu's instrument select
+        name: "Guitar",
+
         // used to tell AudioInterface.startNote which type of sound to play
-        instrument: "Guitar",
+        audio: "Guitar",
 
         // standard guitar tuning: [E=40,A=45,D=50,G=55,B=59,E=64]
         // each element is the open course's midi value
