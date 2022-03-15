@@ -15,6 +15,9 @@ class FretboardMultitool {
     const PROPS = { ...FRETBOARD_INSTRUMENTS_PROPS.defaults, ...props };
 
     this.fretboardMultitool = document.createElement("div");
+    this.fretboardMultitool.style.display = "flex";
+    this.fretboardMultitool.style.flexDirection = "column";
+    this.fretboardMultitool.style.gap = "0.5em";
     this.fretboardMultitool.style.backgroundColor = PROPS.colorTheme.background;
 
     this.fretboardMenu = new FretboardMenu(PROPS);
@@ -90,7 +93,10 @@ class FretboardMultitool {
     this.fretboardMenu.instrumentSelect.addEventListener("change", (event) => {
       this.fretboard.props = {
         ...this.fretboard.props,
-        ...FRETBOARD_INSTRUMENTS_PROPS.instruments[event.target.value],
+        ...FRETBOARD_INSTRUMENTS_PROPS.instruments.find(
+          (instrument) => instrument.name === event.target.value
+        ),
+        // ...FRETBOARD_INSTRUMENTS_PROPS.instruments[event.target.value],
       };
       this.fretboard.reset();
       // update the fret number selects
