@@ -5,7 +5,7 @@ class SpinningMinusButton {
     width = "1.5em",
     height = "1.5em"
   ) {
-    this.button = document.createElement("button");
+    this.button = document.createElement("div");
     this.button.style.position = "relative";
     this.button.style.border = "0";
     this.button.style.cursor = "pointer";
