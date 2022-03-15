@@ -1,6 +1,5 @@
 import {
   FRETBOARD_INSTRUMENTS_PROPS,
-  getFretboardInstrumentNameFromTuning,
   getFretboardInstrumentSelect,
 } from "../../data/fretboardInstrumentsProps.mjs";
 import { NOTE_NAMES, getNoteNamesSelect } from "../../data/noteNames.mjs";
@@ -17,7 +16,7 @@ import {
 } from "../../data/colorThemes.mjs";
 
 class FretboardMenu {
-  constructor(props = {}, width = "40em") {
+  constructor(props = {}, width = "42em") {
     // don't need to store this.props in this class
     const PROPS = {
       ...FRETBOARD_INSTRUMENTS_PROPS.defaults,
@@ -25,6 +24,9 @@ class FretboardMenu {
     };
 
     this.fretboardMenu = document.createElement("div");
+    this.fretboardMenu.style.display = "flex";
+    this.fretboardMenu.style.flexFlow = "row wrap";
+    this.fretboardMenu.style.gap = "0.4em";
     this.fretboardMenu.style.backgroundColor = PROPS.colorTheme.background;
     this.fretboardMenu.style.maxWidth = width;
 
@@ -33,15 +35,11 @@ class FretboardMenu {
       "font-size": "1em",
       "background-color": PROPS.colorTheme.background,
       color: PROPS.colorTheme.foreground,
-      margin: "0.1em",
       "border-radius": "0.2em",
     };
 
     // Instrument Select
-    // this.instrumentSelect = getFretboardInstrumentSelect(PROPS.instrument);
-    this.instrumentSelect = getFretboardInstrumentSelect(
-      getFretboardInstrumentNameFromTuning(PROPS.tuning)
-    );
+    this.instrumentSelect = getFretboardInstrumentSelect(PROPS.name);
     Object.assign(this.instrumentSelect.style, SELECT_STYLE);
     this.fretboardMenu.appendChild(this.instrumentSelect);
 
