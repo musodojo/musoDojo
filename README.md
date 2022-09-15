@@ -10,7 +10,7 @@ https://musodojo.github.io/musodojo/
 
 ## Download
 
-Version 2.0.0 is now available to download.
+Version 3.0 is now available to download.
 
 https://github.com/musodojo/musodojo/releases
 
