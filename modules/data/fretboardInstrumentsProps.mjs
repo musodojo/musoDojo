@@ -11,6 +11,9 @@ const FRET_MARKERS = {
 // see Fretboard class's contstructor for porperty explanations
 const FRETBOARD_INSTRUMENTS_PROPS = {
   defaults: {
+    // width and height in px
+    width: "600",
+    height: "200",
     name: "Guitar",
     audio: "Guitar",
     tuning: [[40], [45], [50], [55], [59], [64]], // EADGBE
@@ -26,9 +29,9 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     noteLabels: NOTE_LABELS["None"],
     noteColors: NOTE_COLORS["Muso Dojo"],
     noteSizes: { first: "88%", second: "55%" },
-    // noteDuration = -1 means play full note duration in audio sprite
+    // noteDuration = -1 means play note for infinity
     // noteDuration = 0 means play note until up event occurs
-    // noteDuration = x means play note for x seconds (clipped at note's duration in audio sprite)
+    // noteDuration = x means play note for x seconds
     noteDuration: 0,
     colorTheme: COLOR_THEMES["Dark"],
     showStrings: true,
@@ -130,7 +133,7 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     },
     {
       name: "Violin",
-      audio: "Strings",
+      audio: "Bowed",
       tuning: [[55], [62], [69], [76]], // GDAE
       fromFret: 0,
       toFret: 17,
@@ -142,7 +145,7 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     },
     {
       name: "Viola",
-      audio: "Strings",
+      audio: "Bowed",
       tuning: [[48], [55], [62], [69]], // GDAE
       fromFret: 0,
       toFret: 17,
@@ -154,7 +157,7 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     },
     {
       name: "Cello",
-      audio: "Strings",
+      audio: "Bowed",
       tuning: [[36], [43], [50], [57]], // GDAE
       fromFret: 0,
       toFret: 17,
@@ -166,7 +169,7 @@ const FRETBOARD_INSTRUMENTS_PROPS = {
     },
     {
       name: "Double Bass",
-      audio: "Strings",
+      audio: "Bowed",
       tuning: [[28], [33], [38], [43]], // GDAE
       fromFret: 0,
       toFret: 17,

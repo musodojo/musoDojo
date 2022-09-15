@@ -6,9 +6,10 @@ import { NOTE_SEQUENCES } from "../../data/noteSequences.mjs";
 import { NOTE_LABELS } from "../../data/noteLabels.mjs";
 import { NOTE_COLORS } from "../../data/noteColors.mjs";
 import { COLOR_THEMES } from "../../data/colorThemes.mjs";
-import { SquashyMenuButton } from "../buttons/squashyMenuButton.mjs";
-import { SpinningPlusButton } from "../buttons/spinningPlusButton.mjs";
-import { SpinningMinusButton } from "../buttons/spinningMinusButton.mjs";
+import { MenuButton } from "../buttons/menuButton.mjs";
+import { PlusButton } from "../buttons/plusButton.mjs";
+import { MinusButton } from "../buttons/minusButton.mjs";
+import { ResizeButton } from "../buttons/resizeButton.mjs";
 
 class FretboardMultitool {
   constructor(props = {}) {
@@ -202,15 +203,22 @@ class FretboardMultitool {
       this.fretboard.props.colorTheme = COLOR_THEMES[event.target.value];
       this.fretboard.setColorThemeStyles();
       this.fretboard.update();
-      this.showHideButton.setColorTheme(
+      this.menuButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground
       );
-      this.addToolButton.setColorTheme(
+      this.plusButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground
       );
-      this.removeToolButton.setColorTheme(
+      this.minusButton.setColorTheme(
         COLOR_THEMES[event.target.value].foreground
       );
+      this.resizeButton.setColorTheme(
+        COLOR_THEMES[event.target.value].foreground
+      );
+    });
+
+    this.fretboardMultitool.addEventListener("fretboardResized", (event) => {
+      this.fretboardMenu.fretboardMenu.style.width = `${event.detail.width}px`;
     });
 
     const BUTTONS_DIV = document.createElement("div");
@@ -219,9 +227,8 @@ class FretboardMultitool {
     BUTTONS_DIV.style.gap = "1em";
     this.fretboardMultitool.appendChild(BUTTONS_DIV);
 
-    this.showHideButton = new SquashyMenuButton(PROPS.colorTheme.foreground);
-    this.fretboardMenu.fretboardMenu.style.transition = "transform 0.2s";
-    this.showHideButton.button.addEventListener("pointerdown", () => {
+    this.menuButton = new MenuButton(PROPS.colorTheme.foreground);
+    this.menuButton.menuButton.addEventListener("pointerdown", () => {
       if (this.fretboardMenu.fretboardMenu.style.display === "none") {
         this.fretboardMenu.fretboardMenu.style.display = "block";
         setTimeout(() => {
@@ -234,10 +241,10 @@ class FretboardMultitool {
         }, 200);
       }
     });
-    BUTTONS_DIV.appendChild(this.showHideButton.button);
+    BUTTONS_DIV.appendChild(this.menuButton.menuButton);
 
-    this.addToolButton = new SpinningPlusButton(PROPS.colorTheme.foreground);
-    this.addToolButton.button.addEventListener("pointerdown", () => {
+    this.plusButton = new PlusButton(PROPS.colorTheme.foreground);
+    this.plusButton.plusButton.addEventListener("pointerdown", () => {
       this.fretboardMultitool.dispatchEvent(
         new CustomEvent("addtool", {
           detail: this.fretboard.props,
@@ -245,17 +252,21 @@ class FretboardMultitool {
         })
       );
     });
-    BUTTONS_DIV.appendChild(this.addToolButton.button);
+    BUTTONS_DIV.appendChild(this.plusButton.plusButton);
 
-    this.removeToolButton = new SpinningMinusButton(
-      PROPS.colorTheme.foreground
-    );
-    this.removeToolButton.button.addEventListener("pointerdown", () => {
+    this.minusButton = new MinusButton(PROPS.colorTheme.foreground);
+    this.minusButton.minusButton.addEventListener("pointerdown", () => {
       this.fretboardMultitool.dispatchEvent(
         new Event("removetool", { bubbles: true })
       );
     });
-    BUTTONS_DIV.appendChild(this.removeToolButton.button);
+    BUTTONS_DIV.appendChild(this.minusButton.minusButton);
+
+    this.resizeButton = new ResizeButton(PROPS.colorTheme.foreground);
+    this.resizeButton.resizeButton.addEventListener("pointerdown", () => {
+      this.fretboard.toggleResize();
+    });
+    BUTTONS_DIV.appendChild(this.resizeButton.resizeButton);
 
     this.addKeyboardShortcuts();
   }

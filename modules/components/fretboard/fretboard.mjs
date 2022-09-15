@@ -6,15 +6,19 @@ import { FretboardFretLabel } from "./fretboardFretLabel.mjs";
 import { FretboardNote } from "./fretboardNote.mjs";
 
 class Fretboard {
-  constructor(props = {}, width = "42em", height = "14em") {
+  constructor(props = {}) {
     try {
       // properties are defined here
       this.props = {
+        // the total width and height of the entire fretboard in px
+        width: "600",
+        height: "200",
+
         // used in FretboardMenu's instrument select
         name: "Guitar",
 
         // used to tell AudioInterface.startNote which type of sound to play
-        audio: "Guitar",
+        audio: "Plucked",
 
         // standard guitar tuning: [E=40,A=45,D=50,G=55,B=59,E=64]
         // each element is the open course's midi value
@@ -51,9 +55,9 @@ class Fretboard {
         // props.mode's Edit One" and "Edit All" functionality
         noteSizes: { first: "88%", second: "55%" },
 
-        // noteDuration = -1 means play full note duration
+        // noteDuration = -1 means play note for infinity
         // noteDuration = 0 means play note until up event occurs
-        // noteDuration = x means play note for x seconds (clipped at note's duration in audio sprite)
+        // noteDuration = x means play note for x seconds
         noteDuration: 0,
 
         // default to a dark theme
@@ -93,7 +97,7 @@ class Fretboard {
       };
 
       this.checkProps();
-      this.createFretboard(width, height);
+      this.createFretboard();
     } catch (err) {
       console.error(err);
       this.fretboard.innerHTML = "";
@@ -103,44 +107,81 @@ class Fretboard {
 
   // FRETBOARD SETUP
 
-  createFretboard(width, height) {
-    // create the main div and set style.position it so children can position relative to it
+  createFretboard() {
+    // create the fretboard div
     this.fretboard = document.createElement("div");
+    // set style.position it so children can position relative to it
     this.fretboard.style.position = "relative";
-    this.fretboard.style.resize = "both";
-    this.fretboard.style.overflow = "hidden";
-
-    this.setSize(width, height);
     this.setColorThemeStyles();
-
-    const FINGERBOARD_FRACTION = this.props.showFretLabels
-      ? this.props.fingerboardFraction
-      : 1;
-    this.createFingerboard(FINGERBOARD_FRACTION);
-    this.props.showFretLabels ? this.createSide(FINGERBOARD_FRACTION) : null;
-
+    this.createFingerboard();
+    this.createSide();
+    this.setSize();
     this.resetState();
-
     this.renderFretboard();
     if (this.props.sequence) this.renderSequence();
+    this.createResizeObserver();
+    this.disableResize();
   }
 
-  createFingerboard(FINGERBOARD_FRACTION) {
+  createFingerboard() {
     this.fingerboard = document.createElement("div");
     this.fingerboard.style.position = "absolute";
     this.fingerboard.style.width = "100%";
-    this.fingerboard.style.height = `calc(${this.height} * ${FINGERBOARD_FRACTION})`;
     this.fingerboard.style.top = "0";
     this.fretboard.appendChild(this.fingerboard);
   }
 
-  createSide(FINGERBOARD_FRACTION) {
+  createSide() {
     this.side = document.createElement("div");
     this.side.style.position = "absolute";
     this.side.style.width = "100%";
-    this.side.style.height = `calc(${this.height} * (1 - ${FINGERBOARD_FRACTION}))`;
     this.side.style.bottom = "0";
     this.fretboard.appendChild(this.side);
+  }
+
+  createResizeObserver() {
+    this.resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        this.props.width = entry.contentRect.width;
+        this.props.height = entry.contentRect.height;
+        this.setSize();
+        this.update();
+        this.fretboard.dispatchEvent(
+          new CustomEvent("fretboardResized", {
+            detail: this.props,
+            bubbles: true,
+          })
+        );
+      }
+    });
+  }
+
+  enableResize() {
+    this.fretboard.style.resize = "both";
+    this.fretboard.style.overflow = "hidden";
+    this.resizeObserver.observe(this.fretboard);
+  }
+
+  disableResize() {
+    this.fretboard.style.resize = "none";
+    this.fretboard.style.overflow = "visible";
+    this.resizeObserver.unobserve(this.fretboard);
+  }
+
+  toggleResize() {
+    this.fretboard.style.resize === "none"
+      ? this.enableResize()
+      : this.disableResize();
+  }
+
+  setFingerboardAndSideHeights() {
+    const FINGERBOARD_FRACTION = this.props.showFretLabels
+      ? this.props.fingerboardFraction
+      : 1;
+    this.fingerboard.style.height = `calc(${this.props.height}px
+     * ${FINGERBOARD_FRACTION})`;
+    this.side.style.height = `calc(${this.props.height}px
+     * (1 - ${FINGERBOARD_FRACTION}))`;
   }
 
   setColorThemeStyles() {
@@ -157,53 +198,11 @@ class Fretboard {
     this.state.audioBuffers = {};
   }
 
-  // WIDTH and HEIGHT
-  // keep track of width and height of the main Fretboard.fretboard div
-  // in this.widthValue, this.widthUnits, this.heightValue, this.heightUnits
-  // this is because CSS can't yet do power calculations (e.g. 2^3)
-  // which is needed for fret distance calculations
-
-  // get and set width
-  get width() {
-    return this.fretboard.style.width;
-  }
-
-  set width(width) {
-    this.widthValue = this.getValueFromStyleSetting(width);
-    this.widthUnits = this.getUnitsFromStyleSetting(width);
-    this.fretboard.style.width = width;
-  }
-
-  // get and set height
-  get height() {
-    return this.fretboard.style.height;
-  }
-
-  set height(height) {
-    this.heightValue = this.getValueFromStyleSetting(height);
-    this.heightUnits = this.getUnitsFromStyleSetting(height);
-    this.fretboard.style.height = height;
-  }
-
   // set width and height together
-  setSize(width, height) {
-    this.width = width;
-    this.height = height;
-  }
-
-  // return a string containing
-  // multiple (+)
-  // case-insensitive (/i)
-  // letters [A-Z...]
-  // at the end of the value string ($)
-  // need [0] because match returns an array
-  getUnitsFromStyleSetting(styleSetting) {
-    return styleSetting.match(/[A-Z]+$/i)[0];
-  }
-
-  // return a number containing numeric part at start of styleSetting
-  getValueFromStyleSetting(styleSetting) {
-    return parseFloat(styleSetting);
+  setSize() {
+    this.fretboard.style.width = `${this.props.width}px`;
+    this.fretboard.style.height = `${this.props.height}px`;
+    this.setFingerboardAndSideHeights();
   }
 
   // ERROR HANDLERS
@@ -292,8 +291,8 @@ class Fretboard {
       ((Math.pow(2, (NUM_FRETS + this.props.fromFret - fretNum) / 12) -
         Math.pow(2, (NUM_FRETS + this.props.fromFret - fretNum - 1) / 12)) /
         (Math.pow(2, NUM_FRETS / 12) - 1)) *
-        this.widthValue +
-      this.widthUnits
+        this.props.width +
+      "px"
     );
   }
 
@@ -305,8 +304,8 @@ class Fretboard {
     return (
       ((Math.pow(2, (NUM_FRETS - 1 + this.props.fromFret - fretNum) / 12) - 1) /
         (Math.pow(2, NUM_FRETS / 12) - 1)) *
-        this.widthValue +
-      this.widthUnits
+        this.props.width +
+      "px"
     );
   }
 

@@ -1,19 +1,19 @@
-class SquashyMenuButton {
+class MenuButton {
   constructor(
     foregroundColor = "#000000",
     backgroundColor = "transparent",
     width = "1.7em",
     height = "1.5em"
   ) {
-    this.button = document.createElement("div");
-    this.button.style.position = "relative";
-    this.button.style.border = "0";
-    this.button.style.cursor = "pointer";
-    this.button.style.width = width;
-    this.button.style.height = height;
-    this.button.style.backgroundColor = backgroundColor;
+    this.menuButton = document.createElement("div");
+    this.menuButton.style.position = "relative";
+    this.menuButton.style.border = "0";
+    this.menuButton.style.cursor = "pointer";
+    this.menuButton.style.width = width;
+    this.menuButton.style.height = height;
+    this.menuButton.style.backgroundColor = backgroundColor;
 
-    this.button.addEventListener(
+    this.menuButton.addEventListener(
       "pointerdown",
       () => {
         this.toggle();
@@ -44,9 +44,9 @@ class SquashyMenuButton {
     this.bar3 = document.createElement("div");
     Object.assign(this.bar3.style, BAR_STYLE);
 
-    this.button.appendChild(this.bar1);
-    this.button.appendChild(this.bar2);
-    this.button.appendChild(this.bar3);
+    this.menuButton.appendChild(this.bar1);
+    this.menuButton.appendChild(this.bar2);
+    this.menuButton.appendChild(this.bar3);
   }
 
   toggle() {
@@ -66,11 +66,11 @@ class SquashyMenuButton {
   }
 
   setColorTheme(foregroundColor, backgroundColor = "transparent") {
-    this.button.style.backgroundColor = backgroundColor;
+    this.menuButton.style.backgroundColor = backgroundColor;
     this.bar1.style.backgroundColor = foregroundColor;
     this.bar2.style.backgroundColor = foregroundColor;
     this.bar3.style.backgroundColor = foregroundColor;
   }
 }
 
-export { SquashyMenuButton };
+export { MenuButton };

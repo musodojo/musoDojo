@@ -18,7 +18,7 @@ class FretboardFretLabel {
     LABEL.style.justifyContent = "center";
     LABEL.style.width = "100%";
     LABEL.style.height = "100%";
-    LABEL.style.fontSize = `calc(${fretboard.side.style.height} * 0.9)`;
+    LABEL.style.fontSize = `min( calc(${fretboard.side.style.height} * 0.9), calc(${fretboard.side.style.width} * 0.9))`;
     LABEL.innerText = fretNum;
     FRET_LABEL.appendChild(LABEL);
   }

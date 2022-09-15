@@ -1,17 +1,17 @@
-class SpinningPlusButton {
+class PlusButton {
   constructor(
     foregroundColor = "#000000",
     backgroundColor = "transparent",
     width = "1.5em",
     height = "1.5em"
   ) {
-    this.button = document.createElement("div");
-    this.button.style.position = "relative";
-    this.button.style.border = "0";
-    this.button.style.cursor = "pointer";
-    this.button.style.width = width;
-    this.button.style.height = height;
-    this.button.style.backgroundColor = backgroundColor;
+    this.plusButton = document.createElement("div");
+    this.plusButton.style.position = "relative";
+    this.plusButton.style.border = "0";
+    this.plusButton.style.cursor = "pointer";
+    this.plusButton.style.width = width;
+    this.plusButton.style.height = height;
+    this.plusButton.style.backgroundColor = backgroundColor;
 
     this.textDiv = document.createElement("div");
     this.textDiv.style.position = "relative";
@@ -21,7 +21,7 @@ class SpinningPlusButton {
     this.textDiv.style.left = "50%";
     this.textDiv.style.transform = "translate(-50%, -50%)";
     this.textDiv.style.transition = "transform 0.2s ease";
-    this.button.appendChild(this.textDiv);
+    this.plusButton.appendChild(this.textDiv);
 
     this.bar1 = document.createElement("div");
     this.bar1.style.position = "absolute";
@@ -43,7 +43,7 @@ class SpinningPlusButton {
     this.bar2.style.backgroundColor = foregroundColor;
     this.textDiv.appendChild(this.bar2);
 
-    this.button.addEventListener(
+    this.plusButton.addEventListener(
       "pointerdown",
       () => {
         this.toggle();
@@ -63,10 +63,10 @@ class SpinningPlusButton {
   }
 
   setColorTheme(foregroundColor, backgroundColor = "transparent") {
-    this.button.style.backgroundColor = backgroundColor;
+    this.plusButton.style.backgroundColor = backgroundColor;
     this.bar1.style.backgroundColor = foregroundColor;
     this.bar2.style.backgroundColor = foregroundColor;
   }
 }
 
-export { SpinningPlusButton };
+export { PlusButton };

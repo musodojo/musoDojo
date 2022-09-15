@@ -3,86 +3,89 @@ const AUDIO_SPRITE_DATA = {
   instruments: {
     Bass: [
       {
-        // E1
         midi: 28,
         start: 0,
-        duration: 1.8,
+        duration: 1.9,
       },
       {
-        // F2
         midi: 41,
         start: 2,
-        duration: 1.3,
+        duration: 1.4,
       },
       {
-        // C4
-        midi: 60,
+        midi: 54,
         start: 4,
-        duration: 1,
+        duration: 0.95,
       },
       {
-        // C5
-        midi: 72,
-        start: 5.5,
-        duration: 0.6,
+        midi: 60,
+        start: 5,
+        duration: 1.1,
       },
     ],
     Guitar: [
       {
-        // E2
         midi: 40,
-        start: 6.5,
-        duration: 4.4,
+        start: 7,
+        duration: 3.7,
       },
       {
-        // D3
-        midi: 50,
-        start: 11.5,
-        duration: 4.6,
+        midi: 52,
+        start: 11,
+        duration: 2.6,
       },
       {
-        // A4
-        midi: 69,
-        start: 17,
+        midi: 64,
+        start: 14,
         duration: 0.9,
       },
       {
-        // E5
         midi: 76,
-        start: 18,
+        start: 15,
         duration: 0.8,
+      },
+      {
+        midi: 88,
+        start: 16,
+        duration: 0.5,
       },
     ],
-    Strings: [
+    Bowed: [
       {
-        // G1
-        midi: 31,
-        start: 19,
-        duration: 3.5,
+        //
+        midi: 28,
+        start: 17,
+        duration: 4.5,
       },
       {
-        // G2
-        midi: 43,
-        start: 23,
-        duration: 3.1,
+        //
+        midi: 36,
+        start: 22,
+        duration: 9.1,
       },
       {
-        // E3
-        midi: 52,
-        start: 27,
-        duration: 3.9,
-      },
-      {
-        // G4
-        midi: 67,
+        //
+        midi: 48,
         start: 32,
-        duration: 2.3,
+        duration: 8.6,
       },
       {
-        // G5
-        midi: 79,
-        start: 35,
-        duration: 0.8,
+        //
+        midi: 55,
+        start: 41,
+        duration: 10.5,
+      },
+      {
+        //
+        midi: 66,
+        start: 52,
+        duration: 7.5,
+      },
+      {
+        //
+        midi: 83,
+        start: 60,
+        duration: 8.124,
       },
     ],
   },

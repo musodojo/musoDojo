@@ -9,26 +9,26 @@ class FretboardCourseFret {
     fretboard.checkCourseNum(courseNum);
     this.midi = this.fretboard.getMidi(this.courseNum, this.fretNum);
 
-    const COURSE_FRET = document.createElement("div");
-    COURSE_FRET.style.cursor = "pointer";
-    COURSE_FRET.style.position = "absolute";
-    COURSE_FRET.style.display = "flex";
-    COURSE_FRET.style.justifyContent = "center";
-    COURSE_FRET.style.alignItems = "center";
+    this.fretboardCourseFret = document.createElement("div");
+    this.fretboardCourseFret.style.cursor = "pointer";
+    this.fretboardCourseFret.style.position = "absolute";
+    this.fretboardCourseFret.style.display = "flex";
+    this.fretboardCourseFret.style.justifyContent = "center";
+    this.fretboardCourseFret.style.alignItems = "center";
 
-    COURSE_FRET.style.width = fretboard.getFretAreaWidth(fretNum);
+    this.fretboardCourseFret.style.width = fretboard.getFretAreaWidth(fretNum);
 
-    COURSE_FRET.style.height = `calc(${fretboard.fingerboard.style.height} / ${fretboard.props.tuning.length})`;
+    this.fretboardCourseFret.style.height = `calc(${fretboard.fingerboard.style.height} / ${fretboard.props.tuning.length})`;
 
     // are passed in lowest=1 to highest, but strings are traditionally
     // labelled with highest=1
-    COURSE_FRET.style.top = `calc(( (${courseNum} - 1) / ${fretboard.props.tuning.length}) *
+    this.fretboardCourseFret.style.top = `calc(( (${courseNum} - 1) / ${fretboard.props.tuning.length}) *
       ${fretboard.fingerboard.style.height})`;
 
-    COURSE_FRET.style[fretboard.props.hand.toLowerCase()] =
+    this.fretboardCourseFret.style[fretboard.props.hand.toLowerCase()] =
       fretboard.getFretDistance(fretNum);
 
-    fretboard.fingerboard.appendChild(COURSE_FRET);
+    fretboard.fingerboard.appendChild(this.fretboardCourseFret);
 
     // add a highlighter div, which can be used to highlight an interaction
     // this is stored in 'this' so it can be accessed from FretboardNote
@@ -40,43 +40,87 @@ class FretboardCourseFret {
     this.highlighter.style.width = "98%";
     this.highlighter.style.height = "98%";
     this.highlighter.style.borderRadius = "20%";
-    COURSE_FRET.appendChild(this.highlighter);
+    this.fretboardCourseFret.appendChild(this.highlighter);
 
     fretboard.state.areas[`${courseNum}_${fretNum}`] = this;
 
-    this.addInteractivity(COURSE_FRET);
+    this.addInteractivity();
   }
 
-  addInteractivity(COURSE_FRET) {
-    COURSE_FRET.addEventListener(
+  pointerDownFunction1(event) {
+    if (this.fretboard.state.notes[`${this.courseNum}_${this.fretNum}`])
+      this.play();
+    const INDEX = this.fretboard.state.pointerDownIds.indexOf(event.pointerId);
+    // if id was not found, push it
+    if (INDEX < 0) {
+      this.fretboard.state.pointerDownIds.push(event.pointerId);
+      event.target.releasePointerCapture(event.pointerId);
+    }
+
+    if (this.fretboard.props.mode === "Edit One")
+      this.fretboard.toggleNote(this.courseNum, this.fretNum);
+    else if (this.fretboard.props.mode === "Edit All")
+      this.fretboard.togglePitchClass(this.courseNum, this.fretNum);
+
+    // if the note duration is -1 (i.e. play for infinity)
+    // we need to handle next pointerdown event differently
+    // when hit a second time (i.e. stop note and highlighter)
+    if (this.fretboard.props.noteDuration === -1) {
+      this.fretboardCourseFret.removeEventListener(
+        "pointerdown",
+        this.currentPointerDownFunction,
+        true
+      );
+
+      this.currentPointerDownFunction = this.pointerDownFunction2.bind(this);
+      this.fretboardCourseFret.addEventListener(
+        "pointerdown",
+        this.currentPointerDownFunction,
+        true
+      );
+    }
+  }
+
+  pointerDownFunction2() {
+    this.fretboard.state.audioBuffers[
+      `${this.courseNum}_${this.fretNum}`
+    ].forEach((audioBuffer) => {
+      AudioInterface.stopNote(audioBuffer);
+    });
+    this.highlighter.style.backgroundColor = "transparent";
+    delete this.fretboard.state.audioBuffers[
+      `${this.courseNum}_${this.fretNum}`
+    ];
+
+    this.fretboardCourseFret.removeEventListener(
       "pointerdown",
-      (event) => {
-        if (this.fretboard.state.notes[`${this.courseNum}_${this.fretNum}`])
-          this.fretboard.play(this.courseNum, this.fretNum);
-        const INDEX = this.fretboard.state.pointerDownIds.indexOf(
-          event.pointerId
-        );
-        // if id was not found, push it
-        if (INDEX < 0) {
-          this.fretboard.state.pointerDownIds.push(event.pointerId);
-          event.target.releasePointerCapture(event.pointerId);
-        }
-        // this.fretboard.state.pointerDownIds.push(event.pointerId);
-        // event.target.releasePointerCapture(event.pointerId);
-        if (this.fretboard.props.mode === "Edit One")
-          this.fretboard.toggleNote(this.courseNum, this.fretNum);
-        else if (this.fretboard.props.mode === "Edit All")
-          this.fretboard.togglePitchClass(this.courseNum, this.fretNum);
-      },
+      this.currentPointerDownFunction,
       true
     );
 
-    COURSE_FRET.addEventListener(
+    this.currentPointerDownFunction = this.pointerDownFunction1.bind(this);
+    this.fretboardCourseFret.addEventListener(
+      "pointerdown",
+      this.currentPointerDownFunction,
+      true
+    );
+  }
+
+  addInteractivity() {
+    this.currentPointerDownFunction = this.pointerDownFunction1.bind(this);
+
+    this.fretboardCourseFret.addEventListener(
+      "pointerdown",
+      this.currentPointerDownFunction,
+      true
+    );
+
+    this.fretboardCourseFret.addEventListener(
       "pointerover",
       (event) => {
         if (this.fretboard.state.pointerDownIds.includes(event.pointerId)) {
           if (this.fretboard.state.notes[`${this.courseNum}_${this.fretNum}`])
-            this.fretboard.play(this.courseNum, this.fretNum);
+            this.play();
           if (this.fretboard.props.mode === "Edit One")
             this.fretboard.toggleNote(this.courseNum, this.fretNum);
           else if (this.fretboard.props.mode === "Edit All")
@@ -86,7 +130,7 @@ class FretboardCourseFret {
       true
     );
 
-    COURSE_FRET.addEventListener(
+    this.fretboardCourseFret.addEventListener(
       "pointerup",
       (event) => {
         // pointer id will already be removed by the FreboardMultitool
@@ -104,7 +148,7 @@ class FretboardCourseFret {
     // if the note duration is 0 (i.e. play for touched duration)
     // we need to handle up and leave events separately
     if (this.fretboard.props.noteDuration === 0) {
-      COURSE_FRET.addEventListener(
+      this.fretboardCourseFret.addEventListener(
         "pointerup",
         () => {
           if (
@@ -125,7 +169,7 @@ class FretboardCourseFret {
         },
         true
       );
-      COURSE_FRET.addEventListener(
+      this.fretboardCourseFret.addEventListener(
         "pointerleave",
         () => {
           if (
@@ -150,9 +194,9 @@ class FretboardCourseFret {
   }
 
   play(duration = this.fretboard.props.noteDuration) {
-    // duration = -1 means play full note duration in audio sprite
-    // duration = 0 means play note until up event occurs (event handled externally)
-    // duration = x means play note for x seconds (max = note's duration in audio sprite)
+    // duration = -1 means play note for infinity (stop event handled externally)
+    // duration = 0 means play note until up event occurs (stop event handled externally)
+    // duration = x means play note for x seconds
 
     // clear the previous timeout if the note is currently active
     if (
@@ -170,10 +214,8 @@ class FretboardCourseFret {
     // in forEach below, resulting in undefined[index]
     this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`] = [];
 
-    // stores an object {buffer, gain, noteDuration} in audioBuffers object
-    // the noteDuration can be updated by AudioInterface.startNote
-    // if noteDuration = 0
-    // OR if noteDuration > sprite note's full duration
+    // stores an object {buffer, gain, duration}, which is returned by
+    // the AudioInterface, in audioBuffers object
     this.midi.forEach((midiValue, index) => {
       this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`][
         index
@@ -181,12 +223,13 @@ class FretboardCourseFret {
         this.fretboard.props.audio,
         midiValue,
         duration,
-        index * 0.04 // set by ear
+        index * 0.04 // extra course/string delay - set by ear
       );
+
       // adds the timeout property to the audioBuffer definition in audioBuffers
       // this can be cleared in the play function
-      // the === 0 case is handled by event listeners in the addInteractivity function
-      if (duration !== 0) {
+      // the === 0 and === -1 cases are handled by event listeners in the addInteractivity function
+      if (duration > 0) {
         this.fretboard.state.audioBuffers[`${this.courseNum}_${this.fretNum}`][
           index
         ].timeout = setTimeout(() => {

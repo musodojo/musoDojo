@@ -1,17 +1,17 @@
-class SpinningMinusButton {
+class MinusButton {
   constructor(
     foregroundColor = "#000000",
     backgroundColor = "transparent",
     width = "1.5em",
     height = "1.5em"
   ) {
-    this.button = document.createElement("div");
-    this.button.style.position = "relative";
-    this.button.style.border = "0";
-    this.button.style.cursor = "pointer";
-    this.button.style.width = width;
-    this.button.style.height = height;
-    this.button.style.backgroundColor = backgroundColor;
+    this.minusButton = document.createElement("div");
+    this.minusButton.style.position = "relative";
+    this.minusButton.style.border = "0";
+    this.minusButton.style.cursor = "pointer";
+    this.minusButton.style.width = width;
+    this.minusButton.style.height = height;
+    this.minusButton.style.backgroundColor = backgroundColor;
 
     this.textDiv = document.createElement("div");
     this.textDiv.style.position = "relative";
@@ -22,7 +22,7 @@ class SpinningMinusButton {
     this.textDiv.style.transform = "translate(-50%, -50%)";
     // 0.2s in this.textDiv.style.transition = 200ms in setTimeout in toggle function
     this.textDiv.style.transition = "transform 0.2s ease";
-    this.button.appendChild(this.textDiv);
+    this.minusButton.appendChild(this.textDiv);
 
     this.bar = document.createElement("div");
     this.bar.style.position = "absolute";
@@ -34,7 +34,7 @@ class SpinningMinusButton {
     this.bar.style.backgroundColor = foregroundColor;
     this.textDiv.appendChild(this.bar);
 
-    this.button.addEventListener(
+    this.minusButton.addEventListener(
       "pointerdown",
       () => {
         this.toggle();
@@ -54,9 +54,9 @@ class SpinningMinusButton {
   }
 
   setColorTheme(foregroundColor, backgroundColor = "transparent") {
-    this.button.style.backgroundColor = backgroundColor;
+    this.minusButton.style.backgroundColor = backgroundColor;
     this.bar.style.backgroundColor = foregroundColor;
   }
 }
 
-export { SpinningMinusButton };
+export { MinusButton };

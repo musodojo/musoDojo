@@ -16,7 +16,7 @@ import {
 } from "../../data/colorThemes.mjs";
 
 class FretboardMenu {
-  constructor(props = {}, width = "42em") {
+  constructor(props = {}) {
     // don't need to store this.props in this class
     const PROPS = {
       ...FRETBOARD_INSTRUMENTS_PROPS.defaults,
@@ -28,7 +28,10 @@ class FretboardMenu {
     this.fretboardMenu.style.flexFlow = "row wrap";
     this.fretboardMenu.style.gap = "0.4em";
     this.fretboardMenu.style.backgroundColor = PROPS.colorTheme.background;
-    this.fretboardMenu.style.maxWidth = width;
+    this.fretboardMenu.style.width = `${PROPS.width}px`;
+    // for hiding the menu
+    this.fretboardMenu.style.transition = "transform 0.2s";
+    this.fretboardMenu.style.transformOrigin = "0 0";
 
     // a general style for a HTML <select>
     const SELECT_STYLE = {
@@ -170,26 +173,37 @@ class FretboardMenu {
     NOTE_DURATION_LABEL.text = "Duration";
     NOTE_DURATION_LABEL.disabled = "disabled";
     this.noteDurationSelect.add(NOTE_DURATION_LABEL);
-    const NOTE_DURATION_0_OPTION = document.createElement("option");
-    NOTE_DURATION_0_OPTION.text = "Touch";
-    NOTE_DURATION_0_OPTION.value = "0";
-    this.noteDurationSelect.add(NOTE_DURATION_0_OPTION);
+    // Touch sensitive
+    const NOTE_DURATION_TOUCH_OPTION = document.createElement("option");
+    NOTE_DURATION_TOUCH_OPTION.text = "Touch";
+    NOTE_DURATION_TOUCH_OPTION.value = "0";
+    this.noteDurationSelect.add(NOTE_DURATION_TOUCH_OPTION);
+    // 0.5 seconds
     const NOTE_DURATION_05_OPTION = document.createElement("option");
-    NOTE_DURATION_05_OPTION.text = "0.5s";
+    NOTE_DURATION_05_OPTION.text = "0.5 s";
     NOTE_DURATION_05_OPTION.value = "0.5";
     this.noteDurationSelect.add(NOTE_DURATION_05_OPTION);
+    // 1 seconds
     const NOTE_DURATION_1_OPTION = document.createElement("option");
-    NOTE_DURATION_1_OPTION.text = "1s";
+    NOTE_DURATION_1_OPTION.text = "1 s";
     NOTE_DURATION_1_OPTION.value = "1";
     this.noteDurationSelect.add(NOTE_DURATION_1_OPTION);
+    // 2 seconds
     const NOTE_DURATION_2_OPTION = document.createElement("option");
-    NOTE_DURATION_2_OPTION.text = "2s";
+    NOTE_DURATION_2_OPTION.text = "2 s";
     NOTE_DURATION_2_OPTION.value = "2";
     this.noteDurationSelect.add(NOTE_DURATION_2_OPTION);
+    // 3 seconds
     const NOTE_DURATION_3_OPTION = document.createElement("option");
-    NOTE_DURATION_3_OPTION.text = "3s";
+    NOTE_DURATION_3_OPTION.text = "3 s";
     NOTE_DURATION_3_OPTION.value = "3";
     this.noteDurationSelect.add(NOTE_DURATION_3_OPTION);
+    // ∞ seconds
+    const NOTE_DURATION_INFIN_OPTION = document.createElement("option");
+    NOTE_DURATION_INFIN_OPTION.text = "∞ s";
+    NOTE_DURATION_INFIN_OPTION.value = "-1";
+    this.noteDurationSelect.add(NOTE_DURATION_INFIN_OPTION);
+    // set the default
     this.noteDurationSelect.value = PROPS.noteDuration;
     this.fretboardMenu.appendChild(this.noteDurationSelect);
 
