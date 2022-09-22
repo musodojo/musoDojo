@@ -8,12 +8,6 @@ View the latest version of Muso Dojo.
 
 https://musodojo.github.io/musodojo/
 
-## Download
-
-Version 3.0 is now available to download.
-
-https://github.com/musodojo/musodojo/releases
-
 ## Keyboard Shortcuts
 
 Change Root Note

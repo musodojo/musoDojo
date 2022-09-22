@@ -4,6 +4,8 @@
   - set loop points
   - infinity seconds selected but no loop points set
 
+- convert data to arrays not objects
+
 - resize event
 
   - filter back to multitool / include buttons div

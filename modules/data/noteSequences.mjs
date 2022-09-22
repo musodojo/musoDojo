@@ -136,7 +136,6 @@ const NOTE_SEQUENCES = {
       },
     },
     "m7♭5 / ø7 / Half-Diminished 7th": {
-      sequence: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0],
       sequence: [0, 3, 6, 10],
     },
     "Whole-Half Diminished": {
