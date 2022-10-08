@@ -18,7 +18,7 @@ class Fretboard {
         name: "Guitar",
 
         // used to tell AudioInterface.startNote which type of sound to play
-        audio: "Plucked",
+        audio: "Guitar",
 
         // standard guitar tuning: [E=40,A=45,D=50,G=55,B=59,E=64]
         // each element is the open course's midi value
