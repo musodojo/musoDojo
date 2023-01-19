@@ -1,4 +1,4 @@
-# Muso Dojo - pratcice music.
+# Muso Dojo - Practice Music
 
 Welcome to Muso Dojo. Here you can access a suite of tools to help teachers and students to study chords, scales, and arpeggios on various instruments including Guitar, Bass, Violin and Ukulele.
 
